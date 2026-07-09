@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>David Guijosa — Full-Stack & Game Developer</title>
+    <meta
+      name="description"
+      content="Portfolio of David Guijosa — full-stack software engineer and game developer in Riverside, CA. Angular, React, Java Spring Boot, Node.js, and GCP on the web — Unity, C#, and Blender in the engine."
+    />
+    <meta name="theme-color" content="#0a0e17" />
+    <link rel="canonical" href="https://www.zntsns.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.zntsns.com/" />
+    <meta property="og:title" content="David Guijosa — Full-Stack & Game Developer" />
+    <meta
+      property="og:description"
+      content="Full-stack web applications and games — Angular, React, Java Spring Boot, Node.js, GCP, and Unity. Open to full-time roles and freelance."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Apply the saved (or system) theme before first paint to avoid a flash.
+      (function () {
+        var theme;
+        try {
+          theme = localStorage.getItem("theme");
+        } catch (e) {
+          theme = null;
+        }
+        if (theme !== "light" && theme !== "dark") {
+          theme = window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark";
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

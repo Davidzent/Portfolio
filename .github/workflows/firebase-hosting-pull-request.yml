@@ -1,0 +1,43 @@
+name: Deploy preview to Firebase Hosting (PR)
+
+# Build every PR and deploy it to a temporary preview channel.
+# The action posts the preview URL as a comment on the PR.
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  build_and_preview:
+    # Secrets aren't exposed to PRs from forks — skip so those PRs don't fail red.
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all apps into dist/
+        run: pnpm build
+
+      - name: Deploy to a preview channel (expires in 7 days)
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZNTSNS_34AEE }}
+          projectId: zntsns-34aee
+          expires: 7d

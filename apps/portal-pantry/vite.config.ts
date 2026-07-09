@@ -1,0 +1,17 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+
+  base: '/portal-pantry/',
+
+  server: {
+    port: Number(process.env.PORT) || 5175,
+  },
+
+  build: {
+    outDir: '../../dist/portal-pantry',
+    emptyOutDir: false,
+  },
+})

@@ -1,0 +1,26 @@
+{
+  "name": "zntsns",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "packageManager": "pnpm@11.10.0",
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "pnpm clean && pnpm -r build",
+    "dev": "pnpm -r dev",
+    "deploy": "pnpm build && firebase deploy",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Davidzent/ZNTSNS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Davidzent/ZNTSNS/issues"
+  },
+  "homepage": "https://github.com/Davidzent/ZNTSNS#readme"
+}
