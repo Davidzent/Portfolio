@@ -68,12 +68,7 @@ Both are self-contained, fully client-side, and part of this same build.
 src/
 ├─ components/       Portfolio sections (Hero, About, Skills, Projects…) + shared UI
 ├─ data/content.ts  Single source of truth for all portfolio copy
-├─ hooks/           useTheme, useScrollReveal
-├─ recipes/         "Simmer" demo  → served at /simmer/
-└─ portal-pantry/   "Portal Pantry" demo → served at /portal-pantry/
-   ├─ components/   UI
-   ├─ api/          typed HTTP-style client + SDK
-   └─ server/       in-browser mock backend (DB + router)
+└─ hooks/           useTheme, useScrollReveal
 ```
 
 ## Getting started
