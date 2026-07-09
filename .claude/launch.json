@@ -1,0 +1,16 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "portfolio",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": [
+        "apps/portafolio/node_modules/vite/bin/vite.js",
+        "apps/portafolio",
+        "--port", "5190",
+        "--strictPort"
+      ],
+      "port": 5190
+    }
+  ]
+}

@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(cd \"D:/Repo/React/portafolio/src/assets/portal-pantry\" && mkdir -p _originals && mv *.png _originals/ && echo \"--- moved. dir now: ---\" && ls -1 . && echo \"--- _originals: ---\" && ls -1 _originals/)"
-    ]
-  }
-}
