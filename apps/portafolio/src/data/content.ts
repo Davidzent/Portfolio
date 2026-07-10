@@ -2,7 +2,7 @@ export const site = {
   /** Short name used in the navbar brand and terminal. */
   name: "David",
   fullName: "David Guijosa",
-  role: "Full-Stack Developer & Game Developer",
+  role: "Full-Stack Software Developer & Game Developer",
   tagline:
     "I build end-to-end web applications and games — secure APIs, cloud-deployed microservices, responsive frontends, and gameplay systems in Unity. Three years of shipping software that holds up in production.",
   email: "davidgin641@gmail.com",
