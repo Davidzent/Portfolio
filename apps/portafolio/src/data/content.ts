@@ -145,18 +145,6 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    title: "Simmer — Recipe Finder",
-    type: "web",
-    description:
-      "A standalone recipe site built on TheMealDB API — search dishes by name, browse categories, hunt by main ingredient, or shuffle random meals, with check-off ingredient lists and step-by-step methods.",
-    highlight: "Live demo — try it now",
-    tech: ["React", "TypeScript", "REST APIs", "Vite"],
-    github: "https://github.com/Davidzent/Simmer",
-    demo: "/simmer/",
-    logo: "simmer",
-    hue: 95,
-  },
-  {
     title: "Portal Pantry — Interdimensional Eats",
     type: "web",
     description:
@@ -167,6 +155,18 @@ export const projects: Project[] = [
     demo: "/portal-pantry/",
     logo: "portal-pantry",
     hue: 285,
+  },
+  {
+    title: "Simmer — Recipe Finder",
+    type: "web",
+    description:
+      "A standalone recipe site built on TheMealDB API — search dishes by name, browse categories, hunt by main ingredient, or shuffle random meals, with check-off ingredient lists and step-by-step methods.",
+    highlight: "Live demo — try it now",
+    tech: ["React", "TypeScript", "REST APIs", "Vite"],
+    github: "https://github.com/Davidzent/Simmer",
+    demo: "/simmer/",
+    logo: "simmer",
+    hue: 95,
   },
   {
     title: "Multiplayer Cooking Game",
