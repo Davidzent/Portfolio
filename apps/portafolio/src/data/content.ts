@@ -148,9 +148,9 @@ export const projects: Project[] = [
     title: "Portal Pantry — Interdimensional Eats",
     type: "web",
     description:
-      "Uber Eats for the multiverse — dimension filters, menus, a live cart, and a portal-powered checkout, plus mock-API auth with two roles: customers get order history, store owners get a dashboard to rename dishes, change prices, and delist items.",
+      "Uber Eats for the multiverse — dimension filters, photo menus, a live cart, and a portal-powered checkout. Two roles on a real Node + SQLite backend (or a zero-setup in-browser mock): customers order, track history, and review; owners manage menus, work a live order queue, and see server-computed payouts.",
     highlight: "Live demo — order across the multiverse",
-    tech: ["React", "TypeScript", "Vite", "CSS animations"],
+    tech: ["React", "TypeScript","Node.js", "Express", "Vite","Vitest","SQLite ", "CSS animations"],
     github: "https://github.com/Davidzent/Portal-Pantry",
     demo: "/portal-pantry/",
     logo: "portal-pantry",
