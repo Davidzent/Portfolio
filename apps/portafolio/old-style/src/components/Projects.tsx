@@ -1,8 +1,8 @@
 import { useState } from "react";
-import type { CSSProperties } from "react";
 import { projects, site, type Project, type ProjectType } from "../data/content";
 import { Icon } from "./Icon";
-import { ProjectLogo, type ProjectLogoName } from "./ProjectLogos";
+import { type ProjectLogoName } from "./ProjectLogos";
+import { ProjectCover, type CoverName } from "./ProjectCover";
 
 type Filter = "all" | ProjectType;
 
@@ -12,26 +12,33 @@ const filters: { value: Filter; label: string }[] = [
   { value: "game", label: "Games" },
 ];
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({
+  project,
+  featured,
+}: {
+  project: Project;
+  featured?: boolean;
+}) {
   return (
-    <article className="project-card">
-      <div
-        className="project-cover"
-        style={{ "--hue": project.hue } as CSSProperties}
-      >
+    <article className={`project-card${featured ? " featured" : ""}`}>
+      <div className="project-cover">
         {project.image ? (
           <img
             src={project.image}
             alt={`${project.title} screenshot`}
             loading="lazy"
           />
-        ) : project.logo ? (
-          <span className="cover-logo">
-            <ProjectLogo name={project.logo as ProjectLogoName} size={58} />
-          </span>
+        ) : project.cover ? (
+          <ProjectCover
+            cover={project.cover as CoverName}
+            logo={project.logo as ProjectLogoName | undefined}
+          />
         ) : (
           <span className="cover-icon">
-            <Icon name={project.type === "game" ? "gamepad" : "code"} size={46} />
+            <Icon
+              name={project.type === "game" ? "gamepad" : "code"}
+              size={featured ? 64 : 46}
+            />
           </span>
         )}
         <span className="project-type">
@@ -95,12 +102,14 @@ export default function Projects() {
   return (
     <section id="projects" className="section">
       <div className="container">
-        <div className="section-head" data-reveal>
-          <p className="section-label">03 · Projects</p>
-          <h2 className="section-title">Selected work</h2>
-          <p className="section-lead">
-            A mix of production web platforms and games — the two halves of how
-            I think about software.
+        <div data-reveal>
+          <p className="tag">Selected work</p>
+          <h2 className="sec-title" style={{ marginTop: "16px" }}>
+            Things I&apos;ve <span className="mark">shipped</span>
+          </h2>
+          <p className="sec-lead">
+            A mix of production web platforms and games, the two halves of how I
+            think about software.
           </p>
         </div>
 
@@ -124,8 +133,12 @@ export default function Projects() {
         </div>
 
         <div className="projects-grid" data-reveal>
-          {visible.map((project) => (
-            <ProjectCard key={project.title} project={project} />
+          {visible.map((project, i) => (
+            <ProjectCard
+              key={project.title}
+              project={project}
+              featured={i === 0}
+            />
           ))}
         </div>
 

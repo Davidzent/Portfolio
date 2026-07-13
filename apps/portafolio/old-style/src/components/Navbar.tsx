@@ -38,7 +38,7 @@ export default function Navbar() {
         </a>
 
         <ul id="primary-menu" className={`nav-links${open ? " open" : ""}`}>
-          {navLinks.map((link, i) => (
+          {navLinks.map((link) => (
             <li key={link.id}>
               <a
                 href={`#${link.id}`}
@@ -46,7 +46,6 @@ export default function Navbar() {
                 aria-current={active === link.id ? "true" : undefined}
                 onClick={() => setOpen(false)}
               >
-                <span className="nav-num">{String(i + 1).padStart(2, "0")}.</span>
                 {link.label}
               </a>
             </li>

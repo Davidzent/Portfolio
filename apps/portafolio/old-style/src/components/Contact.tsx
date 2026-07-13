@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { contact, site } from "../data/content";
 import { Icon } from "./Icon";
+import { NeuralBackdrop } from "./NeuralBackdrop";
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
@@ -16,25 +17,28 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="section">
-      <div className="container contact-inner">
-        <div data-reveal>
-          <p className="section-label label-center">05 · Contact</p>
-          <h2 className="section-title">{contact.heading}</h2>
-          <p className="section-lead lead-center">{contact.blurb}</p>
+    <section id="contact" className="section section-term">
+      <NeuralBackdrop />
+      <div className="container contact-inner" data-reveal>
+        <p className="tag">Contact</p>
+        <h2 className="contact-title">
+          Let&apos;s build <span className="mark">something</span> together
+        </h2>
+        <p className="contact-lead">{contact.blurb}</p>
 
-          <div className="contact-actions">
-            <a className="btn btn-primary" href={`mailto:${site.email}`}>
-              <Icon name="mail" size={17} />
-              Say hello
-            </a>
-            <button type="button" className="btn btn-ghost" onClick={copyEmail}>
-              <Icon name={copied ? "check" : "copy"} size={16} />
-              {copied ? "Copied!" : site.email}
-            </button>
-          </div>
+        <div className="contact-actions">
+          <a className="btn btn-primary" href={`mailto:${site.email}`}>
+            <Icon name="mail" size={17} />
+            Email me
+          </a>
+          <button type="button" className="btn btn-ghost" onClick={copyEmail}>
+            <Icon name={copied ? "check" : "copy"} size={16} />
+            {copied ? "Copied!" : site.email}
+          </button>
+        </div>
 
-          <div className="social-row socials-center">
+        <div className="contact-foot">
+          <div className="social-row">
             <a
               className="social-link"
               href={site.socials.github}
@@ -57,16 +61,15 @@ export default function Contact() {
             </a>
             <a
               className="social-link"
-              // href={site.socials.itchio}
+              href={site.resumeUrl}
               target="_blank"
               rel="noreferrer"
-              aria-label="itch.io profile"
-              title="itch.io"
+              aria-label="Download résumé"
+              title="Résumé"
             >
-              <Icon name="gamepad" size={18} />
+              <Icon name="download" size={18} />
             </a>
           </div>
-
           <p className="contact-note">{contact.note}</p>
         </div>
       </div>

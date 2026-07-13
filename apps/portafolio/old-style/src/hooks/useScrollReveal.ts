@@ -29,6 +29,19 @@ export function useScrollReveal() {
     );
 
     elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+
+    // Safety net: if the observer never reports (e.g. it fails, or the tab is
+    // opened in the background and closed before it's ever shown), make sure
+    // the content can't stay stuck invisible. Only fires if nothing revealed.
+    const fallback = window.setTimeout(() => {
+      if (!document.querySelector("[data-reveal].revealed")) {
+        elements.forEach((el) => el.classList.add("revealed"));
+      }
+    }, 1600);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(fallback);
+    };
   }, []);
 }

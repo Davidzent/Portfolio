@@ -1,0 +1,64 @@
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { ZntsnsLogo } from "./ZntsnsLogo";
+
+/**
+ * The site "boots up" once per session: black screen, the mark scramble-decodes
+ * over a loading bar, then the screen lifts. Skipped entirely under reduced
+ * motion and on repeat navigations. Content renders underneath the whole time,
+ * so this never blocks LCP.
+ */
+export function BootScreen() {
+  const reduce = useReducedMotion();
+  const [done, setDone] = useState(true);
+
+  useEffect(() => {
+    if (reduce) return;
+    let booted = false;
+    try {
+      booted = sessionStorage.getItem("zntsns-booted") === "1";
+    } catch {
+      booted = false;
+    }
+    if (booted) return;
+    setDone(false);
+    const t = setTimeout(() => {
+      setDone(true);
+      try {
+        sessionStorage.setItem("zntsns-booted", "1");
+      } catch {
+        /* private mode: boot again next load, harmless */
+      }
+    }, 1500);
+    return () => clearTimeout(t);
+  }, [reduce]);
+
+  return (
+    <AnimatePresence>
+      {!done && (
+        <motion.div
+          className="fixed inset-0 z-[120] grid place-items-center bg-void"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: [0.2, 0, 0, 1] }}
+          aria-hidden="true"
+        >
+          <div className="flex flex-col items-center gap-5">
+            <ZntsnsLogo height={44} boot />
+            <div className="h-[3px] w-40 overflow-hidden rounded-full bg-panel-2">
+              <motion.div
+                className="h-full origin-left bg-acid"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 1.25, ease: [0.2, 0, 0, 1] }}
+              />
+            </div>
+            <span className="font-mono text-[11px] tracking-[0.3em] text-faint uppercase">
+              booting
+            </span>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}

@@ -1,33 +1,38 @@
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import About from "./components/About";
-import Skills from "./components/Skills";
-import Projects from "./components/Projects";
-import Experience from "./components/Experience";
-import Contact from "./components/Contact";
-import Footer from "./components/Footer";
-import { useScrollReveal } from "./hooks/useScrollReveal";
+import { useLenis } from "./lib/useLenis";
+import { Grain } from "./components/fx";
+import { BootScreen } from "./components/BootScreen";
+import { Nav } from "./sections/Nav";
+import { Hero } from "./sections/Hero";
+import { About } from "./sections/About";
+import { Skills } from "./sections/Skills";
+import { Projects } from "./sections/Projects";
+import { Journey } from "./sections/Journey";
+import { Contact } from "./sections/Contact";
+import { Footer } from "./sections/Footer";
 
-function App() {
-  useScrollReveal();
+export default function App() {
+  useLenis();
 
   return (
     <>
-      <a className="skip-link" href="#main">
+      <BootScreen />
+      <Grain />
+      <a
+        href="#top"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[130] focus:rounded-md focus:bg-acid focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:font-semibold focus:text-void"
+      >
         Skip to content
       </a>
-      <Navbar />
-      <main id="main">
+      <Nav />
+      <main>
         <Hero />
         <About />
         <Skills />
         <Projects />
-        <Experience />
+        <Journey />
         <Contact />
       </main>
       <Footer />
     </>
   );
 }
-
-export default App;

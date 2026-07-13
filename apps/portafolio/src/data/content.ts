@@ -1,260 +1,344 @@
+/* ─────────────────────────────────────────────────────────────
+   zntsns.com — single content source of truth.
+   Everything editable lives here: copy, links, projects, skills,
+   the hero code, the journey timeline, the terminal easter egg.
+   Swap in real values and the sections pick them up.
+   ───────────────────────────────────────────────────────────── */
+
 export const site = {
-  /** Short name used in the navbar brand and terminal. */
   name: "David",
   fullName: "David Guijosa",
-  role: "Full-Stack Software Developer & Game Developer",
-  tagline:
-    "I build end-to-end web applications and games — secure APIs, cloud-deployed microservices, responsive frontends, and gameplay systems in Unity. Three years of shipping software that holds up in production.",
-  email: "davidgin641@gmail.com",
-  location: "Riverside, CA — remote friendly",
-  availability: "Open to work",
-  /** Served from public/resume.pdf. */
-  resumeUrl: "/resume.pdf",
-  /** The site is hosted at zntsns.com — shown in the navbar brand & footer. */
+  role: "Full-Stack Developer, leveling into Game Dev",
   domain: "zntsns.com",
+  email: "davidgin641@gmail.com",
+  location: "Riverside, CA",
+  availability: "Open to work",
+  resumeUrl: "/resume.pdf",
+  /** The dual-boot seam: the wordmark splits into the IDE half + the engine half. */
   brand: { base: "znt", accent: "sns" },
   socials: {
     github: "https://github.com/Davidzent",
     linkedin: "https://www.linkedin.com/in/davidguijosa/",
+    email: "mailto:davidgin641@gmail.com",
   },
 };
 
-export const navLinks = [
+export const nav = [
   { id: "about", label: "About" },
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
-  { id: "experience", label: "Experience" },
+  { id: "journey", label: "Journey" },
   { id: "contact", label: "Contact" },
+] as const;
+
+/* ── Hero ──────────────────────────────────────────────────── */
+
+export type TokenKind =
+  | "kw"
+  | "fn"
+  | "str"
+  | "num"
+  | "com"
+  | "punct"
+  | "var"
+  | "type"
+  | "plain";
+
+export type CodeLine = { indent?: number; tokens: [string, TokenKind][] };
+
+/** Left side of the hero: a live-typing editor. Fake syntax highlighting is
+ *  driven by these token kinds. It reads as real TypeScript about David. */
+export const heroCode: CodeLine[] = [
+  { tokens: [["const", "kw"], [" david", "var"], [" = ", "punct"], ["{", "punct"]] },
+  { indent: 1, tokens: [["role", "plain"], [": ", "punct"], ['"full-stack dev"', "str"], [",", "punct"]] },
+  { indent: 1, tokens: [["stack", "plain"], [": ", "punct"], ["[", "punct"], ['"React"', "str"], [", ", "punct"], ['"Node"', "str"], [", ", "punct"], ['"Spring"', "str"], ["]", "punct"], [",", "punct"]] },
+  { indent: 1, tokens: [["nowPlaying", "plain"], [": ", "punct"], ['"Unity + C#"', "str"], [",", "punct"]] },
+  { tokens: [["}", "punct"]] },
+  { tokens: [["", "plain"]] },
+  { tokens: [["function", "kw"], [" build", "fn"], ["(", "punct"], ["idea", "var"], [": ", "punct"], ["Idea", "type"], ["): ", "punct"], ["Shipped", "type"], [" {", "punct"]] },
+  { indent: 1, tokens: [["const", "kw"], [" api", "var"], [" = ", "punct"], ["secure", "fn"], ["(", "punct"], ["idea", "var"], [")", "punct"], [";", "punct"], ["   // OAuth2 · JWT", "com"]] },
+  { indent: 1, tokens: [["return", "kw"], [" deploy", "fn"], ["(", "punct"], ["api", "var"], [", ", "punct"], ["{", "punct"], [" cloud", "plain"], [": ", "punct"], ['"GCP"', "str"], [" }", "punct"], [")", "punct"], [";", "punct"]] },
+  { tokens: [["}", "punct"]] },
+  { tokens: [["", "plain"]] },
+  { tokens: [["// currently: a multiplayer cooking game, solo", "com"]] },
+  { tokens: [["while", "kw"], [" (", "punct"], ["awake", "var"], [") ", "punct"], ["david", "var"], [".", "punct"], ["ship", "fn"], ["()", "punct"], [";", "punct"]] },
 ];
 
+export const hero = {
+  eyebrow: "znt // full-stack   ·   sns // game engine",
+  /** Two-line headline. The accent word is styled per-line in the component. */
+  headline: ["Full-stack systems,", "game-world imagination."],
+  tagline: "Production web apps on one boot, games on the other.",
+  primaryCta: { label: "View projects", href: "#projects" },
+  secondaryCta: { label: "Start co-op", href: "#contact" },
+  engineHint: "drag the seam",
+};
+
+/* ── About (player card) ───────────────────────────────────── */
+
 export const about = {
-  paragraphs: [
-    "I'm a full-stack software engineer from Riverside, California, working across the whole stack: Angular and React frontends, Java / Spring Boot and Node.js services, and the PostgreSQL databases, Docker containers, and CI/CD pipelines that carry them to production on Google Cloud.",
-    "When I'm not shipping client work, I build games. I'm currently the sole developer of a multiplayer cooking game in Unity — designing the gameplay systems in C# and modeling the 3D assets in Blender myself. I've also written a neural network from scratch in Java and evolved it with a genetic algorithm until it played Flappy Bird better than I can.",
-    "Before going independent I built Java microservices and Jenkins pipelines for enterprise clients at Cognizant, where I learned that reliability, testing, and clear communication matter as much as clever code. I bring that discipline to everything I build — for users and for players.",
+  class: "Full-Stack Dev  ·  Lv.1 Game Dev",
+  /** Swap for a real portrait. Placeholder is duotoned in the UI so it still reads. */
+  photo: "https://picsum.photos/seed/zntsns-portrait/640/800",
+  photoAlt: "David Guijosa",
+  bio: [
+    "I'm a full-stack engineer from Riverside, California. Day to day I work the whole stack: Angular and React on the front, Java / Spring Boot and Node services behind them, and the PostgreSQL, Docker, and CI/CD on Google Cloud that carry them to production.",
+    "Off the clock I build games. I'm the sole developer of a multiplayer cooking game in Unity, designing the systems in C# and modeling the 3D assets in Blender myself. I also wrote a neural network from scratch in Java and evolved it until it out-flapped me at Flappy Bird.",
+  ],
+  /** Stat bars, RPG-style. Values are self-assessed skill, labeled as such. */
+  stats: [
+    { label: "Backend", value: 90 },
+    { label: "Frontend", value: 85 },
+    { label: "Cloud / DevOps", value: 80 },
+    { label: "Game Dev", value: 55 },
   ],
   facts: [
-    { icon: "map-pin", label: "Based in", value: "Riverside, CA" },
-    { icon: "briefcase", label: "Experience", value: "3+ years building software" },
-    {
-      icon: "graduation",
-      label: "Education",
-      value: "A.S. Computer Science — Riverside City College",
-    },
-    { icon: "mail", label: "Availability", value: "Full-time roles & freelance" },
-  ],
-  stats: [
-    { value: "3+", label: "Years experience" },
-    { value: "5+", label: "Freelance clients" },
-    { value: "12+", label: "Projects built" },
-    { value: "1", label: "Game in development" },
+    { k: "Base", v: "Riverside, CA" },
+    { k: "XP", v: "3+ yrs shipping" },
+    { k: "Guild", v: "Freelance · ex-Cognizant" },
+    { k: "Status", v: "Open to work" },
   ],
 };
 
-export interface SkillGroup {
-  icon: string;
+/* ── Skills (tree) ─────────────────────────────────────────── */
+
+export type SkillState = "core" | "strong" | "learning";
+export interface SkillNode {
+  id: string;
+  label: string;
+  state: SkillState;
+}
+export interface SkillBranch {
+  id: "fullstack" | "gamedev";
   title: string;
-  blurb: string;
-  skills: string[];
+  subtitle: string;
+  nodes: SkillNode[];
 }
 
-export const skillGroups: SkillGroup[] = [
+export const skillTree: SkillBranch[] = [
   {
-    icon: "code",
-    title: "Frontend",
-    blurb: "Responsive, accessible interfaces in Angular and React.",
-    skills: [
-      "Angular",
-      "React",
-      "TypeScript",
-      "JavaScript",
-      "HTML5 & CSS3",
-      "Responsive UI",
-      "Reusable components",
-      "API integration",
+    id: "fullstack",
+    title: "Full-Stack",
+    subtitle: "web / api / cloud",
+    nodes: [
+      { id: "ts", label: "TypeScript", state: "core" },
+      { id: "react", label: "React", state: "core" },
+      { id: "angular", label: "Angular", state: "strong" },
+      { id: "node", label: "Node.js", state: "strong" },
+      { id: "spring", label: "Java / Spring Boot", state: "core" },
+      { id: "sql", label: "PostgreSQL", state: "strong" },
+      { id: "docker", label: "Docker / GCP", state: "strong" },
+      { id: "cicd", label: "CI/CD · Jenkins", state: "strong" },
+      { id: "rust", label: "Rust", state: "learning" },
     ],
   },
   {
-    icon: "server",
-    title: "Backend",
-    blurb: "Java and Node.js services built to scale — secure, tested, observable.",
-    skills: [
-      "Java",
-      "Spring Boot",
-      "Node.js",
-      "REST APIs",
-      "Microservices",
-      "OAuth 2.0 / JWT",
-      "PostgreSQL",
-      "MySQL",
-    ],
-  },
-  {
-    icon: "gamepad",
-    title: "Game Development",
-    blurb:
-      "Gameplay systems, game AI, and original 3D assets — currently building a multiplayer cooking game.",
-    skills: [
-      "Unity",
-      "C#",
-      "C++",
-      "Blender",
-      "Gameplay systems",
-      "Game AI",
-      "Neural networks",
-      "OOP architecture",
-    ],
-  },
-  {
-    icon: "wrench",
-    title: "Cloud & DevOps",
-    blurb: "From commit to production on GCP — automated, tested, repeatable.",
-    skills: [
-      "Google Cloud (GCP)",
-      "Docker",
-      "Jenkins",
-      "CI/CD",
-      "SonarCloud",
-      "Git & GitHub",
-      "Postman",
-      "JUnit",
-      "Agile / Scrum",
+    id: "gamedev",
+    title: "Game Dev",
+    subtitle: "engine / systems / 3d",
+    nodes: [
+      { id: "unity", label: "Unity", state: "strong" },
+      { id: "csharp", label: "C#", state: "core" },
+      { id: "blender", label: "Blender / 3D", state: "strong" },
+      { id: "gameplay", label: "Gameplay systems", state: "strong" },
+      { id: "ai", label: "Game AI / neural nets", state: "strong" },
+      { id: "netcode", label: "Multiplayer netcode", state: "learning" },
+      { id: "shaders", label: "Shaders / HLSL", state: "learning" },
+      { id: "physics", label: "Physics", state: "learning" },
     ],
   },
 ];
 
+/* ── Projects (level select) ───────────────────────────────── */
+
 export type ProjectType = "web" | "game";
+export type MarkId =
+  | "portal"
+  | "simmer"
+  | "cooking"
+  | "restaurant"
+  | "neural"
+  | "tetris";
 
 export interface Project {
+  id: string;
   title: string;
+  short: string;
   type: ProjectType;
+  mark: MarkId;
+  /** One-line "preview" shown on hover, arcade blurb voice. */
+  preview: string;
   description: string;
-  /** Short mono-spaced line under the description — metrics, awards, status. */
   highlight?: string;
   tech: string[];
-  github?: string;
-  demo?: string;
-  /** Optional screenshot (put files in public/ and use e.g. "/shots/cooking.png").
-   *  Cards without an image get generated cover art from their `hue`. */
-  image?: string;
-  /** Optional logo badge drawn on the cover (see components/ProjectLogos.tsx). */
-  logo?: string;
-  /** Hue (0–360) for the generated cover art when no image is set. */
-  hue: number;
+  links: { github?: string; demo?: string };
 }
 
 export const projects: Project[] = [
   {
-    title: "Portal Pantry — Interdimensional Eats",
+    id: "portal-pantry",
+    title: "Portal Pantry",
+    short: "Interdimensional Eats",
     type: "web",
+    mark: "portal",
+    preview: "Uber Eats for the multiverse. Two roles, live cart, portal checkout.",
     description:
-      "Uber Eats for the multiverse — dimension filters, photo menus, a live cart, and a portal-powered checkout. Two roles on a real Node + SQLite backend (or a zero-setup in-browser mock): customers order, track history, and review; owners manage menus, work a live order queue, and see server-computed payouts.",
-    highlight: "Live demo — order across the multiverse",
-    tech: ["React", "TypeScript","Node.js", "Express", "Vite","Vitest","SQLite ", "CSS animations"],
-    github: "https://github.com/Davidzent/Portal-Pantry",
-    demo: "/portal-pantry/",
-    logo: "portal-pantry",
-    hue: 285,
+      "Food delivery across dimensions: dimension filters, photo menus, a live cart, and a portal-powered checkout. Two roles on a real Node + SQLite backend (or a zero-setup in-browser mock). Customers order, track, and review; owners run menus, a live order queue, and server-computed payouts.",
+    highlight: "Live demo · order across the multiverse",
+    tech: ["React", "TypeScript", "Node.js", "Express", "Vite", "Vitest", "SQLite"],
+    links: { github: "https://github.com/Davidzent/Portal-Pantry", demo: "/portal-pantry/" },
   },
   {
-    title: "Simmer — Recipe Finder",
+    id: "simmer",
+    title: "Simmer",
+    short: "Recipe Finder",
     type: "web",
+    mark: "simmer",
+    preview: "Search 300+ dishes by name, ingredient, or pure chaos (random).",
     description:
-      "A standalone recipe site built on TheMealDB API — search dishes by name, browse categories, hunt by main ingredient, or shuffle random meals, with check-off ingredient lists and step-by-step methods.",
-    highlight: "Live demo — try it now",
+      "A standalone recipe site on TheMealDB API: search dishes by name, browse categories, hunt by main ingredient, or shuffle random meals, with check-off ingredient lists and step-by-step methods.",
+    highlight: "Live demo · try it now",
     tech: ["React", "TypeScript", "REST APIs", "Vite"],
-    github: "https://github.com/Davidzent/Simmer",
-    demo: "/simmer/",
-    logo: "simmer",
-    hue: 95,
+    links: { github: "https://github.com/Davidzent/Simmer", demo: "/simmer/" },
   },
   {
+    id: "cooking",
     title: "Multiplayer Cooking Game",
+    short: "Unity · in development",
     type: "game",
+    mark: "cooking",
+    preview: "Overcooked-style co-op. Solo build: code, design, and 3D art.",
     description:
-      "Overcooked-inspired co-op cooking game built solo in Unity — recipe classification, player actions, and NPC routing designed as a clean, scalable C# architecture, with all 3D assets modeled in Blender. Currently extending it to real-time multiplayer.",
-    highlight: "In development · sole developer — code, design & 3D art",
+      "An Overcooked-inspired co-op cooking game built solo in Unity: recipe classification, player actions, and NPC routing designed as a clean, scalable C# architecture, with every 3D asset modeled in Blender. Currently extending it to real-time multiplayer.",
+    highlight: "In development · sole developer",
     tech: ["Unity", "C#", "Blender", "OOP architecture"],
-    hue: 25,
+    links: {},
   },
   {
-    title: "Restaurant Web Application",
+    id: "restaurant",
+    title: "Restaurant Platform",
+    short: "Full-stack ordering",
     type: "web",
+    mark: "restaurant",
+    preview: "Angular front, Spring Boot API, Postgres. Tested end to end.",
     description:
-      "Full-stack restaurant ordering platform with menu browsing, cart management, and checkout — an Angular frontend backed by a Java Spring Boot REST API with PostgreSQL persistence.",
-    highlight: "JUnit test coverage · Postman-validated endpoints",
+      "A full-stack restaurant ordering platform: menu browsing, cart management, and checkout. Angular frontend backed by a Java Spring Boot REST API with PostgreSQL persistence.",
+    highlight: "JUnit coverage · Postman-validated endpoints",
     tech: ["Angular", "TypeScript", "Spring Boot", "PostgreSQL", "REST APIs"],
-    github: "https://github.com/Davidzent/Restaurant_Store_Application",
-    logo: "restaurant",
-    hue: 210,
+    links: { github: "https://github.com/Davidzent/Restaurant_Store_Application" },
   },
   {
-    title: "Neural Network — Flappy Bird AI",
+    id: "neural",
+    title: "Flappy Bird AI",
+    short: "Neural net from scratch",
     type: "game",
+    mark: "neural",
+    preview: "A hand-built net, evolved by a genetic algorithm, beats the game.",
     description:
-      "A feedforward neural network written from scratch in Java — no ML libraries — evolved with a genetic algorithm (selection, crossover, mutation) until the agent mastered Flappy Bird across hundreds of generations.",
+      "A feedforward neural network written from scratch in Java, no ML libraries, evolved with a genetic algorithm (selection, crossover, mutation) until the agent mastered Flappy Bird across hundreds of generations.",
     highlight: "Custom fitness function · real-time game-state pipeline",
     tech: ["Java", "Neural networks", "Genetic algorithms", "OOP"],
-    github: "https://github.com/Davidzent/Neural-Network",
-    logo: "flappy-bird",
-    hue: 130,
+    links: { github: "https://github.com/Davidzent/Neural-Network" },
   },
   {
-    title: "Tetris — Accounts & Leaderboard",
+    id: "tetris",
+    title: "Tetris",
+    short: "Accounts + leaderboard",
     type: "game",
+    mark: "tetris",
+    preview: "Classic Tetris with hashed auth and a persistent global ladder.",
     description:
       "Browser-based Tetris with a full SQL-backed user system: hashed credential authentication, session management, and a persistent global leaderboard ranked across difficulty levels.",
     highlight: "A game and a full-stack app in one",
     tech: ["JavaScript", "HTML & CSS", "SQL", "Authentication"],
-    github: "https://github.com/Davidzent/Tetris",
-    logo: "tetris",
-    hue: 260,
+    links: { github: "https://github.com/Davidzent/Tetris" },
   },
 ];
 
-export interface Experience {
-  role: string;
-  company: string;
-  period: string;
+/* ── Journey (side-scroll timeline) ────────────────────────── */
+
+export interface Checkpoint {
+  year: string;
+  title: string;
+  org: string;
+  type: "work" | "quest";
   points: string[];
 }
 
-export const experience: Experience[] = [
+export const journey: Checkpoint[] = [
   {
-    role: "Full-Stack Software Developer",
-    company: "Freelance",
-    period: "Jun 2023 — Present",
+    year: "2022",
+    title: "Software Engineer",
+    org: "Revature",
+    type: "work",
     points: [
-      "Architected and deployed full-stack web applications for 5+ clients using Angular, TypeScript, and Node.js — containerized on GCP with Docker-based CI/CD pipelines, reducing deployment cycles by 50%.",
-      "Built secure OAuth 2.0 / JWT authentication flows, reusable Angular component libraries, and RESTful API integrations that improved cross-client code reuse.",
-      "Designed responsive UIs with dynamic form validation and third-party API integrations to enhance usability and customer engagement.",
+      "Enterprise training program; placed at Cognizant.",
+      "Contributed to 12+ full-stack projects in Java, Spring, Angular, and Node.",
+      "Led a team of 5 inside a 15-person cross-functional group.",
     ],
   },
   {
-    role: "Software Engineer",
-    company: "Cognizant Technology Solutions",
-    period: "Apr 2022 — Apr 2023",
+    year: "2022",
+    title: "Software Engineer",
+    org: "Cognizant",
+    type: "work",
     points: [
-      "Developed RESTful microservices in Java and Spring Boot handling authentication, authorization, and core business logic for enterprise applications — with JUnit tests and SonarCloud static analysis.",
-      "Built and owned Jenkins CI/CD pipelines end to end, improving team delivery velocity by 25%; automated email notification services cut manual operational workload by 40%.",
-      "Delivered a production MVP three days ahead of a four-week deadline through modular Spring Boot architecture and proactive stakeholder communication.",
+      "Built RESTful microservices in Java / Spring Boot for enterprise apps.",
+      "Owned Jenkins CI/CD pipelines end to end, +25% delivery velocity.",
+      "Shipped a production MVP three days ahead of a four-week deadline.",
     ],
   },
   {
-    role: "Software Engineer",
-    company: "Revature",
-    period: "Jan 2022 — Apr 2023",
+    year: "2023",
+    title: "Side quest: Flappy Bird AI",
+    org: "Self-directed",
+    type: "quest",
     points: [
-      "Enterprise-focused training program; placed at Cognizant Technology Solutions.",
-      "Contributed to 12+ full-stack projects in Java, Spring Boot, Angular, Node.js, and PostgreSQL within Agile teams — led a team of 5 developers inside a 15-person cross-functional group.",
-      "Implemented REST APIs, relational database schemas, and Angular frontend components across concurrent sprints, consistently meeting milestone deadlines.",
+      "Wrote a neural network from scratch in Java, no ML libraries.",
+      "Evolved it with a genetic algorithm until it beat the game.",
+    ],
+  },
+  {
+    year: "2023",
+    title: "Full-Stack Developer",
+    org: "Freelance",
+    type: "work",
+    points: [
+      "Architected and shipped full-stack apps for 5+ clients on GCP.",
+      "Docker-based CI/CD cut deployment cycles by 50%.",
+      "Built secure OAuth 2.0 / JWT flows and reusable component libraries.",
+    ],
+  },
+  {
+    year: "Now",
+    title: "Building a multiplayer cooking game",
+    org: "Solo, in Unity",
+    type: "quest",
+    points: [
+      "Designing gameplay systems in C#, modeling every asset in Blender.",
+      "Extending single-player systems to real-time multiplayer.",
     ],
   },
 ];
 
+/* ── Contact (quest board) ─────────────────────────────────── */
+
 export const contact = {
-  heading: "Let's build something together",
+  kicker: "New quest available",
+  heading: "Press start to co-op",
   blurb:
-    "I'm currently open to full-time roles, freelance projects, and interesting collaborations — web or games, in Riverside or fully remote. My inbox is always open, and I'll get back to you within a day or two.",
+    "I'm open to full-time roles, freelance work, and interesting collaborations, web or games, in Riverside or fully remote. Drop a line and I'll get back within a day or two.",
   note: "// usually responds within 48 hours",
+};
+
+/* ── Footer (terminal easter egg) ──────────────────────────── */
+
+export const terminal = {
+  command: "whoami --full",
+  output: [
+    "david guijosa · full-stack + game developer",
+    "location: riverside, ca · remote-friendly",
+    "status: open to work · press ↑ for more",
+  ],
+  hint: "type `help` and hit enter",
 };
