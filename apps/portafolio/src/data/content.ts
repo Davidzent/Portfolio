@@ -79,7 +79,7 @@ export const hero = {
 export const about = {
   class: "Full-Stack Dev  ·  Lv.1 Game Dev",
   /** Set to a real portrait path (e.g. "/portrait.jpg") to replace the placeholder. */
-  photo: "",
+  photo: "/portrait.webp",
   photoAlt: "David Guijosa",
   bio: [
     "I'm a full-stack engineer from Riverside, California. Day to day I work the whole stack: Angular and React on the front, Java / Spring Boot and Node services behind them, and the PostgreSQL, Docker, and CI/CD on Google Cloud that carry them to production.",

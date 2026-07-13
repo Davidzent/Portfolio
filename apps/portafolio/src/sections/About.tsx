@@ -32,7 +32,9 @@ export function About() {
                       decoding="async"
                       width={640}
                       height={800}
-                      className="h-full w-full object-cover opacity-90 grayscale contrast-[1.05]"
+                      // className="h-full w-full object-cover opacity-90 grayscale contrast-[1.05]"
+                      className="h-full w-full object-cover opacity-90"
+
                     />
                     <div className="absolute inset-0 bg-acid/20 mix-blend-color" aria-hidden="true" />
                   </>
