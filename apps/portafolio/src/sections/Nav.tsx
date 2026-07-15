@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { List, X, DownloadSimple } from "@phosphor-icons/react";
 import { nav, site } from "../data/content";
 import { ZntsnsLogo } from "../components/ZntsnsLogo";
+import { BrandLogo } from "../components/BrandLogo";
 import { MagneticButton } from "../components/MagneticButton";
 import { cn } from "../lib/cn";
 
@@ -49,7 +50,11 @@ export function Nav() {
     >
       <div className="mx-auto flex h-16 max-w-[1240px] items-center justify-between px-5 sm:px-8">
         <a href="#top" aria-label="zntsns home" onClick={() => setOpen(false)}>
+          <div className="mb-5 flex items-center gap-3">
+          <BrandLogo height={40}/>
           <ZntsnsLogo height={30} interactive />
+          </div>
+
         </a>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">

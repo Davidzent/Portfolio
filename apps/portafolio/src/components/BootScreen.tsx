@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ZntsnsLogo } from "./ZntsnsLogo";
+import { BrandLogo } from "./BrandLogo";
 
 /**
  * The site "boots up" once per session: black screen, the mark scramble-decodes
@@ -44,7 +44,7 @@ export function BootScreen() {
           aria-hidden="true"
         >
           <div className="flex flex-col items-center gap-5">
-            <ZntsnsLogo height={44} boot />
+              <BrandLogo height={44} boot />
             <div className="h-[3px] w-40 overflow-hidden rounded-full bg-panel-2">
               <motion.div
                 className="h-full origin-left bg-acid"

@@ -95,8 +95,9 @@ export function Hero() {
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-surface/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
             <span className="h-1.5 w-1.5 rounded-full bg-acid" /> dual-boot // one maker
           </div>
-          <div className="mb-5">
+          <div className="mb-5 flex items-center gap-3">
             <ZntsnsLogo height={40} boot />
+
           </div>
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-[3.65rem] lg:leading-[1.02]">
             <span className="block">

@@ -32,6 +32,7 @@ export function ZntsnsLogo({ height = 34, className, boot = false, interactive =
   const sns = useScramble("sns", boot ? play : false, 0.28);
   const RATIO = 176 / 40;
 
+
   return (
     <svg
       className={cn("zlogo", interactive && "zlogo-i", className)}
