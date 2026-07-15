@@ -14,6 +14,7 @@ import { ErrorBoundary } from "../components/ErrorBoundary";
 import { Scanlines } from "../components/fx";
 import { CodeEditor } from "./CodeEditor";
 import { cn } from "../lib/cn";
+import { BrandLogo } from "../components/BrandLogo";
 
 const EngineViewport = lazy(() => import("./EngineViewport"));
 
@@ -96,6 +97,7 @@ export function Hero() {
             <span className="h-1.5 w-1.5 rounded-full bg-acid" /> dual-boot // one maker
           </div>
           <div className="mb-5 flex items-center gap-3">
+            <BrandLogo height={40}/>
             <ZntsnsLogo height={40} boot />
 
           </div>

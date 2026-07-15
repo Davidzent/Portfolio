@@ -51,7 +51,7 @@ export function Nav() {
       <div className="mx-auto flex h-16 max-w-[1240px] items-center justify-between px-5 sm:px-8">
         <a href="#top" aria-label="zntsns home" onClick={() => setOpen(false)}>
           <div className="mb-5 flex items-center gap-3">
-          <BrandLogo height={40}/>
+          <BrandLogo height={30}/>
           <ZntsnsLogo height={30} interactive />
           </div>
 
