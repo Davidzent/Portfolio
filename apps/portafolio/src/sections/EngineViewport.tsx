@@ -37,14 +37,19 @@ function Object3D({ spin }: { spin: boolean }) {
   );
 }
 
+/** Dust positions are rolled once at module load, so render stays pure. */
+const DUST_POSITIONS = (() => {
+  const n = 90;
+  const pos = new Float32Array(n * 3);
+  for (let i = 0; i < n * 3; i++) pos[i] = (Math.random() - 0.5) * 11;
+  return pos;
+})();
+
 function Dust() {
   const ref = useRef<THREE.Points>(null);
   const geo = useMemo(() => {
-    const n = 90;
-    const pos = new Float32Array(n * 3);
-    for (let i = 0; i < n * 3; i++) pos[i] = (Math.random() - 0.5) * 11;
     const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    g.setAttribute("position", new THREE.BufferAttribute(DUST_POSITIONS, 3));
     return g;
   }, []);
   useFrame((_, dt) => {

@@ -7,7 +7,7 @@ import {
   useReducedMotion,
 } from "motion/react";
 import { ArrowRight, GameController, ArrowsHorizontal } from "@phosphor-icons/react";
-import { hero } from "../data/content";
+import { hero, site } from "../data/content";
 import { ZntsnsLogo } from "../components/ZntsnsLogo";
 import { MagneticButton } from "../components/MagneticButton";
 import { ErrorBoundary } from "../components/ErrorBoundary";
@@ -21,6 +21,7 @@ const EngineViewport = lazy(() => import("./EngineViewport"));
 export function Hero() {
   const reduce = useReducedMotion();
   const [wide, setWide] = useState(false);
+  const [inView, setInView] = useState(true);
   const machineRef = useRef<HTMLDivElement>(null);
   const split = useMotionValue(0.52);
   const dragging = useRef(false);
@@ -31,6 +32,18 @@ export function Hero() {
     on();
     mq.addEventListener("change", on);
     return () => mq.removeEventListener("change", on);
+  }, []);
+
+  // Stop the WebGL loop entirely while the machine is scrolled off-screen.
+  useEffect(() => {
+    const el = machineRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => setInView(entries.some((e) => e.isIntersecting)),
+      { threshold: 0 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   const rightInset = useTransform(split, (s) => `${(1 - s) * 100}%`);
@@ -67,7 +80,7 @@ export function Hero() {
             </div>
           }
         >
-          <EngineViewport spin={!reduce} />
+          <EngineViewport spin={!reduce && inView} />
         </ErrorBoundary>
       </Suspense>
       <span className="pointer-events-none absolute bottom-3 right-4 font-mono text-[10px] uppercase tracking-[0.2em] text-amber/60">
@@ -96,12 +109,14 @@ export function Hero() {
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-surface/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
             <span className="h-1.5 w-1.5 rounded-full bg-acid" /> dual-boot // one maker
           </div>
-          <div className="mb-5 flex items-center gap-3">
-            <BrandLogo height={40}/>
+          <div className="mb-4 flex items-center gap-3">
+            <BrandLogo height={40} />
             <ZntsnsLogo height={40} boot />
-
           </div>
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-[3.65rem] lg:leading-[1.02]">
+          <p className="mb-4 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+            {site.fullName}
+          </p>
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-[2.85rem] lg:leading-[1.04] xl:text-[3.5rem] xl:leading-[1.02]">
             <span className="block">
               Full-stack <span className="text-acid text-glow-acid">systems</span>,
             </span>

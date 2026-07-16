@@ -14,8 +14,9 @@ export function useScramble(target: string, play: boolean, speed = 0.5): string 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!play || reduce) {
-      setText(target);
-      return;
+      // Settle to the final value on the next frame (never sync inside the effect).
+      raf.current = requestAnimationFrame(() => setText(target));
+      return () => cancelAnimationFrame(raf.current);
     }
     let frame = 0;
     const n = target.length;

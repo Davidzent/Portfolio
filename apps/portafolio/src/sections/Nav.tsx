@@ -13,12 +13,17 @@ export function Nav() {
   const [active, setActive] = useState("");
   const [open, setOpen] = useState(false);
 
-  // Boolean-only scroll flag (threshold-guarded, not per-frame animation state).
+  // Nav background flag via a top-of-page sentinel (no scroll listener):
+  // when the sentinel leaves the viewport the page has scrolled.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const sentinel = document.getElementById("scroll-sentinel");
+    if (!sentinel) return;
+    const io = new IntersectionObserver(
+      (entries) => setScrolled(!entries.some((e) => e.isIntersecting)),
+      { threshold: 0 },
+    );
+    io.observe(sentinel);
+    return () => io.disconnect();
   }, []);
 
   // Active section via IntersectionObserver (no scroll math).
@@ -49,12 +54,14 @@ export function Nav() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-[1240px] items-center justify-between px-5 sm:px-8">
-        <a href="#top" aria-label="zntsns home" onClick={() => setOpen(false)}>
-          <div className="mb-5 flex items-center gap-3">
-          <BrandLogo height={30}/>
+        <a
+          href="#top"
+          aria-label="zntsns home"
+          onClick={() => setOpen(false)}
+          className="flex items-center gap-3"
+        >
+          <BrandLogo height={30} />
           <ZntsnsLogo height={30} interactive />
-          </div>
-
         </a>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">

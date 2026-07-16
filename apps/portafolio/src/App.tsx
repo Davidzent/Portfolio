@@ -23,6 +23,12 @@ export default function App() {
       >
         Skip to content
       </a>
+      {/* Sentinel for the nav's scrolled state (see Nav.tsx). */}
+      <div
+        id="scroll-sentinel"
+        className="pointer-events-none absolute left-0 top-4 h-px w-px"
+        aria-hidden="true"
+      />
       <Nav />
       <main>
         <Hero />

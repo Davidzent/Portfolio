@@ -21,11 +21,10 @@ export function ZntsnsLogo({ height = 34, className, boot = false, interactive =
   const [play, setPlay] = useState(false);
   useEffect(() => {
     // Kick the boot one frame after mount so the scramble is visible.
-    if (boot) {
-      const id = requestAnimationFrame(() => setPlay(true));
-      return () => cancelAnimationFrame(id);
-    }
-    setPlay(true);
+    // (`play` is only consumed while `boot` is set, so no else branch needed.)
+    if (!boot) return;
+    const id = requestAnimationFrame(() => setPlay(true));
+    return () => cancelAnimationFrame(id);
   }, [boot]);
 
   const znt = useScramble("znt", boot ? play : false, 0.28);

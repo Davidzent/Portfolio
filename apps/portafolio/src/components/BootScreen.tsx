@@ -10,18 +10,19 @@ import { BrandLogo } from "./BrandLogo";
  */
 export function BootScreen() {
   const reduce = useReducedMotion();
-  const [done, setDone] = useState(true);
+  // Boot only on the first visit of the session (and never under reduced motion);
+  // decided once at mount so the effect below never flips state synchronously.
+  const [done, setDone] = useState(() => {
+    if (reduce) return true;
+    try {
+      return sessionStorage.getItem("zntsns-booted") === "1";
+    } catch {
+      return false;
+    }
+  });
 
   useEffect(() => {
-    if (reduce) return;
-    let booted = false;
-    try {
-      booted = sessionStorage.getItem("zntsns-booted") === "1";
-    } catch {
-      booted = false;
-    }
-    if (booted) return;
-    setDone(false);
+    if (done) return;
     const t = setTimeout(() => {
       setDone(true);
       try {
@@ -29,9 +30,9 @@ export function BootScreen() {
       } catch {
         /* private mode: boot again next load, harmless */
       }
-    }, 1500);
+    }, 1000);
     return () => clearTimeout(t);
-  }, [reduce]);
+  }, [done]);
 
   return (
     <AnimatePresence>

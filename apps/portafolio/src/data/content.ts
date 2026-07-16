@@ -7,7 +7,7 @@
 
 export const site = {
   name: "David",
-  fullName: "David Guijosa",
+  fullName: "David Guijosa Infante",
   role: "Full-Stack Developer, leveling into Game Dev",
   domain: "zntsns.com",
   email: "davidgin641@gmail.com",
@@ -78,9 +78,15 @@ export const hero = {
 
 export const about = {
   class: "Full-Stack Dev  ·  Lv.1 Game Dev",
-  /** Set to a real portrait path (e.g. "/portrait.jpg") to replace the placeholder. */
-  photo: "/portrait.webp",
-  photoAlt: "David Guijosa",
+  /** Rotating portrait gallery. Each caption shows under its photo; edit freely. */
+  gallery: [
+    { src: "/travel/uyuni-1.webp", caption: "My travel to bolivia uyuni." },
+    { src: "/travel/uyuni-2.webp", caption: "My travel to bolivia uyuni." },
+    { src: "/travel/uyuni-3.webp", caption: "My travel to bolivia uyuni." },
+    { src: "/travel/uyuni-4.webp", caption: "My travel to bolivia uyuni." },
+    { src: "/travel/uyuni-5.webp", caption: "My travel to bolivia uyuni." },
+    { src: "/travel/uyuni-6.webp", caption: "My travel to bolivia uyuni." },
+  ],
   bio: [
     "I'm a full-stack engineer from Riverside, California. Day to day I work the whole stack: Angular and React on the front, Java / Spring Boot and Node services behind them, and the PostgreSQL, Docker, and CI/CD on Google Cloud that carry them to production.",
     "Off the clock I build games. I'm the sole developer of a multiplayer cooking game in Unity, designing the systems in C# and modeling the 3D assets in Blender myself. I also wrote a neural network from scratch in Java and evolved it until it out-flapped me at Flappy Bird.",

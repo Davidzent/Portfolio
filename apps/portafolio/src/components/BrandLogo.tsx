@@ -10,7 +10,7 @@ interface Props {
 export function BrandLogo({
   height = 34,
   className,
-  title = "BrandLogo",
+  title = "zntsns",
 }: Props) {
   const RATIO = 568 / 606;
 

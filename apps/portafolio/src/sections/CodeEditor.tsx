@@ -42,8 +42,9 @@ export function CodeEditor() {
 
   useEffect(() => {
     if (reduce) {
-      setLine(heroCode.length);
-      return;
+      // Show the finished file on the next frame (never sync inside the effect).
+      const id = requestAnimationFrame(() => setLine(heroCode.length));
+      return () => cancelAnimationFrame(id);
     }
     let l = 0;
     let c = 0;
