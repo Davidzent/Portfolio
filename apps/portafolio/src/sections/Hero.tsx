@@ -145,6 +145,7 @@ export function Hero() {
         <div className="w-full">
           <div
             ref={machineRef}
+            data-theme="dark"
             className={cn(
               "relative overflow-hidden rounded-xl border border-white/15 bg-void shadow-2xl",
               wide ? "h-[62vh] max-h-[560px]" : "grid h-[74vh] grid-rows-2",

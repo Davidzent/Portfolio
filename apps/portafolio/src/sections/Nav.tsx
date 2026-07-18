@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { List, X, DownloadSimple } from "@phosphor-icons/react";
+import { List, X, DownloadSimple, Sun, MoonStars } from "@phosphor-icons/react";
 import { nav, site } from "../data/content";
 import { ZntsnsLogo } from "../components/ZntsnsLogo";
 import { BrandLogo } from "../components/BrandLogo";
 import { MagneticButton } from "../components/MagneticButton";
+import { useTheme } from "../lib/useTheme";
 import { cn } from "../lib/cn";
 
 export function Nav() {
   const reduce = useReducedMotion();
+  const { theme, toggle } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
   const [open, setOpen] = useState(false);
@@ -64,45 +66,57 @@ export function Nav() {
           <ZntsnsLogo height={30} interactive />
         </a>
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
-          {nav.map((n) => (
-            <a
-              key={n.id}
-              href={`#${n.id}`}
-              aria-current={active === n.id ? "true" : undefined}
-              className={cn(
-                "relative px-3.5 py-2 font-mono text-[13px] uppercase tracking-wider transition-colors",
-                active === n.id ? "text-acid" : "text-muted hover:text-ink",
-              )}
+        <div className="flex items-center gap-2">
+          <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
+            {nav.map((n) => (
+              <a
+                key={n.id}
+                href={`#${n.id}`}
+                aria-current={active === n.id ? "true" : undefined}
+                className={cn(
+                  "relative px-3.5 py-2 font-mono text-[13px] uppercase tracking-wider transition-colors",
+                  active === n.id ? "text-acid" : "text-muted hover:text-ink",
+                )}
+              >
+                {active === n.id && (
+                  <span className="mr-1 text-acid" aria-hidden="true">
+                    &gt;
+                  </span>
+                )}
+                {n.label}
+              </a>
+            ))}
+            <MagneticButton
+              href={site.resumeUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mx-2 gap-2 rounded-md border border-acid/40 px-4 py-2 font-mono text-[13px] uppercase tracking-wider text-acid transition-colors hover:bg-acid hover:text-void"
             >
-              {active === n.id && (
-                <span className="mr-1 text-acid" aria-hidden="true">
-                  &gt;
-                </span>
-              )}
-              {n.label}
-            </a>
-          ))}
-          <MagneticButton
-            href={site.resumeUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="ml-2 gap-2 rounded-md border border-acid/40 px-4 py-2 font-mono text-[13px] uppercase tracking-wider text-acid transition-colors hover:bg-acid hover:text-void"
-          >
-            <DownloadSimple size={15} weight="bold" />
-            Resume
-          </MagneticButton>
-        </nav>
+              <DownloadSimple size={15} weight="bold" />
+              Resume
+            </MagneticButton>
+          </nav>
 
-        <button
-          type="button"
-          className="grid h-10 w-10 place-items-center rounded-md border border-white/10 text-ink md:hidden"
-          onClick={() => setOpen((o) => !o)}
-          aria-expanded={open}
-          aria-label={open ? "Close menu" : "Open menu"}
-        >
-          {open ? <X size={20} /> : <List size={20} />}
-        </button>
+          <button
+            type="button"
+            onClick={toggle}
+            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+            title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+            className="grid h-10 w-10 place-items-center rounded-md border border-white/10 text-muted transition-colors hover:border-acid/40 hover:text-acid"
+          >
+            {theme === "dark" ? <Sun size={18} /> : <MoonStars size={18} />}
+          </button>
+
+          <button
+            type="button"
+            className="grid h-10 w-10 place-items-center rounded-md border border-white/10 text-ink md:hidden"
+            onClick={() => setOpen((o) => !o)}
+            aria-expanded={open}
+            aria-label={open ? "Close menu" : "Open menu"}
+          >
+            {open ? <X size={20} /> : <List size={20} />}
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>

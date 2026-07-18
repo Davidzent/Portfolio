@@ -38,6 +38,7 @@ export function BootScreen() {
     <AnimatePresence>
       {!done && (
         <motion.div
+          data-theme="dark"
           className="fixed inset-0 z-[120] grid place-items-center bg-void"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}

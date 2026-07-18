@@ -6,6 +6,7 @@ import { SectionHeading } from "../components/SectionHeading";
 import { Reveal } from "../components/Reveal";
 import { TiltCard } from "../components/TiltCard";
 import { ProjectScene } from "../components/ProjectScene";
+import { ProjectModal } from "../components/ProjectModal";
 import { cn } from "../lib/cn";
 
 type Filter = "all" | ProjectType;
@@ -15,7 +16,7 @@ const FILTERS: { v: Filter; label: string }[] = [
   { v: "game", label: "Games" },
 ];
 
-function Card({ project }: { project: Project }) {
+function Card({ project, onOpen }: { project: Project; onOpen: (p: Project) => void }) {
   const [hover, setHover] = useState(false);
   const isGame = project.type === "game";
   return (
@@ -23,7 +24,18 @@ function Card({ project }: { project: Project }) {
       <article
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        className="group h-full overflow-hidden rounded-2xl border border-white/10 bg-surface transition-colors hover:border-acid/40"
+        onClick={() => onOpen(project)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onOpen(project);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-haspopup="dialog"
+        aria-label={`Open details for ${project.title}`}
+        className="group h-full cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-surface transition-colors hover:border-acid/40"
         style={{ transformStyle: "preserve-3d" }}
       >
         <div className="relative aspect-[16/10] overflow-hidden bg-void">
@@ -51,6 +63,9 @@ function Card({ project }: { project: Project }) {
           >
             <span className="text-faint">&gt; </span>
             {project.preview}
+            <span className="ml-1.5 inline-block animate-pulse text-acid" aria-hidden="true">
+              ▸
+            </span>
           </div>
         </div>
 
@@ -60,7 +75,8 @@ function Card({ project }: { project: Project }) {
               <h3 className="text-lg font-bold leading-tight">{project.title}</h3>
               <span className="font-mono text-xs text-muted">{project.short}</span>
             </div>
-            <div className="flex flex-none gap-1.5">
+            {/* Quick links act on their own; don't let them open the modal. */}
+            <div className="flex flex-none gap-1.5" onClick={(e) => e.stopPropagation()}>
               {project.links.github && (
                 <a
                   href={project.links.github}
@@ -100,6 +116,14 @@ function Card({ project }: { project: Project }) {
               </li>
             ))}
           </ul>
+
+          {/* Always-visible affordance: the whole card opens the briefing. */}
+          <div className="mt-4 flex items-center gap-1.5 border-t border-white/10 pt-3 font-mono text-[11px] uppercase tracking-[0.15em] text-faint transition-colors group-hover:text-acid">
+            open briefing
+            <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">
+              ▸
+            </span>
+          </div>
         </div>
       </article>
     </TiltCard>
@@ -108,6 +132,7 @@ function Card({ project }: { project: Project }) {
 
 export function Projects() {
   const [filter, setFilter] = useState<Filter>("all");
+  const [selected, setSelected] = useState<Project | null>(null);
   const visible = filter === "all" ? projects : projects.filter((p) => p.type === filter);
 
   return (
@@ -121,7 +146,7 @@ export function Projects() {
                 Things I&apos;ve <span className="text-acid">shipped</span>.
               </>
             }
-            sub="Production web platforms and games. Swap the loadout to filter."
+            sub="Production web platforms and games. Swap the loadout to filter; click a card for the full briefing."
           />
           <Reveal>
             <div className="inline-flex rounded-lg border border-white/10 bg-surface p-1 font-mono text-xs">
@@ -161,12 +186,14 @@ export function Projects() {
                 exit={{ opacity: 0, scale: 0.92 }}
                 transition={{ duration: 0.3, ease: [0.2, 0, 0, 1] }}
               >
-                <Card project={p} />
+                <Card project={p} onOpen={setSelected} />
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
       </div>
+
+      <ProjectModal project={selected} onClose={() => setSelected(null)} />
     </section>
   );
 }

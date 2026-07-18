@@ -100,7 +100,7 @@ export function Footer() {
   return (
     <footer ref={rootRef} id="footer" className="border-t border-white/10 bg-surface px-5 py-16 sm:px-8">
       <div className="mx-auto max-w-[1100px]">
-        <div className="overflow-hidden rounded-xl border border-white/10 bg-void">
+        <div data-theme="dark" className="overflow-hidden rounded-xl border border-white/10 bg-void">
           <div className="flex items-center gap-2 border-b border-white/10 bg-panel px-4 py-2.5">
             <span className="h-3 w-3 rounded-full bg-white/15" />
             <span className="h-3 w-3 rounded-full bg-white/15" />

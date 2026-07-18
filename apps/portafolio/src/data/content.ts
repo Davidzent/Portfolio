@@ -178,6 +178,11 @@ export interface Project {
   highlight?: string;
   tech: string[];
   links: { github?: string; demo?: string };
+  /** Expanded view (the briefing modal): what it does + how it works. */
+  details: {
+    what: string;
+    how: string[];
+  };
 }
 
 export const projects: Project[] = [
@@ -193,6 +198,16 @@ export const projects: Project[] = [
     highlight: "Live demo · order across the multiverse",
     tech: ["React", "TypeScript", "Node.js", "Express", "Vite", "Vitest", "SQLite"],
     links: { github: "https://github.com/Davidzent/Portal-Pantry", demo: "/portal-pantry/" },
+    details: {
+      what: "A food-delivery platform played completely straight, except the restaurants span the multiverse. Browse by dimension, build a cart from photo menus, and check out through a portal. It ships two full roles: customers order, track their history, and leave reviews; owners manage menus, work a live order queue, and get payouts computed for them.",
+      how: [
+        "React + TypeScript front end on Vite, with dimension filters and a live cart",
+        "Node + Express + SQLite REST API, or a zero-setup in-browser mock so the demo runs with no backend at all",
+        "Role-based flows: customer ordering, history, and reviews vs. owner menus and order-queue management",
+        "Order totals and owner payouts are computed server-side, never trusted from the client",
+        "Vitest suite covering cart math and API behavior",
+      ],
+    },
   },
   {
     id: "simmer",
@@ -206,6 +221,15 @@ export const projects: Project[] = [
     highlight: "Live demo · try it now",
     tech: ["React", "TypeScript", "REST APIs", "Vite"],
     links: { github: "https://github.com/Davidzent/Simmer", demo: "/simmer/" },
+    details: {
+      what: "A recipe finder for the nightly \"what do I cook\" problem. Search dishes by name, browse categories, hunt by the main ingredient you already have, or shuffle a random meal when you can't decide. Every recipe opens into a working cook view.",
+      how: [
+        "React + TypeScript on Vite, talking directly to TheMealDB REST API",
+        "Four ways in: name search, category browsing, ingredient hunt, and random shuffle",
+        "Check-off ingredient lists so you can tick items while you cook",
+        "Methods split into numbered step-by-step instructions",
+      ],
+    },
   },
   {
     id: "cooking",
@@ -219,6 +243,14 @@ export const projects: Project[] = [
     highlight: "In development · sole developer",
     tech: ["Unity", "C#", "Blender", "OOP architecture"],
     links: {},
+    details: {
+      what: "An Overcooked-inspired co-op cooking game: run a kitchen, combine ingredients into recipes, and serve orders before the timer eats you. Built entirely solo in Unity, meaning the code, the game design, and every 3D asset.",
+      how: [
+        "Clean C# architecture with recipe classification, player interactions, and NPC routing as separate, scalable systems",
+        "Every 3D asset modeled in Blender and brought into Unity by hand",
+        "Single-player systems currently being extended to real-time multiplayer",
+      ],
+    },
   },
   {
     id: "restaurant",
@@ -232,6 +264,14 @@ export const projects: Project[] = [
     highlight: "JUnit coverage · Postman-validated endpoints",
     tech: ["Angular", "TypeScript", "Spring Boot", "PostgreSQL", "REST APIs"],
     links: { github: "https://github.com/Davidzent/Restaurant_Store_Application" },
+    details: {
+      what: "A full-stack restaurant ordering platform: browse the menu, manage a cart, and check out. Deliberately the boring-reliable kind of system a real restaurant would actually run.",
+      how: [
+        "Angular + TypeScript front end over a Java Spring Boot REST API",
+        "PostgreSQL persistence behind Spring data access",
+        "JUnit tests on the API layer; every endpoint validated with Postman",
+      ],
+    },
   },
   {
     id: "neural",
@@ -245,6 +285,15 @@ export const projects: Project[] = [
     highlight: "Custom fitness function · real-time game-state pipeline",
     tech: ["Java", "Neural networks", "Genetic algorithms", "OOP"],
     links: { github: "https://github.com/Davidzent/Neural-Network" },
+    details: {
+      what: "A neural network that taught itself Flappy Bird. Written from scratch in Java with zero ML libraries, then evolved with a genetic algorithm until, hundreds of generations later, the agent flies better than I do.",
+      how: [
+        "Feedforward network implemented by hand: layers, weights, activations, forward pass",
+        "Genetic algorithm evolves the population through selection, crossover, and mutation",
+        "A custom fitness function scores each bird from a real-time game-state pipeline",
+        "The whole learning loop is hand-written Java, no frameworks anywhere",
+      ],
+    },
   },
   {
     id: "tetris",
@@ -258,6 +307,14 @@ export const projects: Project[] = [
     highlight: "A game and a full-stack app in one",
     tech: ["JavaScript", "HTML & CSS", "SQL", "Authentication"],
     links: { github: "https://github.com/Davidzent/Tetris" },
+    details: {
+      what: "Classic browser Tetris wrapped in a real full-stack app: make an account, log in, and fight for a spot on a persistent global leaderboard. A game on the surface, a complete auth system underneath.",
+      how: [
+        "Game loop, piece logic, and rendering written in vanilla JavaScript",
+        "SQL-backed user system with hashed credentials and session management",
+        "Global leaderboard persists across sessions, ranked per difficulty level",
+      ],
+    },
   },
 ];
 

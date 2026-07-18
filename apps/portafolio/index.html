@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -53,6 +53,26 @@
         ],
         "knowsAbout": ["React","Angular","TypeScript","Java","Spring Boot","Node.js","PostgreSQL","Google Cloud","Docker","CI/CD","Unity","C#","Blender"]
       }
+    </script>
+    <script>
+      // Apply the saved (or system) theme before first paint to avoid a flash.
+      // Dark is the brand default when the OS states no preference.
+      (function () {
+        var theme;
+        try {
+          theme = localStorage.getItem("theme");
+        } catch (e) {
+          theme = null;
+        }
+        if (theme !== "light" && theme !== "dark") {
+          theme = window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark";
+        }
+        document.documentElement.dataset.theme = theme;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute("content", theme === "light" ? "#f5f7f3" : "#07080a");
+      })();
     </script>
   </head>
   <body>

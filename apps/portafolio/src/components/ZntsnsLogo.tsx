@@ -49,10 +49,10 @@ export function ZntsnsLogo({ height = 34, className, boot = false, interactive =
         fontWeight="700"
         letterSpacing="0.5"
       >
-        <tspan fill="#59635c">[</tspan>
-        <tspan fill="#7dfc5a" dx="7">{boot ? znt : "znt"}</tspan>
-        <tspan fill="#ff9e2c">{boot ? sns : "sns"}</tspan>
-        <tspan fill="#59635c" dx="7">]</tspan>
+        <tspan fill="var(--color-faint)">[</tspan>
+        <tspan fill="var(--color-acid)" dx="7">{boot ? znt : "znt"}</tspan>
+        <tspan fill="var(--color-amber)">{boot ? sns : "sns"}</tspan>
+        <tspan fill="var(--color-faint)" dx="7">]</tspan>
       </text>
     </svg>
   );
