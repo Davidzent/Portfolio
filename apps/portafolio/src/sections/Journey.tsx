@@ -73,7 +73,7 @@ export function Journey() {
 
   return (
     <section id="journey" className="relative border-t border-white/5 bg-void">
-      <div className="mx-auto max-w-[1200px] px-5 pt-24 sm:px-8 lg:pt-32">
+      <div className="mx-auto max-w-[1200px] px-5 pt-16 sm:px-8 lg:pt-24">
         <SectionHeading
           cmd="cat journey.log"
           accent="amber"

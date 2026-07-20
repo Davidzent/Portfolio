@@ -6,7 +6,7 @@ import { PortraitCarousel } from "../components/PortraitCarousel";
 
 export function About() {
   return (
-    <section id="about" className="relative border-t border-white/5 px-5 py-24 sm:px-8 lg:py-32">
+    <section id="about" className="relative border-t border-white/5 px-5 py-16 sm:px-8 lg:py-24">
       <div className="mx-auto max-w-[1140px]">
         <SectionHeading
           cmd="cat ./player.card"
@@ -18,7 +18,7 @@ export function About() {
           sub="Full-stack engineer by trade, game developer by obsession."
         />
 
-        <div className="mt-12 grid gap-8 lg:mt-16 lg:grid-cols-[360px_1fr] lg:gap-14">
+        <div className="mt-10 grid gap-8 lg:mt-12 lg:grid-cols-[360px_1fr] lg:gap-12">
           {/* Player card */}
           <Reveal className="lg:sticky lg:top-24 lg:self-start">
             <div className="overflow-hidden rounded-2xl border border-white/12 bg-surface">

@@ -24,7 +24,7 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="relative border-t border-white/5 px-5 py-24 sm:px-8 lg:py-32">
+    <section id="contact" className="relative border-t border-white/5 px-5 py-16 sm:px-8 lg:py-24">
       <div className="mx-auto max-w-[860px]">
         <Reveal>
           <div className="relative overflow-hidden rounded-3xl border border-acid/20 bg-surface p-8 text-center sm:p-12">

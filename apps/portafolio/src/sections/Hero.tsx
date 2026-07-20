@@ -103,7 +103,7 @@ export function Hero() {
         />
       </div>
 
-      <div className="relative mx-auto grid min-h-[100dvh] max-w-[1240px] items-center gap-10 px-5 pb-16 pt-28 sm:px-8 lg:grid-cols-[minmax(0,43%)_1fr] lg:gap-12 lg:pt-24">
+      <div className="relative mx-auto grid min-h-[100dvh] max-w-[1240px] items-center gap-8 px-5 pb-12 pt-24 sm:px-8 lg:grid-cols-[minmax(0,43%)_1fr] lg:gap-10 lg:pt-20">
         {/* Copy */}
         <div className="max-w-xl">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-surface/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
@@ -116,7 +116,7 @@ export function Hero() {
           <p className="mb-4 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
             {site.fullName}
           </p>
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-[2.85rem] lg:leading-[1.04] xl:text-[3.5rem] xl:leading-[1.02]">
+          <h1 className="text-[2rem] font-bold tracking-tight sm:text-[2.5rem] lg:text-[2.5rem] lg:leading-[1.05] xl:text-[2.9rem] xl:leading-[1.03]">
             <span className="block">
               Full-stack <span className="text-acid text-glow-acid">systems</span>,
             </span>

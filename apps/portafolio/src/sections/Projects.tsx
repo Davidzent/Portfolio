@@ -136,7 +136,7 @@ export function Projects() {
   const visible = filter === "all" ? projects : projects.filter((p) => p.type === filter);
 
   return (
-    <section id="projects" className="border-t border-white/5 px-5 py-24 sm:px-8 lg:py-32">
+    <section id="projects" className="border-t border-white/5 px-5 py-16 sm:px-8 lg:py-24">
       <div className="mx-auto max-w-[1200px]">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <SectionHeading

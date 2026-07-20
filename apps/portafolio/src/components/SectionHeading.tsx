@@ -20,7 +20,7 @@ export function SectionHeading({ cmd, title, sub, accent = "acid", center }: Pro
         <span className={accent === "amber" ? "text-amber" : "text-acid"}>{cmd}</span>
         <span className="caret ml-0.5 align-middle text-faint" />
       </span>
-      <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl lg:text-[2.7rem]">
+      <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
         {title}
       </h2>
       {sub && <p className="mt-3 max-w-2xl font-mono text-sm text-muted">{sub}</p>}
