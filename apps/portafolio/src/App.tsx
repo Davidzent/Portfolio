@@ -1,6 +1,7 @@
 import { useLenis } from "./lib/useLenis";
 import { Grain } from "./components/fx";
 import { BootScreen } from "./components/BootScreen";
+import { SpriteBuddy } from "./components/SpriteBuddy";
 import { Nav } from "./sections/Nav";
 import { Hero } from "./sections/Hero";
 import { About } from "./sections/About";
@@ -16,6 +17,7 @@ export default function App() {
   return (
     <>
       <BootScreen />
+      <SpriteBuddy />
       <Grain />
       <a
         href="#top"

@@ -6,15 +6,23 @@ type Line = { kind: "in" | "out" | "sys"; text: string };
 
 const PROMPT = "visitor@zntsns:~$";
 
-function run(raw: string): { lines: Line[]; clear?: boolean; open?: string } {
+function run(raw: string): { lines: Line[]; clear?: boolean; open?: string; respawn?: boolean } {
   const cmd = raw.trim().toLowerCase();
   if (!cmd) return { lines: [] };
   if (cmd === "clear") return { lines: [], clear: true };
   if (cmd === "help")
     return {
       lines: [
-        { kind: "out", text: "commands: whoami · skills · projects · social · resume · github · clear" },
+        { kind: "out", text: "commands: whoami · skills · projects · social · resume · github · knight · clear" },
       ],
+    };
+  if (cmd === "knight")
+    return {
+      lines: [
+        { kind: "out", text: "reviving guardian... hp restored." },
+        { kind: "out", text: "the knight respawns at the bottom of the page. ⚔" },
+      ],
+      respawn: true,
     };
   if (cmd === "whoami" || cmd === "whoami --full")
     return { lines: terminal.output.map((t) => ({ kind: "out", text: t })) };
@@ -93,6 +101,7 @@ export function Footer() {
     const entry: Line = { kind: "in", text: value };
     const res = run(value);
     if (res.open) window.open(res.open, "_blank", "noopener");
+    if (res.respawn) window.dispatchEvent(new CustomEvent("buddy:respawn"));
     setHistory((h) => (res.clear ? [] : [...h, entry, ...res.lines]));
     setValue("");
   };

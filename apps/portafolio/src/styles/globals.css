@@ -172,6 +172,17 @@
 [data-theme="light"] .text-glow-amber { text-shadow: none; }
 [data-theme="light"] .box-glow-acid { box-shadow: 0 0 0 1px rgba(23, 120, 7, 0.3); }
 
+/* Sprite-sheet frame animation (the page guardian). Frames advance by shifting
+   the background; --sheet-shift is the scaled full-sheet width, set per element. */
+.buddy-sprite {
+  image-rendering: pixelated;
+  background-repeat: no-repeat;
+}
+@keyframes sprite-run {
+  from { background-position: 0 0; }
+  to { background-position: var(--sheet-shift, -128px) 0; }
+}
+
 @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 .caret {
   display: inline-block;
