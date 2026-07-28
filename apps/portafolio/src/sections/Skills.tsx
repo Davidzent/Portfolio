@@ -8,7 +8,7 @@ import { cn } from "../lib/cn";
 const BRANCH_ICON = { fullstack: Code, gamedev: GameController } as const;
 
 function dotClass(state: SkillState) {
-  if (state === "core") return "bg-acid shadow-[0_0_10px_rgba(125,252,90,0.7)]";
+  if (state === "core") return "bg-acid shadow-[var(--glow-acid-sm)]";
   if (state === "strong") return "border-2 border-acid bg-void";
   return "border-2 border-dashed border-amber/60 bg-void";
 }

@@ -12,7 +12,7 @@ export function StatBar({ label, value }: { label: string; value: number }) {
       <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-panel-2">
         <motion.div
           className="h-full origin-left rounded-full bg-acid"
-          style={{ boxShadow: "0 0 12px rgba(125,252,90,0.5)" }}
+          style={{ boxShadow: "var(--glow-acid)" }}
           initial={reduce ? { scaleX: value / 100 } : { scaleX: 0 }}
           whileInView={{ scaleX: value / 100 }}
           viewport={{ once: true, amount: 0.8 }}

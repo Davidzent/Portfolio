@@ -94,11 +94,11 @@ export function Hero() {
       <div className="grid-lines pointer-events-none absolute inset-0 opacity-60" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <motion.div
-          className="absolute -left-40 top-1/3 h-96 w-96 rounded-full bg-acid blur-[130px]"
+          className="absolute -left-40 top-1/3 h-96 w-96 rounded-full bg-[var(--orb-acid)] blur-[130px]"
           style={{ opacity: reduce ? 0.16 : acidGlow }}
         />
         <motion.div
-          className="absolute -right-32 top-1/4 h-96 w-96 rounded-full bg-amber blur-[130px]"
+          className="absolute -right-32 top-1/4 h-96 w-96 rounded-full bg-[var(--orb-amber)] blur-[130px]"
           style={{ opacity: reduce ? 0.16 : amberGlow }}
         />
       </div>
