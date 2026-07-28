@@ -113,9 +113,14 @@ export function Hero() {
             <BrandLogo height={40} />
             <ZntsnsLogo height={40} boot />
           </div>
-          <p className="mb-4 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
-            {site.fullName}
-          </p>
+          <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <p className="text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+              {site.fullName}
+            </p>
+            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-acid">
+              {site.experience}
+            </span>
+          </div>
           <h1 className="text-[2rem] font-bold tracking-tight sm:text-[2.5rem] lg:text-[2.5rem] lg:leading-[1.05] xl:text-[2.9rem] xl:leading-[1.03]">
             <span className="block">
               Full-stack <span className="text-acid text-glow-acid">systems</span>,

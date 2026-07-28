@@ -30,7 +30,7 @@ export function BootScreen() {
       } catch {
         /* private mode: boot again next load, harmless */
       }
-    }, 1000);
+    }, 500);
     return () => clearTimeout(t);
   }, [done]);
 
@@ -42,7 +42,7 @@ export function BootScreen() {
           className="fixed inset-0 z-[120] grid place-items-center bg-void"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: [0.2, 0, 0, 1] }}
+          transition={{ duration: 0.3, ease: [0.2, 0, 0, 1] }}
           aria-hidden="true"
         >
           <div className="flex flex-col items-center gap-5">
@@ -52,7 +52,7 @@ export function BootScreen() {
                 className="h-full origin-left bg-acid"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
-                transition={{ duration: 1.25, ease: [0.2, 0, 0, 1] }}
+                transition={{ duration: 0.5, ease: [0.2, 0, 0, 1] }}
               />
             </div>
             <span className="font-mono text-[11px] tracking-[0.3em] text-faint uppercase">

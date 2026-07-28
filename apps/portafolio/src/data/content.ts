@@ -9,6 +9,7 @@ export const site = {
   name: "David",
   fullName: "David Guijosa Infante",
   role: "Full-Stack Developer, leveling into Game Dev",
+  experience: "3+ yrs experience",
   domain: "zntsns.com",
   email: "davidgin641@gmail.com",
   location: "Riverside, CA",
@@ -47,13 +48,30 @@ export type TokenKind =
 export type CodeLine = { indent?: number; tokens: [string, TokenKind][] };
 
 /** Left side of the hero: a live-typing editor. Fake syntax highlighting is
- *  driven by these token kinds. It reads as real TypeScript about David. */
+ *  driven by these token kinds. It reads as real TypeScript about David.
+ *
+ *  This is the only place a recruiter sees actual shipped work above the fold,
+ *  so `shipped` sits right under the bio rather than at the bottom. Three
+ *  constraints:
+ *  - Keep the project names near the top. Lines type out in document order,
+ *    and the point is that they land inside a 10-second scan (~4.5s here).
+ *  - Keep new lines under ~37 chars. At the default seam (52%) the editor is
+ *    clipped at x≈920 and anything longer gets cut mid-token. (The two legacy
+ *    `build()` lines below run past it and always have.)
+ *  - 19 lines is the ceiling. The editor clips at ~19 rows on a 720px-tall
+ *    viewport; adding more silently drops whatever sits at the bottom. */
 export const heroCode: CodeLine[] = [
   { tokens: [["const", "kw"], [" david", "var"], [" = ", "punct"], ["{", "punct"]] },
   { indent: 1, tokens: [["role", "plain"], [": ", "punct"], ['"full-stack dev"', "str"], [",", "punct"]] },
   { indent: 1, tokens: [["stack", "plain"], [": ", "punct"], ["[", "punct"], ['"React"', "str"], [", ", "punct"], ['"Node"', "str"], [", ", "punct"], ['"Spring"', "str"], ["]", "punct"], [",", "punct"]] },
   { indent: 1, tokens: [["nowPlaying", "plain"], [": ", "punct"], ['"Unity + C#"', "str"], [",", "punct"]] },
   { tokens: [["}", "punct"]] },
+  { tokens: [["", "plain"]] },
+  { tokens: [["const", "kw"], [" shipped", "var"], [" = ", "punct"], ["[", "punct"]] },
+  { indent: 1, tokens: [['"Portal Pantry"', "str"], [",", "punct"], ["   ", "punct"], ["// live demo", "com"]] },
+  { indent: 1, tokens: [['"Simmer"', "str"], [",", "punct"], ["          ", "punct"], ["// live demo", "com"]] },
+  { indent: 1, tokens: [['"Restaurant"', "str"], [",", "punct"], ["      ", "punct"], ["// Spring API", "com"]] },
+  { tokens: [["]", "punct"], [";", "punct"]] },
   { tokens: [["", "plain"]] },
   { tokens: [["function", "kw"], [" build", "fn"], ["(", "punct"], ["idea", "var"], [": ", "punct"], ["Idea", "type"], ["): ", "punct"], ["Shipped", "type"], [" {", "punct"]] },
   { indent: 1, tokens: [["const", "kw"], [" api", "var"], [" = ", "punct"], ["secure", "fn"], ["(", "punct"], ["idea", "var"], [")", "punct"], [";", "punct"], ["   // OAuth2 · JWT", "com"]] },

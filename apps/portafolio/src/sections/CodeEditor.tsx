@@ -33,7 +33,16 @@ function sliceTokens(tokens: Tok[], count: number): Tok[] {
   return out;
 }
 
-/** The IDE side of the hero: types `dev.ts` out token by token, loops. */
+/** The IDE side of the hero: types `dev.ts` out token by token, once.
+ *
+ *  It does not loop. The finished file is the point — `shipped` is the only
+ *  proof of real work above the fold, so once it is on screen it stays there
+ *  instead of erasing itself.
+ *
+ *  Speed is a constraint, not a decoration: the project names have to finish
+ *  typing inside a ~10s first-impression scan. At ~24ms/char the last name
+ *  lands around 7.1s and the whole file around 13.2s. Slowing much past
+ *  ~30ms/char pushes the third project name outside the scan window. */
 export function CodeEditor() {
   const reduce = useReducedMotion();
   const [line, setLine] = useState(0);
@@ -52,31 +61,23 @@ export function CodeEditor() {
     const step = () => {
       if (!live) return;
       const cur = heroCode[l];
-      if (!cur) {
-        timer.current = window.setTimeout(() => {
-          l = 0;
-          c = 0;
-          setLine(0);
-          setCh(0);
-          timer.current = window.setTimeout(step, 140);
-        }, 2600);
-        return;
-      }
+      // Past the last line: stop and leave the completed file on screen.
+      if (!cur) return;
       const len = lineLen(cur.tokens);
       if (c < len) {
         c += 1;
         setLine(l);
         setCh(c);
-        timer.current = window.setTimeout(step, 18 + Math.random() * 40);
+        timer.current = window.setTimeout(step, 14 + Math.random() * 20);
       } else {
         l += 1;
         c = 0;
         setLine(l);
         setCh(0);
-        timer.current = window.setTimeout(step, len ? 250 : 80);
+        timer.current = window.setTimeout(step, len ? 180 : 90);
       }
     };
-    timer.current = window.setTimeout(step, 500);
+    timer.current = window.setTimeout(step, 350);
     return () => {
       live = false;
       window.clearTimeout(timer.current);
@@ -84,7 +85,7 @@ export function CodeEditor() {
   }, [reduce]);
 
   return (
-    <div className="flex h-full flex-col bg-void font-mono text-[12.5px] leading-[1.7] sm:text-[13.5px]">
+    <div className="flex h-full flex-col bg-void font-mono text-[12.5px] leading-[1.4] sm:text-[13.5px]">
       <div className="flex items-center gap-2 border-b border-white/10 bg-panel px-4 py-2.5">
         <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
         <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
@@ -96,9 +97,11 @@ export function CodeEditor() {
           const isPast = reduce || i < line;
           const isCur = !reduce && i === line;
           const toks: Tok[] = isPast ? ln.tokens : isCur ? sliceTokens(ln.tokens, ch) : [];
-          const last = reduce && i === heroCode.length - 1;
+          // Typing has run past the end (or was skipped): rest the caret on the
+          // last line so the finished file still reads as a live editor.
+          const last = line >= heroCode.length && i === heroCode.length - 1;
           return (
-            <div key={i} className="flex min-h-[1.5em]">
+            <div key={i} className="flex min-h-[1.4em]">
               <span className="w-7 flex-none select-none pr-3 text-right text-faint/60">
                 {i + 1}
               </span>
