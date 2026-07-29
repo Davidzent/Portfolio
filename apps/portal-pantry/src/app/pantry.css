@@ -1,0 +1,22 @@
+/* ==========================================================================
+   Portal Pantry
+
+   Rebuilt from tokens. The first-pass stylesheet is archived at
+   /oldstyles/portal-pantry/src/app/pantry.css and is reference only — nothing
+   here imports from it.
+
+   Order matters: tokens define the vocabulary, everything after it consumes.
+   ========================================================================== */
+
+@import "./styles/tokens.css";
+@import "./styles/ink.css"; /* generated — scripts/build-ink.mjs */
+@import "./styles/fonts.css";
+@import "./styles/base.css";
+@import "./styles/primitives.css";
+@import "./styles/portal.css";
+@import "./styles/storefront.css";
+@import "./styles/menu.css";
+@import "./styles/auth.css";
+@import "./styles/orders.css";
+@import "./styles/dashboard.css";
+@import "./styles/overlays.css";
