@@ -266,7 +266,7 @@ export default function App() {
 
       <main className="sm-shell sm-main">
         <section className="sm-hero">
-          <p className="sm-kicker">🍳 Hundreds of free recipes</p>
+          <p className="sm-kicker">Hundreds of free recipes</p>
           <h1 className="sm-h1">Find your next favorite meal.</h1>
           <p className="sm-sub">
             Search by name, browse categories, hunt by ingredient — or let the
