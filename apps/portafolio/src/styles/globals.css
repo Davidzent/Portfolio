@@ -260,7 +260,7 @@ html.lenis, html.lenis body { height: auto; }
 .ps-svg { display: block; width: 100%; height: 100%; }
 .ps-pulse, .ps-parcel, .ps-tw, .ps-spin, .ps-spin-r, .ps-spin-f,
 .ps-steam, .ps-bub, .ps-flame, .ps-bounce, .ps-hat, .ps-ticket,
-.ps-check, .ps-edge, .ps-node, .ps-fall {
+.ps-check, .ps-edge, .ps-node, .ps-fall, .ps-chev, .ps-stow, .ps-beam {
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -290,6 +290,19 @@ html.lenis, html.lenis body { height: auto; }
 @keyframes ps-bounce { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-15px); } }
 .ps-hat { animation: ps-bob 3s ease-in-out infinite; }
 @keyframes ps-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+/* Warehouse receiving */
+.ps-chev { animation: ps-chev 1.8s ease-in-out infinite; }
+@keyframes ps-chev { 0%, 100% { opacity: 0.12; transform: translateX(-3px); } 50% { opacity: 0.9; transform: translateX(3px); } }
+.ps-stow { animation: ps-stow 5s cubic-bezier(0.22, 0.61, 0.36, 1) infinite; }
+@keyframes ps-stow {
+  0% { transform: translate(-88px, 50px); opacity: 0; }
+  10% { opacity: 1; }
+  44%, 82% { transform: translate(0, 0); opacity: 1; }
+  100% { transform: translate(0, 0); opacity: 0; }
+}
+.ps-beam { animation: ps-beam 5s ease-in-out infinite; }
+@keyframes ps-beam { 0%, 100% { transform: translateX(0); opacity: 0; } 12% { opacity: 0.75; } 52% { transform: translateX(128px); opacity: 0.75; } 64% { opacity: 0; } }
 
 /* Restaurant */
 .ps-ticket { animation: ps-ticket 4.5s ease-in-out infinite; }

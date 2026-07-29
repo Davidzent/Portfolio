@@ -96,6 +96,45 @@ function Cooking(): ReactElement {
   );
 }
 
+/** Warehouse — pallet racking with an inbound crate stowing into the open slot. */
+function Warehouse(): ReactElement {
+  const s = { fill: "none", stroke: ACID, strokeWidth: 3, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  /** Settled stock: [x, y, fill]. The top shelf keeps a slot open for the inbound crate. */
+  const stock: [number, number, string][] = [
+    [99, 56, ACID_DIM], [131, 56, AMBER_DIM],
+    [99, 96, ACID_DIM], [131, 96, AMBER_DIM], [163, 96, ACID_DIM],
+    [99, 136, AMBER_DIM], [131, 136, ACID_DIM], [163, 136, AMBER_DIM], [195, 136, ACID_DIM],
+  ];
+  return (
+    <Frame glow="#0d1c22">
+      {/* inbound flow, pointing at the dock side of the rack */}
+      <g fill="none" stroke={AMBER} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+        <path className="ps-chev" d="M40 112l10 10-10 10" />
+        <path className="ps-chev ps-d1" d="M56 112l10 10-10 10" />
+        <path className="ps-chev ps-d2" d="M72 112l10 10-10 10" />
+      </g>
+      {/* racking */}
+      <g {...s}>
+        <path d="M96 42v120M224 42v120" />
+        <path d="M92 82h136M92 122h136M92 162h136" />
+      </g>
+      {stock.map(([x, y, c], i) => (
+        <g key={i} stroke={c}>
+          <rect x={x} y={y} width="28" height="26" rx="2" fill={c} fillOpacity="0.16" strokeWidth="2" />
+          <path d={`M${x} ${y + 9}h28`} strokeWidth="1.6" strokeOpacity="0.5" />
+        </g>
+      ))}
+      {/* the received crate, resting in its slot so it reads when frozen */}
+      <g className="ps-stow">
+        <rect x="163" y="56" width="28" height="26" rx="2" fill="#0a1114" stroke={AMBER} strokeWidth="2.6" />
+        <path d="M177 56v26M163 65h28" stroke={AMBER} strokeWidth="1.6" />
+      </g>
+      {/* scanner sweep (hidden at rest) */}
+      <rect className="ps-beam" x="95" y="44" width="2.4" height="116" fill={ACID} opacity="0" />
+    </Frame>
+  );
+}
+
 /** Restaurant — a plated place setting with an order ticket printing above. */
 function Restaurant(): ReactElement {
   const s = { fill: "none", stroke: ACID, strokeWidth: 3, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -188,6 +227,7 @@ const SCENES: Record<MarkId, () => ReactElement> = {
   portal: Portal,
   simmer: Simmer,
   cooking: Cooking,
+  warehouse: Warehouse,
   restaurant: Restaurant,
   neural: Neural,
   tetris: Tetris,

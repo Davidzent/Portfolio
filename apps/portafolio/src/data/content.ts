@@ -180,6 +180,7 @@ export type MarkId =
   | "portal"
   | "simmer"
   | "cooking"
+  | "warehouse"
   | "restaurant"
   | "neural"
   | "tetris";
@@ -267,6 +268,30 @@ export const projects: Project[] = [
         "Clean C# architecture with recipe classification, player interactions, and NPC routing as separate, scalable systems",
         "Every 3D asset modeled in Blender and brought into Unity by hand",
         "Single-player systems currently being extended to real-time multiplayer",
+      ],
+    },
+  },
+  {
+    id: "warehouse",
+    title: "Warehouse Receiving API",
+    short: "Receiving & inventory",
+    type: "web",
+    mark: "warehouse",
+    preview: "Partial deliveries, over-shipments, damaged pallets. No happy path.",
+    description:
+      "A Spring Boot REST API for the moment a delivery hits the dock: clerks record what physically arrived against a purchase order, and only then does stock become pickable. Built around the awkward cases, partial deliveries, 110%-capped over-shipments, damaged units, and two clerks receiving the same PO at once.",
+    highlight: "Concurrency-safe receipts · RFC 7807 errors",
+    tech: ["Java 17", "Spring Boot", "MyBatis", "PostgreSQL", "JWT auth", "JUnit 5"],
+    links: { github: "https://github.com/Davidzent/Warehouse" },
+    details: {
+      what: "The receiving dock, modeled properly. A delivery arrives against a purchase order, a clerk records what actually showed up, and stock only becomes available to pick once it's booked in. The interesting part is everything that isn't the happy path: shipments that arrive in pieces over several trips, suppliers that send too much, pallets that arrive crushed, and two clerks working the same PO at the same time.",
+      how: [
+        "Java 17 + Spring Boot over MyBatis and PostgreSQL in four layers: controllers validate, services own the domain rules, mappers hold the SQL",
+        "Cumulative receipts capped at 110% of the ordered quantity, enforced in the service and again by database constraints, with pessimistic locking so concurrent clerks can't race past the ceiling",
+        "Damaged units count toward received totals but never reach sellable inventory",
+        "JWT auth with method-level WAREHOUSE_CLERK / VIEWER roles; clerk identity comes from the verified token, never the request body",
+        "One exception handler turns every domain error into an RFC 7807 ProblemDetail, so no controller decides a status code",
+        "JUnit 5 + Mockito unit tests plus integration tests against an in-process PostgreSQL, so the real SQL gets exercised",
       ],
     },
   },

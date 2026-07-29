@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUp } from "@phosphor-icons/react";
-import { site, terminal } from "../data/content";
+import { projects, site, terminal } from "../data/content";
 
 type Line = { kind: "in" | "out" | "sys"; text: string };
 
@@ -34,7 +34,11 @@ function run(raw: string): { lines: Line[]; clear?: boolean; open?: string; resp
       ],
     };
   if (cmd === "projects")
-    return { lines: [{ kind: "out", text: "6 shipped. scroll up to the level select, or run `github`." }] };
+    return {
+      lines: [
+        { kind: "out", text: `${projects.length} shipped. scroll up to the level select, or run \`github\`.` },
+      ],
+    };
   if (cmd === "social")
     return {
       lines: [

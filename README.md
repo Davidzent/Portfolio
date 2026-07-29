@@ -43,7 +43,6 @@ The result is one deploy, one domain, and no coupling between apps — you can w
 | **Portfolio** | [`apps/portafolio`](apps/portafolio) | `/` | `5173` | The main portfolio site — animated hero, project showcase, 3D scene, and an in-page code editor / terminal. |
 | **Portal Pantry** | [`apps/portal-pantry`](apps/portal-pantry) | `/portal-pantry/` | `5175` | A food-delivery front end with a fully mocked in-browser backend: two account roles, session auth, an owner analytics dashboard, reviews, and image uploads. |
 | **Simmer** | [`apps/simmer`](apps/simmer) | `/simmer/` | `5174` | A recipe finder built on the free [TheMealDB](https://www.themealdb.com) API — search by name, category, or ingredient, or shuffle. |
-| **Aniversario** | [`apps/aniversario`](apps/aniversario) | `/aniversario` | — | A single hand-written HTML page. Its "build" copies the file into `dist/`. |
 
 Each app has its own README with screenshots and detail.
 
