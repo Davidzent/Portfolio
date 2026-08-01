@@ -9,7 +9,7 @@
 [![TheMealDB](https://img.shields.io/badge/API-TheMealDB-c9502e)](https://www.themealdb.com/api.php)
 
 A live demo by [David Guijosa](https://www.zntsns.com) · part of the
-[portfolio](./README.md) · served at `/simmer/`
+[portfolio](./README.md) · served at `/recipes/`
 
 </div>
 
@@ -59,7 +59,7 @@ It's part of the portfolio monorepo:
 ```bash
 npm install
 npm run dev
-# then open http://localhost:5173/simmer/
+# then open http://localhost:5173/recipes/
 ```
 
 ## Credits
