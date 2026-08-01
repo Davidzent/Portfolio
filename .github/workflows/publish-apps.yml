@@ -43,9 +43,6 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-          # Otherwise checkout writes the GITHUB_TOKEN into an http.extraheader
-          # that overrides the PAT in our push URL, and the push goes out as
-          # github-actions[bot] — which has no access to the mirror repos.
           persist-credentials: false
 
       - name: Split and publish apps/${{ matrix.app }}
