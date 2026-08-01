@@ -1,0 +1,81 @@
+name: Publish apps to their own repos
+
+# This mirrors each apps/<name>/ 
+# The mirrors are READ-ONLY.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/simmer/**"
+      - "apps/portal-pantry/**"
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "Publish only this app (blank = all)"
+        required: false
+        default: ""
+      dry_run:
+        description: "Dry run: check access and report, push nothing"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-apps
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: simmer
+            repo: Davidzent/simmer
+          - app: portal-pantry
+            repo: Davidzent/Portal-Pantry
+
+    steps:
+      - name: Check out full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Split and publish apps/${{ matrix.app }}
+        env:
+          APP: ${{ matrix.app }}
+          REPO: ${{ matrix.repo }}
+          TOKEN: ${{ secrets.APP_SYNC_TOKEN }}
+          ONLY: ${{ inputs.app }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+
+          if [ -n "$ONLY" ] && [ "$ONLY" != "$APP" ]; then
+            echo "Manual run targets '$ONLY' — skipping $APP."
+            exit 0
+          fi
+
+          if [ -z "$TOKEN" ]; then
+            echo "::error::APP_SYNC_TOKEN is not set. Add a fine-grained PAT with Contents: Read and write on $REPO."
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Rewrite apps/$APP/ history so the app sits at the repo root.
+          git subtree split --prefix="apps/$APP" -b "split-$APP"
+
+          REMOTE="https://x-access-token:$TOKEN@github.com/$REPO.git"
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "Dry run — checking access to $REPO, writing nothing."
+            git push --dry-run --force "$REMOTE" "split-$APP:main"
+          else
+            git push --force "$REMOTE" "split-$APP:main"
+            echo "Published apps/$APP -> https://github.com/$REPO"
+          fi
