@@ -7,7 +7,7 @@ on:
     branches: [main]
     paths:
       - "apps/simmer/**"
-      - "apps/portal-pantry/**"
+      
   workflow_dispatch:
     inputs:
       app:
@@ -35,8 +35,8 @@ jobs:
         include:
           - app: simmer
             repo: Davidzent/Simmer
-          - app: portal-pantry
-            repo: Davidzent/Portal-Pantry
+          # portal-pantry is deliberately NOT mirrored. Davidzent/Portal-Pantry
+          # holds 28 commits of its own history;
 
     steps:
       - name: Check out full history
