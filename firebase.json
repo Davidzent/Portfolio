@@ -15,6 +15,10 @@
         "destination": "/portal-pantry/index.html"
       },
       {
+        "source": "/warehouse/**",
+        "destination": "/warehouse/index.html"
+      },
+      {
         "source": "/aniversario",
         "destination": "/aniversario/index.html"
       },
