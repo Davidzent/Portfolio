@@ -120,39 +120,44 @@ Owner-uploaded images are resized & re-encoded to WebP **in the browser**
 
 ## Run it
 
-**Option A — zero setup (in-browser mock).** No backend, no config; state lives
-in `localStorage`.
+This app is part of a pnpm workspace — install once at the repo root.
 
 ```bash
-cd portal-pantry
-npm install
-npm run dev
-# then open http://localhost:5173/portal-pantry/
+pnpm install
 ```
 
-**Option B — with the real backend.** Run the API (needs **Node ≥ 22.5** for
-`node:sqlite`), then point the frontend at it.
+**Option A — zero setup (in-browser mock).** No backend, no config; state lives
+in `localStorage`. This is what the deployed demo runs.
 
 ```bash
-# 1) start the API — seeds a SQLite DB on first boot, listens on :4000
-cd portal-pantry-back
-npm install
-npm run dev
+pnpm --filter portal-pantry dev
+```
 
-# 2) in another shell, point the frontend at it and run it
-cd portal-pantry
-npm install
-# uncomment VITE_API_URL in .env.local (or create the file):
-#   VITE_API_URL=http://localhost:4000
-npm run dev
+Then open <http://localhost:5175/portal-pantry/> (override the port with `PORT`).
+
+**Option B — with the real backend.** The API lives in its own repository
+(`portal-pantry-back`), not in this workspace. Clone it alongside this one and
+run it first — it needs **Node ≥ 22.5** for `node:sqlite`.
+
+```bash
+# 1) in the backend checkout — seeds a SQLite DB on first boot, listens on :4000
+npm install && npm run dev
+```
+
+Then create `apps/portal-pantry/.env.local` pointing at it:
+
+```bash
+VITE_API_URL=http://localhost:4000
+```
+
+```bash
+pnpm --filter portal-pantry dev
 ```
 
 Delete `.env.local` (or unset `VITE_API_URL`) to fall back to the mock. Backend
-config — port, DB path, CORS origins, session TTL — is documented in
-`portal-pantry-back/.env.example`.
-
-The backend ships a **Vitest** suite (auth, catalog, orders, and the owner API);
-run it with `npm test` from `portal-pantry-back`.
+config — port, DB path, CORS origins, session TTL — is documented in that
+repository's `.env.example`, and it ships a **Vitest** suite (auth, catalog,
+orders, and the owner API).
 
 **Try the owner side:** sign in as `owner@neutrino.pp` (any 4+ char password),
 or register a new owner account to create your own kitchen from scratch.

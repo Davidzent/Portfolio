@@ -9,9 +9,16 @@
 [![TheMealDB](https://img.shields.io/badge/API-TheMealDB-c9502e)](https://www.themealdb.com/api.php)
 
 A live demo by [David Guijosa](https://www.zntsns.com) · part of the
-[portfolio](./README.md) · served at `/recipes/`
+[portfolio monorepo](https://github.com/Davidzent/ZNTSNS) · served at `/simmer/`
 
 </div>
+
+> **This repository is a read-only mirror.** Simmer is developed in the
+> [ZNTSNS monorepo](https://github.com/Davidzent/ZNTSNS/tree/main/apps/simmer) and
+> published here automatically on every change. It shares that workspace's ESLint
+> and TypeScript configs and builds into its shared `dist/`, so it is not set up to
+> install or build on its own — clone the monorepo to run it. Open issues and pull
+> requests there.
 
 ![Simmer home](./docs/home.jpg)
 
@@ -54,13 +61,18 @@ hundreds of dishes, browse by category or ingredient, or let the pot decide.
 
 ## Run it
 
-It's part of the portfolio monorepo:
+It's part of the portfolio monorepo, so install once at the repo root and run it
+from there:
 
 ```bash
-npm install
-npm run dev
-# then open http://localhost:5173/recipes/
+pnpm install
 ```
+
+```bash
+pnpm --filter simmer dev
+```
+
+Then open <http://localhost:5174/simmer/> (override the port with `PORT`).
 
 ## Credits
 
