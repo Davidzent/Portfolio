@@ -1,6 +1,5 @@
 name: Deploy to Firebase Hosting (live)
 
-# Auto-deploy the whole monorepo to the live site on every push to main.
 on:
   push:
     branches: [main]
@@ -28,6 +27,9 @@ jobs:
 
       - name: Build all apps into dist/
         run: pnpm build
+        env:
+
+          VITE_API_BASE_URL: ${{ vars.WAREHOUSE_API_URL }}
 
       - name: Deploy to Firebase Hosting (live channel)
         uses: FirebaseExtended/action-hosting-deploy@v0

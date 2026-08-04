@@ -1,7 +1,5 @@
 name: Publish apps to their own repos
 
-# This mirrors each apps/<name>/ 
-# The mirrors are READ-ONLY.
 on:
   push:
     branches: [main]
@@ -35,8 +33,6 @@ jobs:
         include:
           - app: simmer
             repo: Davidzent/Simmer
-          # portal-pantry is deliberately NOT mirrored. Davidzent/Portal-Pantry
-          # holds 28 commits of its own history;
 
     steps:
       - name: Check out full history
