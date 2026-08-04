@@ -467,7 +467,12 @@ export default function App() {
       </footer>
 
       {modalOpen && (
-        <MealModal meal={modalMeal} loading={modalLoading} onClose={closeModal} />
+        <MealModal
+          key={modalMeal?.idMeal}
+          meal={modalMeal}
+          loading={modalLoading}
+          onClose={closeModal}
+        />
       )}
     </div>
   );

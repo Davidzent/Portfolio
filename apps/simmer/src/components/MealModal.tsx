@@ -18,12 +18,9 @@ function cleanStep(step: string): string {
 
 export default function MealModal({ meal, loading, onClose }: MealModalProps) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  // Fresh shopping list for every recipe — the caller keys this component on
+  // the meal id, so a new recipe mounts a new component rather than resetting.
   const [checked, setChecked] = useState<ReadonlySet<number>>(new Set());
-
-  // Fresh shopping list for every recipe.
-  useEffect(() => {
-    setChecked(new Set());
-  }, [meal?.idMeal]);
 
   useEffect(() => {
     closeRef.current?.focus();

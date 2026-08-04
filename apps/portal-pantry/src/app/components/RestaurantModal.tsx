@@ -170,9 +170,22 @@ export default function RestaurantModal({
     }
   }, [restaurant.id]);
 
+  // Initial load. Guarded so a slow response can't land after the modal has
+  // moved on to another restaurant.
   useEffect(() => {
-    void loadReviews();
-  }, [loadReviews]);
+    let active = true;
+    void (async () => {
+      try {
+        const next = await getRestaurantReviews(restaurant.id);
+        if (active) setReviews(next);
+      } catch {
+        if (active) setReviews([]);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [restaurant.id]);
 
   const qtyOf = (item: MenuItem) =>
     cart.find((e) => e.key === `${restaurant.id}:${item.id}`)?.qty ?? 0;

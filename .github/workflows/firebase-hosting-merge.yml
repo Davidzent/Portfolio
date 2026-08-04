@@ -7,11 +7,17 @@ on:
 permissions:
   contents: read
 
+# One live deploy at a time. Without this, two quick pushes can finish out of
+# order and leave the older build serving.
+concurrency:
+  group: firebase-hosting-live
+  cancel-in-progress: false
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4 # version comes from package.json "packageManager"
@@ -25,10 +31,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Lint
+        run: pnpm lint
+
       - name: Build all apps into dist/
         run: pnpm build
         env:
-
           VITE_API_BASE_URL: ${{ vars.WAREHOUSE_API_URL }}
 
       - name: Deploy to Firebase Hosting (live channel)

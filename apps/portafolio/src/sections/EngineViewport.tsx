@@ -1,13 +1,14 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
-import * as THREE from "three";
+import { BufferAttribute, BufferGeometry } from "three";
+import type { Mesh, Points } from "three";
 
 /** Two counter-rotating wireframe solids (amber engine shell, acid core) with
  *  drifting dust. Unlit basic materials, so it renders identically regardless
  *  of three's lighting model and stays cheap on low-end GPUs. */
 function Object3D({ spin }: { spin: boolean }) {
-  const outer = useRef<THREE.Mesh>(null);
-  const inner = useRef<THREE.Mesh>(null);
+  const outer = useRef<Mesh>(null);
+  const inner = useRef<Mesh>(null);
   useFrame((_, dt) => {
     if (!spin) return;
     if (outer.current) {
@@ -46,10 +47,10 @@ const DUST_POSITIONS = (() => {
 })();
 
 function Dust() {
-  const ref = useRef<THREE.Points>(null);
+  const ref = useRef<Points>(null);
   const geo = useMemo(() => {
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(DUST_POSITIONS, 3));
+    const g = new BufferGeometry();
+    g.setAttribute("position", new BufferAttribute(DUST_POSITIONS, 3));
     return g;
   }, []);
   useFrame((_, dt) => {
