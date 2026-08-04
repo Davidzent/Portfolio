@@ -282,7 +282,7 @@ export const projects: Project[] = [
       "A Spring Boot REST API for the moment a delivery hits the dock: clerks record what physically arrived against a purchase order, and only then does stock become pickable. Built around the awkward cases, partial deliveries, 110%-capped over-shipments, damaged units, and two clerks receiving the same PO at once.",
     highlight: "Concurrency-safe receipts · RFC 7807 errors",
     tech: ["Java 17", "Spring Boot", "MyBatis", "PostgreSQL", "JWT auth", "JUnit 5"],
-    links: { github: "https://github.com/Davidzent/Warehouse" },
+    links: { github: "https://github.com/Davidzent/Warehouse-API" },
     details: {
       what: "The receiving dock, modeled properly. A delivery arrives against a purchase order, a clerk records what actually showed up, and stock only becomes available to pick once it's booked in. The interesting part is everything that isn't the happy path: shipments that arrive in pieces over several trips, suppliers that send too much, pallets that arrive crushed, and two clerks working the same PO at the same time.",
       how: [
