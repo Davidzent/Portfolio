@@ -2,9 +2,8 @@ packages:
   - "apps/*"
   - "packages/*"
 
-# One version per dependency, workspace-wide. Apps reference these with
-# `catalog:` instead of their own range, so bumping a shared tool is a one-line
-# change here rather than four package.json edits that drift out of sync.
+# One version per dependency, workspace-wide. Apps reference these as
+# `catalog:` so a bump is one edit here instead of four that drift apart.
 catalog:
   "@eslint/js": ^10.0.1
   "@types/node": ^24.13.3

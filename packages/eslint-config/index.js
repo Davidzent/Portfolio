@@ -19,9 +19,8 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-      // `const { secret: _secret, ...dto } = row` is how these apps strip a
-      // field before returning it. Without these patterns the idiom reads as
-      // dead code and the rule fires on correct source.
+      // These apps strip fields with `const { secret: _secret, ...dto } = row`,
+      // which the default settings flag as dead code.
       '@typescript-eslint/no-unused-vars': [
         'error',
         {

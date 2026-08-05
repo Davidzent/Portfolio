@@ -149,14 +149,15 @@
 
 /* ── Decorative effects ──────────────────────────────────────── */
 
-/* Fine film grain, fixed full-screen overlay (pointer-events off). */
+/* Fine film grain, fixed full-screen overlay (pointer-events off).
+   No mix-blend-mode: on a fixed full-viewport layer it makes Firefox
+   re-composite every scroll frame. Straight alpha looks the same here. */
 .fx-grain {
   position: fixed;
   inset: 0;
   z-index: 90;
   pointer-events: none;
-  opacity: 0.045;
-  mix-blend-mode: overlay;
+  opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -188,10 +189,9 @@
     linear-gradient(to bottom, rgba(20, 30, 18, 0.05) 1px, transparent 1px);
 }
 
-/* Dark grain on paper instead of light grain on void. */
+/* Paper needs slightly more than void to read as grain. */
 [data-theme="light"] .fx-grain {
-  mix-blend-mode: multiply;
-  opacity: 0.05;
+  opacity: 0.06;
 }
 
 [data-theme="light"] ::selection {
@@ -257,6 +257,16 @@ html.lenis, html.lenis body { height: auto; }
 
 /* Project scene animations (the animated logos in the level select). */
 .ps { overflow: hidden; }
+
+/* Off-screen scenes stop moving (toggled from ProjectScene.tsx).
+   `!important` beats the `animation` shorthands below, which reset play-state.
+   Skipped under reduced motion, where pausing would freeze the 0% keyframe. */
+@media (prefers-reduced-motion: no-preference) {
+  .ps-idle,
+  .ps-idle * {
+    animation-play-state: paused !important;
+  }
+}
 .ps-svg { display: block; width: 100%; height: 100%; }
 .ps-pulse, .ps-parcel, .ps-tw, .ps-spin, .ps-spin-r, .ps-spin-f,
 .ps-steam, .ps-bub, .ps-flame, .ps-bounce, .ps-hat, .ps-ticket,

@@ -372,11 +372,8 @@ function seed(): Database {
 
 let cache: Database | null = null;
 
-/**
- * localStorage throws in Safari private mode and once the quota is full.
- * Persistence here is a convenience — `cache` is the authority for the current
- * session — so a failed write is dropped rather than propagated.
- */
+/** localStorage throws in private mode and at quota. `cache` is the authority
+ *  for the session, so a failed write is dropped rather than propagated. */
 function bestEffort(write: () => void): void {
   try {
     write();

@@ -2,10 +2,8 @@ import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "./gsap";
 
 /**
- * Everything smooth scrolling needs: Lenis, GSAP's ticker driving it, and
- * ScrollTrigger listening for position updates. Split into its own module so
- * the ~140 kB of scroll machinery loads after first paint instead of blocking
- * the hero — none of it matters until the visitor scrolls.
+ * Lenis plus the GSAP ticker driving it and ScrollTrigger listening. Its own
+ * module so ~140 kB loads after first paint rather than blocking the hero.
  */
 export function startSmoothScroll(): { lenis: Lenis; stop: () => void } {
   const lenis = new Lenis({

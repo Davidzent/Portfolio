@@ -51,7 +51,7 @@ export function Nav() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
         scrolled || open
-          ? "border-b border-white/10 bg-void/80 backdrop-blur-xl"
+          ? "border-b border-white/10 bg-void/90 backdrop-blur-sm"
           : "border-b border-transparent",
       )}
     >
@@ -122,7 +122,7 @@ export function Nav() {
       <AnimatePresence>
         {open && (
           <motion.nav
-            className="border-t border-white/10 bg-void/95 px-5 pb-6 pt-2 backdrop-blur-xl md:hidden"
+            className="border-t border-white/10 bg-void/97 px-5 pb-6 pt-2 md:hidden"
             initial={reduce ? false : { opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, height: 0 }}

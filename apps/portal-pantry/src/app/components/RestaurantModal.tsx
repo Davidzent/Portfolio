@@ -170,8 +170,7 @@ export default function RestaurantModal({
     }
   }, [restaurant.id]);
 
-  // Initial load. Guarded so a slow response can't land after the modal has
-  // moved on to another restaurant.
+  // Initial load, guarded so a slow response can't land on another restaurant.
   useEffect(() => {
     let active = true;
     void (async () => {
