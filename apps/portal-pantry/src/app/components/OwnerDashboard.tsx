@@ -131,10 +131,8 @@ function DishEditor({
   const [flash, setFlash] = useState(false);
   const [error, setError] = useState("");
 
-  // Adopt the saved values again once a reload lands, discarding edits that the
-  // save already absorbed. Done during render so the row never shows one frame
-  // of stale input; `flash` and `error` survive because they describe the save,
-  // not the item.
+  // Re-adopt saved values after a reload. During render, not in an effect, so
+  // the row never paints stale input; `flash` and `error` survive deliberately.
   const [synced, setSynced] = useState(item);
   if (
     synced.name !== item.name ||
@@ -517,8 +515,7 @@ function DishesTab({
   const [flash, setFlash] = useState(false);
   const [error, setError] = useState("");
 
-  // Same re-sync as the menu rows above: adopt saved values after a reload,
-  // during render rather than in an effect.
+  // Same re-sync as the menu rows above.
   const [synced, setSynced] = useState(store);
   if (
     synced.name !== store.name ||
@@ -1133,9 +1130,8 @@ export default function OwnerDashboard({
     setReviews(await getOwnerReviews());
   }, []);
 
-  // Initial load. Each panel applies as soon as its own request lands, so one
-  // slow section doesn't hold up the rest; `active` stops a late response from
-  // populating a dashboard the owner has already navigated away from.
+  // Initial load. Each panel applies as its own request lands; `active` drops
+  // responses that arrive after unmount.
   useEffect(() => {
     let active = true;
     Promise.all([

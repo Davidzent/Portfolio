@@ -1,7 +1,6 @@
 /**
- * There is no bundler here — the page is a single self-contained HTML file.
- * "Building" it means dropping it into the shared dist/ under the name Firebase
- * serves as the directory index.
+ * No bundler — the page is one self-contained HTML file. Building it means
+ * copying it into the shared dist/ as the directory index.
  */
 import { copyFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";

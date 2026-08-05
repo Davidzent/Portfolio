@@ -11,9 +11,8 @@ import { Projects } from "./sections/Projects";
 import { Contact } from "./sections/Contact";
 import { Footer } from "./sections/Footer";
 
-// The only section that pulls ScrollTrigger. Loading it lazily keeps GSAP out
-// of the entry chunk entirely — it now shares a chunk with the Lenis runtime,
-// fetched once, after the hero has painted.
+// The only section pulling ScrollTrigger; lazy so GSAP stays out of the entry
+// chunk, sharing one with the Lenis runtime.
 const Journey = lazy(() =>
   import("./sections/Journey").then((m) => ({ default: m.Journey })),
 );
@@ -45,8 +44,7 @@ export default function App() {
         <About />
         <Skills />
         <Projects />
-        {/* Placeholder holds the anchor and roughly the section's height so the
-            nav link works and nothing below it jumps when the chunk lands. */}
+        {/* Placeholder keeps the nav anchor and reserves height against jump. */}
         <Suspense
           fallback={
             <section

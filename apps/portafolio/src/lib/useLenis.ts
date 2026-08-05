@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import type Lenis from "lenis";
 
-/** Module-level handle so overlays (e.g. the project modal) can pause
- *  smooth scrolling. Null under reduced motion, where Lenis never runs, and
- *  briefly on load before the runtime below arrives. */
+/** Module-level handle so overlays (e.g. the project modal) can pause smooth
+ *  scrolling. Null under reduced motion, and briefly before the chunk lands. */
 let instance: Lenis | null = null;
 
 export function getLenis(): Lenis | null {
@@ -12,11 +11,8 @@ export function getLenis(): Lenis | null {
 
 /**
  * Smooth scroll via Lenis, driven off GSAP's ticker so ScrollTrigger stays in
- * sync (no `window.onscroll` anywhere). Disabled entirely under reduced motion,
- * where the browser's native scroll is exactly what the user asked for.
- *
- * The runtime is fetched dynamically: nothing about it is visible until the
- * page scrolls, so making the hero wait on it buys nothing.
+ * sync. Disabled under reduced motion. The runtime is imported dynamically —
+ * none of it matters until the page scrolls.
  */
 export function useLenis() {
   useEffect(() => {
@@ -26,7 +22,7 @@ export function useLenis() {
     let stop: (() => void) | undefined;
 
     void import("./smoothScroll").then(({ startSmoothScroll }) => {
-      // Unmounted before the chunk landed — starting now would leak a ticker.
+      // Unmounted before the chunk landed; starting now would leak a ticker.
       if (cancelled) return;
       const started = startSmoothScroll();
       instance = started.lenis;

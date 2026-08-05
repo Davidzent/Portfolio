@@ -7,8 +7,7 @@ on:
 permissions:
   contents: read
 
-# One live deploy at a time. Without this, two quick pushes can finish out of
-# order and leave the older build serving.
+# One live deploy at a time, so two quick pushes can't finish out of order.
 concurrency:
   group: firebase-hosting-live
   cancel-in-progress: false

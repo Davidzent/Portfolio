@@ -1,5 +1,6 @@
-import type { ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement } from "react";
 import type { MarkId } from "../data/content";
+import { cn } from "../lib/cn";
 
 /**
  * Full-bleed animated "logo" scene per project, in the dual-boot palette
@@ -235,8 +236,25 @@ const SCENES: Record<MarkId, () => ReactElement> = {
 
 export function ProjectScene({ id }: { id: MarkId }) {
   const Scene = SCENES[id];
+  const ref = useRef<HTMLDivElement>(null);
+  const [onScreen, setOnScreen] = useState(false);
+
+  // Keyframes run off-screen too, and Firefox rasterises animated SVG on the
+  // main thread Lenis scrolls from — ~33 elements across the grid. Not
+  // `content-visibility`: TiltCard's preserve-3d context disables it.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setOnScreen(entry.isIntersecting),
+      { rootMargin: "200px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <div className="ps absolute inset-0">
+    <div ref={ref} className={cn("ps absolute inset-0", !onScreen && "ps-idle")}>
       <Scene />
     </div>
   );
