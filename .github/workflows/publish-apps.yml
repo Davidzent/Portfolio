@@ -5,7 +5,8 @@ on:
     branches: [main]
     paths:
       - "apps/simmer/**"
-      
+      - "apps/warehouse/**"
+
   workflow_dispatch:
     inputs:
       app:
@@ -33,6 +34,8 @@ jobs:
         include:
           - app: simmer
             repo: Davidzent/Simmer
+          - app: warehouse
+            repo: Davidzent/Warehouse-UI
 
     steps:
       - name: Check out full history
