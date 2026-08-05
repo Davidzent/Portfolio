@@ -27,12 +27,14 @@ export const tokenStore = {
     try {
       localStorage.setItem(TOKEN_KEY, token);
     } catch {
+      /* Private mode or quota exhausted — the session stays in memory only. */
     }
   },
   clear(): void {
     try {
       localStorage.removeItem(TOKEN_KEY);
     } catch {
+      /* Nothing to clear if the write never landed. */
     }
   },
 };

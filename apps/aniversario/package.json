@@ -2,7 +2,8 @@
   "name": "aniversario",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "build": "node -e \"const fs=require('node:fs');fs.mkdirSync('../../dist/aniversario',{recursive:true});fs.copyFileSync('aniversario.html','../../dist/aniversario/index.html')\""
+    "build": "node build.mjs"
   }
 }

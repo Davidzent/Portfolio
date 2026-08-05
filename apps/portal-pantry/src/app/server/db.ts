@@ -372,6 +372,19 @@ function seed(): Database {
 
 let cache: Database | null = null;
 
+/**
+ * localStorage throws in Safari private mode and once the quota is full.
+ * Persistence here is a convenience — `cache` is the authority for the current
+ * session — so a failed write is dropped rather than propagated.
+ */
+function bestEffort(write: () => void): void {
+  try {
+    write();
+  } catch {
+    /* Storage unavailable; the in-memory cache carries the session. */
+  }
+}
+
 export function getDb(): Database {
   if (cache) return cache;
   try {
@@ -381,24 +394,18 @@ export function getDb(): Database {
       return cache;
     }
   } catch {
+    /* Unreadable or corrupt payload — fall through and reseed. */
   }
   cache = seed();
-  for (const key of LEGACY_KEYS) {
-    try {
-      localStorage.removeItem(key);
-    } catch {
-    }
-  }
+  for (const key of LEGACY_KEYS) bestEffort(() => localStorage.removeItem(key));
   persist();
   return cache;
 }
 
 export function persist(): void {
-  if (!cache) return;
-  try {
-    localStorage.setItem(DB_KEY, JSON.stringify(cache));
-  } catch {
-  }
+  const snapshot = cache;
+  if (!snapshot) return;
+  bestEffort(() => localStorage.setItem(DB_KEY, JSON.stringify(snapshot)));
 }
 
 export function createRestaurant(

@@ -131,12 +131,23 @@ function DishEditor({
   const [flash, setFlash] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  // Adopt the saved values again once a reload lands, discarding edits that the
+  // save already absorbed. Done during render so the row never shows one frame
+  // of stale input; `flash` and `error` survive because they describe the save,
+  // not the item.
+  const [synced, setSynced] = useState(item);
+  if (
+    synced.name !== item.name ||
+    synced.desc !== item.desc ||
+    synced.price !== item.price ||
+    synced.prepMinutes !== item.prepMinutes
+  ) {
+    setSynced(item);
     setName(item.name);
     setDesc(item.desc);
     setPrice(String(item.price));
     setPrep(String(item.prepMinutes ?? 10));
-  }, [item.name, item.desc, item.price, item.prepMinutes]);
+  }
 
   const dirty =
     name !== item.name ||
@@ -506,12 +517,21 @@ function DishesTab({
   const [flash, setFlash] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  // Same re-sync as the menu rows above: adopt saved values after a reload,
+  // during render rather than in an effect.
+  const [synced, setSynced] = useState(store);
+  if (
+    synced.name !== store.name ||
+    synced.tagline !== store.tagline ||
+    synced.category !== store.category ||
+    synced.dimension !== store.dimension
+  ) {
+    setSynced(store);
     setName(store.name);
     setTagline(store.tagline);
     setCategory(store.category);
     setDimension(store.dimension);
-  }, [store.name, store.tagline, store.category, store.dimension]);
+  }
 
   const dirty =
     name !== store.name ||
@@ -1113,16 +1133,36 @@ export default function OwnerDashboard({
     setReviews(await getOwnerReviews());
   }, []);
 
+  // Initial load. Each panel applies as soon as its own request lands, so one
+  // slow section doesn't hold up the rest; `active` stops a late response from
+  // populating a dashboard the owner has already navigated away from.
   useEffect(() => {
-    Promise.all([loadStore(), loadOrders(), loadFinance(), loadReviews()]).catch(
-      (err) =>
-        setError(
-          err instanceof ApiError
-            ? err.message
-            : "Your kitchen's records are unreachable. Nothing has been lost.",
-        ),
-    );
-  }, [loadStore, loadOrders, loadFinance, loadReviews]);
+    let active = true;
+    Promise.all([
+      getOwnerRestaurant().then((v) => {
+        if (active) setStore(v);
+      }),
+      getOwnerOrders().then((v) => {
+        if (active) setOrders(v);
+      }),
+      getFinance().then((v) => {
+        if (active) setFinance(v);
+      }),
+      getOwnerReviews().then((v) => {
+        if (active) setReviews(v);
+      }),
+    ]).catch((err) => {
+      if (!active) return;
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Your kitchen's records are unreachable. Nothing has been lost.",
+      );
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const afterMenuChange = useCallback(async () => {
     await loadStore();

@@ -4,12 +4,17 @@
   "description": "",
   "private": true,
   "packageManager": "pnpm@11.10.0",
+  "engines": {
+    "node": ">=24",
+    "pnpm": ">=11"
+  },
   "scripts": {
-    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "clean": "node --input-type=module -e \"import{rmSync}from'node:fs';rmSync('dist',{recursive:true,force:true})\"",
     "build": "pnpm clean && pnpm -r build",
     "dev": "pnpm -r dev",
-    "deploy": "pnpm build && firebase deploy",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "pnpm -r --if-present lint",
+    "test": "pnpm -r --if-present test",
+    "deploy:hosting": "pnpm build && firebase deploy --only hosting"
   },
   "repository": {
     "type": "git",
@@ -18,7 +23,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/Davidzent/ZNTSNS/issues"
   },

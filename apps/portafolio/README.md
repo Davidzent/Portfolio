@@ -135,22 +135,22 @@ pnpm install
 Then, from the repo root:
 
 ```bash
-pnpm --filter portfolio dev
+pnpm --filter portafolio dev
 ```
 
 The dev server runs at <http://localhost:5173> (override with `PORT`). Other useful
 commands:
 
 ```bash
-pnpm --filter portfolio build
+pnpm --filter portafolio build
 ```
 
 ```bash
-pnpm --filter portfolio lint
+pnpm --filter portafolio lint
 ```
 
 ```bash
-pnpm --filter portfolio preview
+pnpm --filter portafolio preview
 ```
 
 `build` runs `tsc -b` before Vite, so type errors fail the build. Lint must stay clean —
@@ -173,12 +173,6 @@ the portfolio and linked directly from their project cards:
 |---|---|---|
 | **Portal Pantry** — food delivery across the multiverse, two roles, live cart, portal checkout | `/portal-pantry/` | [`apps/portal-pantry`](../portal-pantry) |
 | **Simmer** — a recipe finder on TheMealDB: search by name, category, or ingredient | `/simmer/` | [`apps/simmer`](../simmer) |
-
-## `old-style/`
-
-The previous design (the "Two Worlds" amber system, replaced by this one in July 2026) is
-archived verbatim in [`old-style/`](old-style/README.md). Nothing in it is imported or
-built — it's kept as a reference only.
 
 ---
 

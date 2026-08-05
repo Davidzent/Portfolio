@@ -41,19 +41,22 @@ The result is one deploy, one domain, and no coupling between apps — you can w
 | App | Path | Served at | Dev port | What it is |
 |---|---|---|---|---|
 | **Portfolio** | [`apps/portafolio`](apps/portafolio) | `/` | `5173` | The main portfolio site — animated hero, project showcase, 3D scene, and an in-page code editor / terminal. |
-| **Portal Pantry** | [`apps/portal-pantry`](apps/portal-pantry) | `/portal-pantry/` | `5175` | A food-delivery front end with a fully mocked in-browser backend: two account roles, session auth, an owner analytics dashboard, reviews, and image uploads. |
 | **Simmer** | [`apps/simmer`](apps/simmer) | `/simmer/` | `5174` | A recipe finder built on the free [TheMealDB](https://www.themealdb.com) API — search by name, category, or ingredient, or shuffle. |
+| **Portal Pantry** | [`apps/portal-pantry`](apps/portal-pantry) | `/portal-pantry/` | `5175` | A food-delivery front end with a fully mocked in-browser backend: two account roles, session auth, an owner analytics dashboard, reviews, and image uploads. |
+| **Warehouse** | [`apps/warehouse`](apps/warehouse) | `/warehouse/` | `5176` | Inbound receiving against a real HTTP API — the only app that talks to a live backend. See [Configuration](#configuration). |
+| **Aniversario** | [`apps/aniversario`](apps/aniversario) | `/aniversario/` | — | A single self-contained HTML page. Its "build" copies the file into `dist/`; there is no bundler and no dev server. |
 
-Each app has its own README with screenshots and detail.
+Each app except Aniversario has its own README with screenshots and detail.
 
 ## Features
 
 - **Independent apps, one deploy** — every app builds into a subfolder of the shared root `dist/`; Firebase rewrites route each to its own `index.html`.
 - **Parallel-build safe** — `emptyOutDir` is off in every app; the root `clean` script clears `dist/` exactly once so parallel `pnpm -r build` runs can't wipe each other's output.
-- **Strict TypeScript everywhere** — `tsc -b` project references run before every production build, so type errors fail the build.
-- **Continuous deployment** — pushes to `main` deploy to the live channel; pull requests get their own Firebase preview channel.
-- **Long-lived asset caching** — hashed `js`/`css`/`woff2`/`webp` are served `immutable` for a year, HTML `no-cache`.
-- **No app-level lockfiles** — a single `pnpm-lock.yaml` at the root keeps shared dependency versions aligned.
+- **Strict TypeScript everywhere** — `strict` lives in [`packages/tsconfig`](packages/tsconfig) and every app extends it. `tsc -b` project references run before every production build, so type errors fail the build.
+- **One ESLint config, one dependency version** — apps extend [`packages/eslint-config`](packages/eslint-config), and shared dependency versions come from the `catalog:` in [`pnpm-workspace.yaml`](pnpm-workspace.yaml) so no two apps can drift onto different versions of Vite or React.
+- **Continuous deployment** — pushes to `main` lint, build, and deploy to the live channel; pull requests get their own Firebase preview channel. Both are serialized so a slower run can't overwrite a newer one.
+- **Cache headers that match the filenames** — only `assets/**` is `immutable` for a year, because only Vite's output carries a content hash. Files copied verbatim from an app's `public/` keep their names across deploys and take Hosting's short default TTL, so replacing one actually reaches visitors. HTML is `no-cache`.
+- **One lockfile** — a single `pnpm-lock.yaml` at the root; no app has its own.
 
 ## Installation
 
@@ -78,13 +81,12 @@ Then open:
 - Portfolio — <http://localhost:5173>
 - Simmer — <http://localhost:5174/simmer/>
 - Portal Pantry — <http://localhost:5175/portal-pantry/>
+- Warehouse — <http://localhost:5176/warehouse/>
 
-Work on a single app instead:
+Work on a single app instead — the filter name is the directory name:
 
 ```bash
-pnpm --filter portfolio dev
-pnpm --filter simmer dev
-pnpm --filter portal-pantry dev
+pnpm --filter portafolio dev
 ```
 
 Type-check and build everything into `dist/`:
@@ -96,32 +98,48 @@ pnpm build
 Preview a production build the way it will be served:
 
 ```bash
-pnpm --filter portfolio preview
+pnpm --filter portafolio preview
 ```
 
-Lint one app:
+Lint everything, or one app:
 
 ```bash
-pnpm --filter portfolio lint
+pnpm lint
 ```
 
-<!-- TODO: no test runner is configured yet — `pnpm test` currently exits 1. Remove this note once tests exist. -->
+```bash
+pnpm --filter portafolio lint
+```
+
+<!-- TODO: no test runner is configured yet. `pnpm test` fans out to any app that
+     defines a test script and passes when none do, so adding one needs no change here. -->
 
 ## Configuration
 
 | Where | What it controls |
 |---|---|
-| [`pnpm-workspace.yaml`](pnpm-workspace.yaml) | Workspace globs — `apps/*` and `packages/*`. Anything dropped into `apps/` is picked up automatically. |
+| [`pnpm-workspace.yaml`](pnpm-workspace.yaml) | Workspace globs — `apps/*` and `packages/*` — and the `catalog:` that pins one version per shared dependency. Anything dropped into `apps/` is picked up automatically. |
+| [`packages/tsconfig`](packages/tsconfig) | The `strict` TypeScript bases every app extends. |
+| [`packages/eslint-config`](packages/eslint-config) | The ESLint flat config every app re-exports. |
 | `apps/<app>/vite.config.ts` | The app's `base` public path, dev-server port, and `outDir` inside the shared `dist/`. |
 | [`firebase.json`](firebase.json) | Hosting root, SPA rewrites per app, and cache headers. |
 | [`.firebaserc`](.firebaserc) | Default Firebase project (`zntsns-34aee`). |
 | `PORT` env var | Overrides an app's dev-server port: `PORT=4000 pnpm --filter simmer dev`. |
 
+### Warehouse and its API
+
+Warehouse is the one app that calls a real backend, and it needs an origin for it.
+
+- **In dev**, leave `VITE_API_BASE_URL` empty and set `VITE_API_TARGET` to the local API. The client then issues same-origin `/api` requests and the dev server proxies them, so the API needs no CORS setup. Copy [`.env.example`](apps/warehouse/.env.example) to `.env.local` to get this.
+- **In production**, `VITE_API_BASE_URL` must be an absolute origin. CI supplies it from the `WAREHOUSE_API_URL` repository variable. **If it is missing, the CI build fails on purpose** — an empty value would point every request at the hosting origin, which serves no API, and the demo would 404 its way through a green deploy.
+
 ### Adding an app
 
 1. Create `apps/<name>` with its own `package.json`, exposing at least a `build` script.
-2. In its `vite.config.ts`, set `base: '/<name>/'`, `build.outDir: '../../dist/<name>'`, and `build.emptyOutDir: false`.
-3. Add a rewrite for `/<name>/**` in [`firebase.json`](firebase.json).
+2. Take shared dependencies as `"catalog:"` rather than a version range, and add `@zntsns/eslint-config` and `@zntsns/tsconfig` as `"workspace:*"` dev dependencies.
+3. Point `tsconfig.app.json` / `tsconfig.node.json` at the shared bases and re-export the shared ESLint config.
+4. In its `vite.config.ts`, set `base: '/<name>/'`, `build.outDir: '../../dist/<name>'`, and `build.emptyOutDir: false`.
+5. Add a rewrite for `/<name>/**` in [`firebase.json`](firebase.json) and an entry in [`sitemap.xml`](apps/portafolio/public/sitemap.xml).
 
 ## Deployment
 
@@ -133,8 +151,10 @@ The site is hosted on **Firebase Hosting**. Deployment is automatic:
 To deploy by hand (requires the Firebase CLI and access to the project):
 
 ```bash
-pnpm deploy
+pnpm run deploy:hosting
 ```
+
+The script is not called `deploy` because pnpm has a built-in command by that name that would shadow it.
 
 Because `dist/` is plain static output, it can also be served by any static host.
 
@@ -145,7 +165,7 @@ This is a personal project, but issues and pull requests are welcome.
 1. Fork the repo and branch off `main`.
 2. Run `pnpm install`.
 3. Make your change, then confirm it builds cleanly: `pnpm build`.
-4. Lint the app you touched: `pnpm --filter <app> lint`.
+4. Lint: `pnpm lint`. CI runs this before it builds, so a lint error blocks the preview.
 5. Open a pull request — CI will publish a preview URL you can link to in the description.
 
 Keep changes scoped to a single app where possible; anything that changes `dist/` layout must be reflected in [`firebase.json`](firebase.json).
