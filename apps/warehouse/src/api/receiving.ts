@@ -7,6 +7,7 @@ import type {
   InventoryRow,
   Location,
   PurchaseOrderDetail,
+  ReceiptDetail,
   ReceiptRequest,
   ReceiptResponse,
   Role,
@@ -22,26 +23,29 @@ export function fetchDevToken(username: string, role: Role) {
   })
 }
 
-export function fetchPurchaseOrder(poId: string | number, token: string) {
-  return request<PurchaseOrderDetail>(`/api/purchase-orders/${poId}`, { token })
+export function fetchPurchaseOrder(poId: string | number) {
+  return request<PurchaseOrderDetail>(`/api/purchase-orders/${poId}`)
 }
 
-export function fetchLocations(token: string) {
-  return request<Location[]>('/api/locations', { token })
+export function fetchReceipt(receiptId: string | number) {
+  return request<ReceiptDetail>(`/api/receipts/${receiptId}`)
 }
 
-export function fetchInventory(token: string) {
-  return request<InventoryRow[]>('/api/inventory', { token })
+export function fetchLocations() {
+  return request<Location[]>('/api/locations')
+}
+
+export function fetchInventory() {
+  return request<InventoryRow[]>('/api/inventory')
 }
 
 /**
  * Note what ReceiptRequest deliberately cannot express: no receiptId, no
  * receivedBy, no receivedAt.
  */
-export function postReceipt(body: ReceiptRequest, token: string) {
+export function postReceipt(body: ReceiptRequest) {
   return request<ReceiptResponse>('/api/receipts', {
     method: 'POST',
-    token,
     body,
   })
 }

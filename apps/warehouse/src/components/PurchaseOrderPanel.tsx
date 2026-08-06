@@ -4,7 +4,6 @@ import type { PurchaseOrderDetail } from '../api/types'
 import { ErrorBanner } from './ErrorBanner'
 
 interface PurchaseOrderPanelProps {
-  token: string
   purchaseOrder: PurchaseOrderDetail | null
   onLoaded: (po: PurchaseOrderDetail | null) => void
 }
@@ -12,7 +11,7 @@ interface PurchaseOrderPanelProps {
 /**
  * Load a purchase order by id.
  */
-export function PurchaseOrderPanel({ token, purchaseOrder, onLoaded }: PurchaseOrderPanelProps) {
+export function PurchaseOrderPanel({ purchaseOrder, onLoaded }: PurchaseOrderPanelProps) {
   const [poId, setPoId] = useState('1000')
   const [error, setError] = useState<unknown>(null)
   const [busy, setBusy] = useState(false)
@@ -22,7 +21,7 @@ export function PurchaseOrderPanel({ token, purchaseOrder, onLoaded }: PurchaseO
     setBusy(true)
     setError(null)
     try {
-      onLoaded(await fetchPurchaseOrder(poId, token))
+      onLoaded(await fetchPurchaseOrder(poId))
     } catch (err) {
       setError(err)
       onLoaded(null)
@@ -35,54 +34,68 @@ export function PurchaseOrderPanel({ token, purchaseOrder, onLoaded }: PurchaseO
     <section>
       <h2>Purchase order</h2>
       <form onSubmit={load}>
-        <label>
-          PO id <input value={poId} onChange={(e) => setPoId(e.target.value)} />
-        </label>{' '}
-        <button type="submit" disabled={busy}>
-          {busy ? 'Loading…' : 'Load'}
-        </button>
+        <div className="field">
+          <label htmlFor="po-id">PO id</label>
+          <input
+            id="po-id"
+            inputMode="numeric"
+            value={poId}
+            onChange={(e) => setPoId(e.target.value)}
+          />
+          <button type="submit" disabled={busy}>
+            {busy ? 'Loading…' : 'Load order'}
+          </button>
+        </div>
       </form>
 
       <ErrorBanner error={error} />
 
+      {busy && <p>Loading purchase order…</p>}
+      {!purchaseOrder && !error && !busy && <p>Enter a purchase order id to look one up.</p>}
+
       {purchaseOrder && (
         <>
           <p>
-            <strong>{purchaseOrder.poNumber}</strong> — {purchaseOrder.vendorName} — status{' '}
-            <strong>{purchaseOrder.status}</strong>
-            {!purchaseOrder.receivable && ' (not receivable)'}
+            <strong>{purchaseOrder.poNumber}</strong> — {purchaseOrder.vendorName}{' '}
+            <span className={`pill pill-${purchaseOrder.status.toLowerCase()}`}>
+              {purchaseOrder.status.replace('_', ' ')}
+            </span>
           </p>
-          <p>
+          <p className="meta">
             ordered {purchaseOrder.orderDate} · expected {purchaseOrder.expectedDate ?? '—'} ·
             created by {purchaseOrder.createdBy}
           </p>
 
-          <table border={1} cellPadding={4}>
+          {purchaseOrder.lines.length === 0 && <p>This order has no lines.</p>}
+
+          {purchaseOrder.lines.length > 0 && (
+          <table>
             <thead>
               <tr>
-                <th>#</th>
+                <th className="num">#</th>
                 <th>SKU</th>
                 <th>Description</th>
-                <th>Ordered</th>
-                <th>Received</th>
-                <th>Remaining</th>
-                <th>Max now (110%)</th>
+                <th className="num">Ordered</th>
+                <th className="num">Received</th>
+                <th className="num">Remaining</th>
+                <th className="num">Max now</th>
               </tr>
             </thead>
             <tbody>
               {purchaseOrder.lines.map((line) => (
                 <tr key={line.poLineId}>
-                  <td>{line.lineNumber}</td>
-                  <td>{line.sku}</td>
+                  <td className="num">{line.lineNumber}</td>
+                  <td className="sku">{line.sku}</td>
                   <td>{line.productDescription}</td>
-                  <td>{line.quantityOrdered}</td>
-                  <td>{line.quantityReceived}</td>
-                  <td>{line.remainingQuantity}</td>
-                  <td>{line.maxReceivableNow}</td>
+                  <td className="num">{line.quantityOrdered}</td>
+                  <td className="num">{line.quantityReceived}</td>
+                  <td className="num">{line.remainingQuantity}</td>
+                  <td className="num">{line.maxReceivableNow}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+          )}
         </>
       )}
     </section>

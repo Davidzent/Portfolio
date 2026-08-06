@@ -3,7 +3,10 @@ import { useAuth } from './auth/useAuth'
 import { LoginPanel } from './components/LoginPanel'
 import { PurchaseOrderPanel } from './components/PurchaseOrderPanel'
 import { ReceiptForm } from './components/ReceiptForm'
+import { ReceiptPanel } from './components/ReceiptPanel'
+import { LocationsPanel } from './components/LocationsPanel'
 import { InventoryPanel } from './components/InventoryPanel'
+import { ThemeToggle } from './components/ThemeToggle'
 import type { PurchaseOrderDetail } from './api/types'
 
 /**
@@ -13,44 +16,71 @@ export default function App() {
   const { session, signIn, signOut, error: authError, busy } = useAuth()
   const [purchaseOrder, setPurchaseOrder] = useState<PurchaseOrderDetail | null>(null)
   const [refreshKey, setRefreshKey] = useState(0)
+  const [postedReceiptId, setPostedReceiptId] = useState<number | null>(null)
 
   // Bump after a successful post so inventory refetches and the PO panel
   // remounts, reloading its running totals and status.
-  function handlePosted() {
+  function handlePosted(receiptId: number) {
     setRefreshKey((k) => k + 1)
+    setPostedReceiptId(receiptId)
   }
 
   return (
-    <main>
-      <h1>Warehouse — Inbound Receiving</h1>
+    <>
+      <header className="topbar">
+        <h1 className="brand">
+          Warehouse <span>Receiving</span>
+        </h1>
 
-      <LoginPanel
-        session={session}
-        onSignIn={signIn}
-        onSignOut={signOut}
-        busy={busy}
-        error={authError}
-      />
+        <div className="topbar-actions">
+          <ThemeToggle />
 
-      {session && (
-        <>
-          <PurchaseOrderPanel
-            key={refreshKey}
-            token={session.token}
-            purchaseOrder={purchaseOrder}
-            onLoaded={setPurchaseOrder}
-          />
+          {session && (
+            <div className="session">
+              <span>
+                {session.username}{' '}
+                {session.roles.map((role) => (
+                  <span key={role} className="pill">
+                    {role}
+                  </span>
+                ))}
+              </span>
+              <button onClick={signOut}>Sign out</button>
+            </div>
+          )}
+        </div>
+      </header>
 
-          <ReceiptForm
-            token={session.token}
-            purchaseOrder={purchaseOrder}
-            role={session.role}
-            onPosted={handlePosted}
-          />
+      <div className="workspace">
+        <div className="stack">
+          {session ? (
+            <>
+              <PurchaseOrderPanel
+                key={refreshKey}
+                purchaseOrder={purchaseOrder}
+                onLoaded={setPurchaseOrder}
+              />
 
-          <InventoryPanel token={session.token} refreshKey={refreshKey} />
-        </>
-      )}
-    </main>
+              <ReceiptForm
+                purchaseOrder={purchaseOrder}
+                canReceive={session.canReceive}
+                onPosted={handlePosted}
+              />
+
+              <ReceiptPanel receiptId={postedReceiptId} />
+            </>
+          ) : (
+            <LoginPanel onSignIn={signIn} busy={busy} error={authError} />
+          )}
+        </div>
+
+        {session && (
+          <aside className="stack">
+            <InventoryPanel refreshKey={refreshKey} />
+            <LocationsPanel />
+          </aside>
+        )}
+      </div>
+    </>
   )
 }

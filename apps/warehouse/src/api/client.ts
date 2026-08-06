@@ -32,20 +32,33 @@ export function isApiError(error: unknown): error is ApiError {
   return error instanceof ApiError
 }
 
+let authToken: string | null = null
+let unauthorizedHandler: (() => void) | null = null
+
+/** Set by the auth module on sign-in, cleared on sign-out and on any 401. */
+export function setAuthToken(token: string | null) {
+  authToken = token
+}
+
+/**
+ * The auth module registers here so that a 401 from any endpoint ends the
+ * session in one place, rather than every call site remembering to check.
+ */
+export function setUnauthorizedHandler(handler: (() => void) | null) {
+  unauthorizedHandler = handler
+}
+
 interface RequestOptions {
   method?: 'GET' | 'POST'
   body?: unknown
-  token?: string
 }
 
 export async function request<T>(
   path: string,
-  { method = 'GET', body, token }: RequestOptions = {},
+  { method = 'GET', body }: RequestOptions = {},
 ): Promise<T> {
   const headers: Record<string, string> = {}
-  // The token is passed in explicitly rather than read from module state —
-  // it keeps this file free of auth logic and makes it trivial to test.
-  if (token) headers.Authorization = `Bearer ${token}`
+  if (authToken) headers.Authorization = `Bearer ${authToken}`
   if (body !== undefined) headers['Content-Type'] = 'application/json'
 
   const response = await fetch(`${BASE_URL}${path}`, {
@@ -59,6 +72,9 @@ export async function request<T>(
   const payload = text ? safeParse(text) : null
 
   if (!response.ok) {
+    // 401 comes back with an empty body, so there is nothing to show the user —
+    // the handler replaces it with a message and a way back in.
+    if (response.status === 401) unauthorizedHandler?.()
     throw new ApiError({ ...payload, status: response.status })
   }
   return payload as T
