@@ -17,6 +17,24 @@
         "headers": [
           { "key": "Cache-Control", "value": "no-cache" }
         ]
+      },
+      {
+        "source": "/",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      },
+      {
+        "source": "/@(simmer|portal-pantry|warehouse|aniversario)/",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      },
+      {
+        "source": "/portal-pantry/case-study/",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
       }
     ]
   }
