@@ -133,8 +133,17 @@ export default function App() {
     [],
   );
 
+  // One roll is RANDOM_COUNT calls to TheMealDB's shared free key, so a second
+  // roll waits rather than supersedes — the sequence guard above would discard
+  // the first roll's results while its requests were already in flight.
+  const rolling = useRef(false);
+
   const rollRandom = useCallback(() => {
-    void run("Chef's random picks", () => getRandomMeals(RANDOM_COUNT));
+    if (rolling.current) return;
+    rolling.current = true;
+    void run("Chef's random picks", () => getRandomMeals(RANDOM_COUNT)).finally(() => {
+      rolling.current = false;
+    });
   }, [run]);
 
   const surpriseMe = () => {
@@ -247,6 +256,7 @@ export default function App() {
               type="button"
               className="sm-btn sm-btn-ghost sm-btn-sm sm-surprise"
               onClick={surpriseMe}
+              disabled={loading}
             >
               <Icon name="shuffle" size={15} />
               Surprise me
@@ -356,6 +366,7 @@ export default function App() {
               type="button"
               className="sm-btn sm-btn-primary"
               onClick={rollRandom}
+              disabled={loading}
             >
               <Icon name="shuffle" size={16} />
               Stir the pot — {RANDOM_COUNT} random meals
