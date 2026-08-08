@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 — page not found · zntsns</title>
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#07080a" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Standalone by design: this is the fallback when nothing else matched,
+         so it must not depend on a hashed bundle that may have been purged. -->
+    <style>
+      :root {
+        --void: #07080a;
+        --ink: #e9eee9;
+        --muted: #8b958d;
+        --acid: #7dfc5a;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --void: #f5f7f3;
+          --ink: #191e18;
+          --muted: #4c5a4c;
+          --acid: #177807;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 2rem;
+        background: var(--void);
+        color: var(--ink);
+        font-family: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace;
+        text-align: center;
+      }
+      .code {
+        font-size: clamp(3.5rem, 14vw, 7rem);
+        line-height: 1;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: var(--acid);
+        margin: 0;
+      }
+      h1 {
+        font-size: clamp(1rem, 3.5vw, 1.25rem);
+        font-weight: 600;
+        margin: 1.25rem 0 0;
+        letter-spacing: 0.02em;
+      }
+      p {
+        max-width: 42ch;
+        margin: 0.75rem auto 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      a {
+        display: inline-block;
+        margin-top: 2rem;
+        padding: 0.75rem 1.75rem;
+        border: 1px solid color-mix(in srgb, var(--acid) 45%, transparent);
+        border-radius: 6px;
+        color: var(--acid);
+        text-decoration: none;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        transition: background-color 0.15s, color 0.15s;
+      }
+      a:hover,
+      a:focus-visible {
+        background: var(--acid);
+        color: var(--void);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="code">404</p>
+      <h1>No route to that page</h1>
+      <p>
+        The link is broken, or the page moved. Everything that still exists is
+        one hop away.
+      </p>
+      <a href="/">Back to zntsns.com</a>
+    </main>
+  </body>
+</html>
