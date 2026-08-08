@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import type { Plugin } from 'vite'
+// import type { Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 // import { site, about, projects, skillTree, journey, contact } from './src/data/content.js'
