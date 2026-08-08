@@ -122,6 +122,17 @@
     color-scheme: dark;
     -webkit-text-size-adjust: 100%;
   }
+  /* Build-time crawler shell (see vite.config.ts). This stylesheet is a
+     render-blocking <link>, so the shell is hidden before the first paint and
+     never flashes; React replaces #root outright on mount. */
+  [data-seo-shell] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
   body {
     background: var(--color-void);
     color: var(--color-ink);
