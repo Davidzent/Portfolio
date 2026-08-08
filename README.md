@@ -30,7 +30,7 @@
 
 ## Overview
 
-ZNTSNS is a pnpm workspace that builds several independent front ends into a single static site. Each app owns its own Vite config, `base` path, and dev port, and each writes its production output into a shared `dist/` at the repo root. Firebase Hosting serves that directory, with rewrites mapping every app to its own SPA entry point.
+ZNTSNS is a pnpm workspace that builds several independent front ends into a single static site. Each app owns its own Vite config, `base` path, and dev port, and each writes its production output into a shared `dist/` at the repo root. Firebase Hosting serves that directory directly: no app uses client-side routing, so each one is reached through its own directory index and anything unmatched gets a real `404`.
 
 The result is one deploy, one domain, and no coupling between apps — you can work on any of them in isolation.
 
@@ -50,12 +50,13 @@ Each app except Aniversario has its own README with screenshots and detail.
 
 ## Features
 
-- **Independent apps, one deploy** — every app builds into a subfolder of the shared root `dist/`; Firebase rewrites route each to its own `index.html`.
+- **Independent apps, one deploy** — every app builds into a subfolder of the shared root `dist/` and is served from its own directory index. No app does path-based client routing, so there are no SPA rewrites and an unknown URL returns a genuine `404` instead of a soft one.
 - **Parallel-build safe** — `emptyOutDir` is off in every app; the root `clean` script clears `dist/` exactly once so parallel `pnpm -r build` runs can't wipe each other's output.
 - **Strict TypeScript everywhere** — `strict` lives in [`packages/tsconfig`](packages/tsconfig) and every app extends it. `tsc -b` project references run before every production build, so type errors fail the build.
 - **One ESLint config, one dependency version** — apps extend [`packages/eslint-config`](packages/eslint-config), and shared dependency versions come from the `catalog:` in [`pnpm-workspace.yaml`](pnpm-workspace.yaml) so no two apps can drift onto different versions of Vite or React.
 - **Continuous deployment** — pushes to `main` lint, build, and deploy to the live channel; pull requests get their own Firebase preview channel. Both are serialized so a slower run can't overwrite a newer one.
-- **Cache headers that match the filenames** — only `assets/**` is `immutable` for a year, because only Vite's output carries a content hash. Files copied verbatim from an app's `public/` keep their names across deploys and take Hosting's short default TTL, so replacing one actually reaches visitors. HTML is `no-cache`.
+- **Cache headers that match the filenames** — only `assets/**` is `immutable` for a year, because only Vite's output carries a content hash. Files copied verbatim from an app's `public/` keep their names across deploys and take Hosting's short default TTL, so replacing one actually reaches visitors. HTML is `no-cache`, and each entry point is listed by its real extensionless path (`/`, `/simmer/`, …) — a glob on `*.html` matches the request URL, which none of them end in.
+- **Crawlable HTML before any JS runs** — a build-only Vite plugin injects the portfolio's real copy, drawn from the same `content.ts` the app renders, into `#root`. It is clipped by a render-blocking rule so it never paints, and React replaces it on mount.
 - **One lockfile** — a single `pnpm-lock.yaml` at the root; no app has its own.
 
 ## Installation
@@ -111,8 +112,15 @@ pnpm lint
 pnpm --filter portafolio lint
 ```
 
-<!-- TODO: no test runner is configured yet. `pnpm test` fans out to any app that
-     defines a test script and passes when none do, so adding one needs no change here. -->
+Run the tests:
+
+```bash
+pnpm test
+```
+
+`pnpm test` fans out to every app that defines a `test` script and passes when none do, so adding a suite to another app needs no change here. **Warehouse** is the app that has one — Vitest on jsdom, covering the request-ordering guard and the inventory panel. Watch it with `pnpm --filter warehouse test:watch`.
+
+Note that Vitest strips types rather than checking them, so a test file can pass while failing `tsc -b`. `pnpm build` is what catches that.
 
 ## Configuration
 
@@ -122,7 +130,7 @@ pnpm --filter portafolio lint
 | [`packages/tsconfig`](packages/tsconfig) | The `strict` TypeScript bases every app extends. |
 | [`packages/eslint-config`](packages/eslint-config) | The ESLint flat config every app re-exports. |
 | `apps/<app>/vite.config.ts` | The app's `base` public path, dev-server port, and `outDir` inside the shared `dist/`. |
-| [`firebase.json`](firebase.json) | Hosting root, SPA rewrites per app, and cache headers. |
+| [`firebase.json`](firebase.json) | Hosting root and cache headers. No rewrites — apps are served from their directory indexes, and `dist/404.html` handles anything unmatched. |
 | [`.firebaserc`](.firebaserc) | Default Firebase project (`zntsns-34aee`). |
 | `PORT` env var | Overrides an app's dev-server port: `PORT=4000 pnpm --filter simmer dev`. |
 
@@ -139,7 +147,7 @@ Warehouse is the one app that calls a real backend, and it needs an origin for i
 2. Take shared dependencies as `"catalog:"` rather than a version range, and add `@zntsns/eslint-config` and `@zntsns/tsconfig` as `"workspace:*"` dev dependencies.
 3. Point `tsconfig.app.json` / `tsconfig.node.json` at the shared bases and re-export the shared ESLint config.
 4. In its `vite.config.ts`, set `base: '/<name>/'`, `build.outDir: '../../dist/<name>'`, and `build.emptyOutDir: false`.
-5. Add a rewrite for `/<name>/**` in [`firebase.json`](firebase.json) and an entry in [`sitemap.xml`](apps/portafolio/public/sitemap.xml).
+5. Add `/<name>/` to the `no-cache` header sources in [`firebase.json`](firebase.json) and an entry in [`sitemap.xml`](apps/portafolio/public/sitemap.xml). No rewrite is needed unless the app uses path-based client routing — none currently do.
 
 ## Deployment
 
@@ -172,9 +180,14 @@ Keep changes scoped to a single app where possible; anything that changes `dist/
 
 ## License
 
-Released under the **ISC License**, as declared in [`package.json`](package.json).
+The **code** is released under the **ISC License** — see [`LICENSE`](LICENSE), matching the declaration in [`package.json`](package.json).
 
-<!-- TODO: no LICENSE file exists in the repo yet — add one, or update this section if a different license is intended. -->
+Two things that licence does **not** cover:
+
+- **Personal content.** The written copy, photography under [`apps/portafolio/public/travel`](apps/portafolio/public/travel), the portrait, and `resume.pdf` are not licensed for reuse. Take the code, not the biography.
+- **Bundled third-party assets.** Portal Pantry ships three subset webfonts under the SIL Open Font License, with each family's licence alongside them — see [`apps/portal-pantry/src/app/fonts`](apps/portal-pantry/src/app/fonts).
+
+`apps/simmer` and `apps/warehouse` carry their own copy of the licence, because [`publish-apps.yml`](.github/workflows/publish-apps.yml) splits those directories into standalone repositories where a root-level file would not follow.
 
 ## Acknowledgments
 

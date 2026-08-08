@@ -123,6 +123,10 @@ under ~37 characters (the seam clips anything longer), and 19 lines is the hard 
   keyboard control of the hero seam (← / →).
 - SEO: canonical URL, OpenGraph + Twitter cards, and `Person` JSON-LD in
   [`index.html`](index.html); `robots.txt` and `sitemap.xml` in [`public/`](public).
+- The build injects a crawler shell into `#root` — the same copy from `content.ts` the app
+  renders, so the first HTML response is never an empty div. See
+  [`vite.config.ts`](vite.config.ts). A render-blocking rule on `[data-seo-shell]` clips it
+  before first paint, so it never flashes; React replaces `#root` outright on mount.
 
 ## Getting started
 
@@ -166,12 +170,13 @@ push to `main` deploys — see the [workspace README](../../README.md).
 
 ## Live demos
 
-Two of the projects on the site are real apps in this same workspace, deployed alongside
+Three of the projects on the site are real apps in this same workspace, deployed alongside
 the portfolio and linked directly from their project cards:
 
 | Demo | Served at | Source |
 |---|---|---|
 | **Portal Pantry** — food delivery across the multiverse, two roles, live cart, portal checkout | `/portal-pantry/` | [`apps/portal-pantry`](../portal-pantry) |
+| **Warehouse** — inbound receiving against a live Spring Boot API, the only demo with a real backend | `/warehouse/` | [`apps/warehouse`](../warehouse) |
 | **Simmer** — a recipe finder on TheMealDB: search by name, category, or ingredient | `/simmer/` | [`apps/simmer`](../simmer) |
 
 ---

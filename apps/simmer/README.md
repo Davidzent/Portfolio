@@ -54,7 +54,7 @@ hundreds of dishes, browse by category or ingredient, or let the pot decide.
 ## Tech
 
 - React 19 + TypeScript (strict)
-- A tiny typed [`api.ts`](api.ts) client wrapping TheMealDB endpoints
+- A tiny typed [`api.ts`](src/components/api.ts) client wrapping TheMealDB endpoints
   (`search.php`, `filter.php`, `lookup.php`, `random.php`, `categories.php`,
   `list.php`)
 - Hand-written CSS (`Fraunces` display serif + `Inter`), no UI framework
@@ -78,3 +78,8 @@ Then open <http://localhost:5174/simmer/> (override the port with `PORT`).
 
 Recipe data & photography from [TheMealDB](https://www.themealdb.com) (free
 test API). Simmer is a portfolio demo and not affiliated with TheMealDB.
+
+## License
+
+Released under the **ISC License** — see [`LICENSE`](LICENSE). Recipe content and
+imagery served by TheMealDB remain theirs.

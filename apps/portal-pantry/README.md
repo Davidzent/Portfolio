@@ -8,7 +8,6 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-dev%20%26%20build-646CFF?logo=vite&logoColor=white)](https://vite.dev)
 ![Backend](https://img.shields.io/badge/backend-in--browser%20mock%20or%20Node%20%2B%20SQLite-7be04b)
-![Tests](https://img.shields.io/badge/tests-Vitest-6E9F18?logo=vitest&logoColor=white)
 [![Live demo](https://img.shields.io/badge/live-Firebase%20Hosting-FFCA28?logo=firebase&logoColor=white)](https://www.zntsns.com/portal-pantry/)
 
 **[▶ Try the live demo](https://www.zntsns.com/portal-pantry/)** · built by
@@ -56,7 +55,7 @@ backend** — identical API contract, switched with a single environment variabl
 <table>
   <tr>
     <td width="50%"><img src="./docs/restaurant.jpg" alt="Restaurant menu"><p align="center"><em>Restaurant menu — photos, prep times & reviews</em></p></td>
-    <td width="50%"><img src="./docs/checkout.jpg" alt="Checkout"><p align="center"><em>Checkout — order placed through the portal</em></p></td>
+    <td width="50%"><img src="./src/case-study/shots/07-checkout.webp" alt="Checkout"><p align="center"><em>Checkout — order placed through the portal</em></p></td>
   </tr>
   <tr>
     <td width="50%"><img src="./docs/owner-orders.jpg" alt="Owner orders"><p align="center"><em>Owner dashboard — live order queue</em></p></td>
@@ -113,8 +112,12 @@ Owner-uploaded images are resized & re-encoded to WebP **in the browser**
 ## Tech
 
 - **Frontend** — React 19 + TypeScript (strict), no state library (plain hooks),
-  hand-written CSS (cosmic dark theme, `Titan One` + `Baloo 2`), built with Vite.
-  Zero third-party runtime dependencies.
+  hand-written CSS (cosmic dark theme), built with Vite. Zero third-party runtime
+  dependencies.
+- **Type** — three self-hosted subset variable fonts, declared internally as
+  `PP Display` / `PP Body` / `PP Utility`: Bricolage Grotesque, Public Sans, and
+  Spline Sans Mono. No third-party font request, and metric-matched fallbacks give
+  zero CLS without preloading. See [`src/app/fonts/`](src/app/fonts).
 - **Backend (optional)** — Node 22+ · Express 5 · `node:sqlite` · Zod validation
   · pino logging · Vitest. Typed end-to-end; seeds its database on first boot.
 
