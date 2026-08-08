@@ -113,22 +113,24 @@ export function Hero() {
             <BrandLogo height={40} />
             <ZntsnsLogo height={40} boot />
           </div>
+          {/* The name is the h1, not the tagline below it: this page ranks for a
+              person, and a heading naming someone else's slogan spends that signal. */}
           <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <p className="text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+            <h1 className="text-xl font-semibold tracking-tight text-ink sm:text-2xl">
               {site.fullName}
-            </p>
+            </h1>
             <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-acid">
               {site.experience}
             </span>
           </div>
-          <h1 className="text-[2rem] font-bold tracking-tight sm:text-[2.5rem] lg:text-[2.5rem] lg:leading-[1.05] xl:text-[2.9rem] xl:leading-[1.03]">
+          <p className="text-[2rem] font-bold tracking-tight sm:text-[2.5rem] lg:text-[2.5rem] lg:leading-[1.05] xl:text-[2.9rem] xl:leading-[1.03]">
             <span className="block">
               Full-stack <span className="text-acid text-glow-acid">systems</span>,
             </span>
             <span className="block">
               <span className="text-amber text-glow-amber">game-world</span> imagination.
             </span>
-          </h1>
+          </p>
           <p className="mt-6 max-w-md font-mono text-sm text-muted sm:text-[15px]">{hero.tagline}</p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <MagneticButton
