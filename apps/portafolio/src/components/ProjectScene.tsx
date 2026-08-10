@@ -16,7 +16,13 @@ const AMBER_DIM = "#d97e18";
 
 function Frame({ children, glow }: { children: React.ReactNode; glow?: string }) {
   return (
-    <svg className="ps-svg" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <svg
+      className="ps-svg"
+      viewBox="0 0 320 200"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <defs>
         <radialGradient id={`psbg-${glow ?? "a"}`} cx="50%" cy="46%" r="70%">
           <stop offset="0" stopColor={glow ?? "#12181a"} stopOpacity="0.5" />

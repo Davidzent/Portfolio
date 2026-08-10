@@ -1,0 +1,37 @@
+# David Guijosa Infante
+
+> Full-stack developer in Riverside, California, moving into game development.
+> This site is a portfolio plus three demo applications that are actually
+> running, each with public source.
+
+Also goes by **David Guijosa** and the handle **zntsns**. Builds production web
+applications with React, Angular, TypeScript, Java and Spring Boot, PostgreSQL,
+Docker and Google Cloud; builds games solo in Unity and C# with assets modelled
+in Blender. The links below are live software, not screenshots.
+
+## Live demos
+
+- [Warehouse Receiving](https://www.zntsns.com/warehouse/): a React and TypeScript receiving desk on a real Spring Boot API. Models the awkward cases rather than the happy path — partial deliveries, over-shipments capped at 110%, damaged units that count as received but never reach stock, and JWT-gated clerk and viewer roles. The API runs on Render against Supabase PostgreSQL, so the first request after an idle period is slow.
+- [Portal Pantry](https://www.zntsns.com/portal-pantry/): a full-stack food-delivery application with two account roles. Customers browse, order, track and review; store owners run menus, a live order queue, reviews, and server-computed payouts. The hosted demo runs an in-browser mock backend with the same API contract as the Node and SQLite service.
+- [Portal Pantry case study](https://www.zntsns.com/portal-pantry/case-study/): how that application was built, presented as a delivery-app session.
+- [Simmer](https://www.zntsns.com/simmer/): a recipe finder on TheMealDB — search by name, browse categories, hunt by main ingredient, or shuffle random meals.
+
+## Source
+
+- [ZNTSNS monorepo](https://github.com/Davidzent/ZNTSNS): the portfolio and every demo above, as a pnpm workspace deployed to Firebase Hosting.
+- [Warehouse API](https://github.com/Davidzent/Warehouse-API): Java 17, Spring Boot, MyBatis, PostgreSQL. The backend behind the receiving demo.
+- [Warehouse UI](https://github.com/Davidzent/Warehouse-UI): read-only mirror of the receiving front end.
+- [Simmer](https://github.com/Davidzent/Simmer): read-only mirror of the recipe finder.
+- [Portal Pantry](https://github.com/Davidzent/Portal-Pantry): the food-delivery application.
+
+## Contact
+
+- [Portfolio](https://www.zntsns.com/): the full site, including projects, skills and background.
+- [LinkedIn](https://www.linkedin.com/in/davidguijosa/)
+- [GitHub](https://github.com/Davidzent)
+- [Email](mailto:davidgin641@gmail.com)
+
+## Optional
+
+- [Résumé (PDF)](https://www.zntsns.com/resume.pdf)
+- [Sitemap](https://www.zntsns.com/sitemap.xml)

@@ -52,10 +52,21 @@ export function Hero() {
   const acidGlow = useTransform(split, [0.2, 0.9], [0.1, 0.34]);
   const amberGlow = useTransform(split, [0.1, 0.8], [0.34, 0.1]);
 
+  // A focusable separator is a widget, so aria-valuenow is required and has to
+  // agree with these bounds — a splitter that reports a range it cannot reach
+  // is worse than one that reports none.
+  const SPLIT_MIN = 0.08;
+  const SPLIT_MAX = 0.92;
+
+  // React state only so the value can be rendered; the drag itself stays on the
+  // motion value, and committing on release keeps pointer moves re-render free.
+  const [splitPct, setSplitPct] = useState(() => Math.round(split.get() * 100));
+  const commitSplit = () => setSplitPct(Math.round(split.get() * 100));
+
   const setFromX = (clientX: number) => {
     const r = machineRef.current?.getBoundingClientRect();
     if (!r) return;
-    split.set(Math.min(0.92, Math.max(0.08, (clientX - r.left) / r.width)));
+    split.set(Math.min(SPLIT_MAX, Math.max(SPLIT_MIN, (clientX - r.left) / r.width)));
   };
   const onDown = (e: React.PointerEvent) => {
     dragging.current = true;
@@ -63,10 +74,14 @@ export function Hero() {
     setFromX(e.clientX);
   };
   const onMove = (e: React.PointerEvent) => dragging.current && setFromX(e.clientX);
-  const onUp = () => (dragging.current = false);
+  const onUp = () => {
+    dragging.current = false;
+    commitSplit();
+  };
   const onKey = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowLeft") split.set(Math.max(0.08, split.get() - 0.05));
-    if (e.key === "ArrowRight") split.set(Math.min(0.92, split.get() + 0.05));
+    if (e.key === "ArrowLeft") split.set(Math.max(SPLIT_MIN, split.get() - 0.05));
+    if (e.key === "ArrowRight") split.set(Math.min(SPLIT_MAX, split.get() + 0.05));
+    commitSplit();
   };
 
   const engine = (
@@ -178,6 +193,9 @@ export function Hero() {
                 role="separator"
                 aria-orientation="vertical"
                 aria-label="Drag to shift between IDE and game engine"
+                aria-valuenow={splitPct}
+                aria-valuemin={Math.round(SPLIT_MIN * 100)}
+                aria-valuemax={Math.round(SPLIT_MAX * 100)}
                 tabIndex={0}
                 onKeyDown={onKey}
               >

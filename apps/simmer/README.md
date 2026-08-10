@@ -41,6 +41,10 @@ hundreds of dishes, browse by category or ingredient, or let the pot decide.
   choice.
 - **Loading & empty states**, keyboard-accessible modal, `prefers-reduced-motion`
   support.
+- **One roll at a time.** TheMealDB returns a single random meal per call, so a
+  shuffle is 8 requests to a shared free key. A second roll is ignored while one
+  is running rather than superseding it — replacing in-flight calls with an equal
+  number of new ones would only multiply the traffic.
 
 <table>
   <tr>

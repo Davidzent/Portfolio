@@ -122,7 +122,15 @@ under ~37 characters (the seam clips anything longer), and 19 lines is the hard 
 - Skip link, landmarks, focus-visible rings, `aria-label`s on the seam and terminal, and
   keyboard control of the hero seam (← / →).
 - SEO: canonical URL, OpenGraph + Twitter cards, and `Person` JSON-LD in
-  [`index.html`](index.html); `robots.txt` and `sitemap.xml` in [`public/`](public).
+  [`index.html`](index.html); `robots.txt`, `sitemap.xml` and
+  [`llms.txt`](public/llms.txt) in [`public/`](public). The last is a curated map of the
+  site for language models — a proposal rather than a standard, but the demos are only
+  worth anything if a reader can tell they are running software, and that is the file
+  that says so.
+- The `<h1>` is the name, not the tagline beside it. This page ranks for a person, and
+  the heading is the strongest on-page signal for that; the tagline is a styled `<p>`
+  and renders identically. `alternateName` lists the short name and handle so Google
+  resolves all three spellings to one entity.
 - The build injects a crawler shell into `#root` — the same copy from `content.ts` the app
   renders, so the first HTML response is never an empty div. See
   [`vite.config.ts`](vite.config.ts). A render-blocking rule on `[data-seo-shell]` clips it

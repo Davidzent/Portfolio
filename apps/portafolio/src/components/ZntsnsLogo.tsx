@@ -31,7 +31,9 @@ export function ZntsnsLogo({ height = 34, className, boot = false, interactive =
   const sns = useScramble("sns", boot ? play : false, 0.28);
   const RATIO = 176 / 40;
 
-
+  // xmlns is redundant inline — the HTML parser supplies it — but anything that
+  // serialises this mark and reloads it as a standalone image parses it as XML,
+  // where a missing namespace is a hard failure rather than a warning.
   return (
     <svg
       className={cn("zlogo", interactive && "zlogo-i", className)}
@@ -40,6 +42,7 @@ export function ZntsnsLogo({ height = 34, className, boot = false, interactive =
       viewBox="0 0 176 40"
       role="img"
       aria-label={title}
+      xmlns="http://www.w3.org/2000/svg"
     >
       <text
         x="4"

@@ -44,7 +44,7 @@ The result is one deploy, one domain, and no coupling between apps — you can w
 | **Simmer** | [`apps/simmer`](apps/simmer) | `/simmer/` | `5174` | A recipe finder built on the free [TheMealDB](https://www.themealdb.com) API — search by name, category, or ingredient, or shuffle. |
 | **Portal Pantry** | [`apps/portal-pantry`](apps/portal-pantry) | `/portal-pantry/` | `5175` | A food-delivery front end with a fully mocked in-browser backend: two account roles, session auth, an owner analytics dashboard, reviews, and image uploads. |
 | **Warehouse** | [`apps/warehouse`](apps/warehouse) | `/warehouse/` | `5176` | Inbound receiving against a real HTTP API — the only app that talks to a live backend. See [Configuration](#configuration). |
-| **Aniversario** | [`apps/aniversario`](apps/aniversario) | `/aniversario/` | — | A single self-contained HTML page. Its "build" copies the file into `dist/`; there is no bundler and no dev server. |
+| **Aniversario** | [`apps/aniversario`](apps/aniversario) | `/aniversario/` | — | A single self-contained HTML page — personal, so it carries `noindex` and stays out of the sitemap. Its "build" copies the file into `dist/`; there is no bundler and no dev server. |
 
 Each app except Aniversario has its own README with screenshots and detail.
 
@@ -57,6 +57,7 @@ Each app except Aniversario has its own README with screenshots and detail.
 - **Continuous deployment** — pushes to `main` lint, build, and deploy to the live channel; pull requests get their own Firebase preview channel. Both are serialized so a slower run can't overwrite a newer one.
 - **Cache headers that match the filenames** — only `assets/**` is `immutable` for a year, because only Vite's output carries a content hash. Files copied verbatim from an app's `public/` keep their names across deploys and take Hosting's short default TTL, so replacing one actually reaches visitors. HTML is `no-cache`, and each entry point is listed by its real extensionless path (`/`, `/simmer/`, …) — a glob on `*.html` matches the request URL, which none of them end in.
 - **Crawlable HTML before any JS runs** — a build-only Vite plugin injects the portfolio's real copy, drawn from the same `content.ts` the app renders, into `#root`. It is clipped by a render-blocking rule so it never paints, and React replaces it on mount.
+- **Security headers on every response** — `nosniff`, `Referrer-Policy`, `X-Frame-Options`, `Cross-Origin-Opener-Policy`, `Permissions-Policy`, and a CSP that names the only three origins this site talks to. `script-src` keeps `'unsafe-inline'` because three pages apply their theme before first paint; the directives that carry the weight here are `object-src 'none'`, `base-uri`, `form-action`, `frame-ancestors`, and a closed `connect-src`.
 - **One lockfile** — a single `pnpm-lock.yaml` at the root; no app has its own.
 
 ## Installation
@@ -118,7 +119,7 @@ Run the tests:
 pnpm test
 ```
 
-`pnpm test` fans out to every app that defines a `test` script and passes when none do, so adding a suite to another app needs no change here. **Warehouse** is the app that has one — Vitest on jsdom, covering the request-ordering guard and the inventory panel. Watch it with `pnpm --filter warehouse test:watch`.
+`pnpm test` fans out to every app that defines a `test` script and passes when none do, so adding a suite to another app needs no change here. **Warehouse** is the app that has one — 25 tests on Vitest and jsdom, covering the request-ordering guard, the inventory panel, and the receipt quantity rules: the damaged-unit split, the 110% over-receipt cap, and the field-error aliases the API returns. Watch it with `pnpm --filter warehouse test:watch`.
 
 Note that Vitest strips types rather than checking them, so a test file can pass while failing `tsc -b`. `pnpm build` is what catches that.
 
@@ -130,7 +131,7 @@ Note that Vitest strips types rather than checking them, so a test file can pass
 | [`packages/tsconfig`](packages/tsconfig) | The `strict` TypeScript bases every app extends. |
 | [`packages/eslint-config`](packages/eslint-config) | The ESLint flat config every app re-exports. |
 | `apps/<app>/vite.config.ts` | The app's `base` public path, dev-server port, and `outDir` inside the shared `dist/`. |
-| [`firebase.json`](firebase.json) | Hosting root and cache headers. No rewrites — apps are served from their directory indexes, and `dist/404.html` handles anything unmatched. |
+| [`firebase.json`](firebase.json) | Hosting root, cache headers, and the security headers below. No rewrites — apps are served from their directory indexes, and `dist/404.html` handles anything unmatched. |
 | [`.firebaserc`](.firebaserc) | Default Firebase project (`zntsns-34aee`). |
 | `PORT` env var | Overrides an app's dev-server port: `PORT=4000 pnpm --filter simmer dev`. |
 

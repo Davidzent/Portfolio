@@ -21,21 +21,13 @@ function Card({ project, onOpen }: { project: Project; onOpen: (p: Project) => v
   const isGame = project.type === "game";
   return (
     <TiltCard className="h-full">
+      {/* Not role="button": a button may not contain the GitHub and demo links
+          below it. The briefing control at the foot of the card is a real button
+          whose hit area is stretched over the whole card instead. */}
       <article
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        onClick={() => onOpen(project)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            onOpen(project);
-          }
-        }}
-        role="button"
-        tabIndex={0}
-        aria-haspopup="dialog"
-        aria-label={`Open details for ${project.title}`}
-        className="group h-full cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-surface transition-colors hover:border-acid/40"
+        className="group relative h-full cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-surface transition-colors hover:border-acid/40 focus-within:border-acid/40"
         style={{ transformStyle: "preserve-3d" }}
       >
         <div className="relative aspect-[16/10] overflow-hidden bg-void">
@@ -75,8 +67,9 @@ function Card({ project, onOpen }: { project: Project; onOpen: (p: Project) => v
               <h3 className="text-lg font-bold leading-tight">{project.title}</h3>
               <span className="font-mono text-xs text-muted">{project.short}</span>
             </div>
-            {/* Quick links act on their own; don't let them open the modal. */}
-            <div className="flex flex-none gap-1.5" onClick={(e) => e.stopPropagation()}>
+            {/* Stacked above the briefing button's stretched hit area, so these
+                stay separately clickable and separately focusable. */}
+            <div className="relative z-10 flex flex-none gap-1.5">
               {project.links.github && (
                 <a
                   href={project.links.github}
@@ -117,13 +110,20 @@ function Card({ project, onOpen }: { project: Project; onOpen: (p: Project) => v
             ))}
           </ul>
 
-          {/* Always-visible affordance: the whole card opens the briefing. */}
-          <div className="mt-4 flex items-center gap-1.5 border-t border-white/10 pt-3 font-mono text-[11px] uppercase tracking-[0.15em] text-faint transition-colors group-hover:text-acid">
+          {/* after:inset-0 resolves against the card, so the button is the whole
+              card's hit area while remaining one control in the tab order. */}
+          <button
+            type="button"
+            onClick={() => onOpen(project)}
+            aria-haspopup="dialog"
+            aria-label={`Open details for ${project.title}`}
+            className="mt-4 flex w-full items-center gap-1.5 border-t border-white/10 pt-3 font-mono text-[11px] uppercase tracking-[0.15em] text-faint transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-acid focus-visible:text-acid focus-visible:outline-none"
+          >
             open briefing
             <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">
               ▸
             </span>
-          </div>
+          </button>
         </div>
       </article>
     </TiltCard>
