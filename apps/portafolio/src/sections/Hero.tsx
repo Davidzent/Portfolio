@@ -121,9 +121,9 @@ export function Hero() {
       <div className="relative mx-auto grid min-h-[100dvh] max-w-[1240px] items-center gap-8 px-5 pb-12 pt-24 sm:px-8 lg:grid-cols-[minmax(0,43%)_1fr] lg:gap-10 lg:pt-20">
         {/* Copy */}
         <div className="max-w-xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-surface/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+          {/* <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-surface/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
             <span className="h-1.5 w-1.5 rounded-full bg-acid" /> dual-boot // one maker
-          </div>
+          </div> */}
           <div className="mb-4 flex items-center gap-3">
             <BrandLogo height={40} />
             <ZntsnsLogo height={40} boot />
