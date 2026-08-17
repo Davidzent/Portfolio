@@ -12,8 +12,13 @@
 /* ------------------------------------------------------------------ shared */
 
 export interface SectionLabel {
-  /** Plain-language eyebrow, e.g. "MENU — FEATURES". Never hidden. */
-  eyebrow: string;
+  /** Course number. The page is an order, so its sections are courses. */
+  course: number;
+  /**
+   * What the section is actually about. The old eyebrow said it twice —
+   * "MENU — FEATURES" repeated both `title` and `plain` beside it.
+   */
+  topic: string;
   /** The in-fiction heading. */
   title: string;
   /** Accessible section name for screen readers / aria-label. */
@@ -35,7 +40,8 @@ export const site = {
 
 export const storefront = {
   label: {
-    eyebrow: "STOREFRONT — PROJECT OVERVIEW",
+    course: 1,
+    topic: "OVERVIEW",
     title: "Portal Pantry",
     plain: "Project overview",
   } as SectionLabel,
@@ -112,7 +118,8 @@ export interface MenuDish {
 
 export const menu = {
   label: {
-    eyebrow: "MENU — FEATURES",
+    course: 2,
+    topic: "FEATURES",
     title: "Tonight's menu",
     plain: "Features",
   } as SectionLabel,
@@ -226,7 +233,8 @@ export interface ReceiptLine {
 
 export const receipt = {
   label: {
-    eyebrow: "RECEIPT — STACK",
+    course: 3,
+    topic: "STACK",
     title: "Your receipt",
     plain: "Tech stack",
   } as SectionLabel,
@@ -274,7 +282,8 @@ export interface TrackerStop {
 
 export const tracker = {
   label: {
-    eyebrow: "TRACK YOUR ORDER — ARCHITECTURE",
+    course: 4,
+    topic: "ARCHITECTURE",
     title: "Your order is on its way",
     plain: "Architecture: the request lifecycle",
   } as SectionLabel,
@@ -353,7 +362,8 @@ export interface TestReview {
 
 export const reviews = {
   label: {
-    eyebrow: "REVIEWS — TESTS",
+    course: 5,
+    topic: "TESTING",
     title: "Verified reviews",
     plain: "Testing",
   } as SectionLabel,
@@ -413,7 +423,8 @@ export interface RolePanel {
 
 export const roles = {
   label: {
-    eyebrow: "SWITCH ACCOUNT — THE TWO ROLES",
+    course: 6,
+    topic: "ROLES",
     title: "One app, two accounts",
     plain: "The two user roles",
   } as SectionLabel,
@@ -464,7 +475,8 @@ export const roles = {
 
 export const checkout = {
   label: {
-    eyebrow: "CHECKOUT — WHERE TO NEXT",
+    course: 7,
+    topic: "NEXT",
     title: "Your order",
     plain: "Summary and links",
   } as SectionLabel,

@@ -425,11 +425,22 @@ export default function PantryApp() {
 
       <main className="pp-shell">
         <section className="pp-hero">
-          <div className="pp-hero__plate">
-            <span className="pp-tag">Carrier no. PP-0042-D</span>
-            <span className="pp-tag pp-tag--go">Cleared for 5 dimensions</span>
-            <span className="pp-tag pp-tag--bad">Bonded since 2847</span>
-          </div>
+          {/* A waybill, not three badges: a bonded carrier stamps one document,
+              and label-over-value reads as freight paperwork rather than chips. */}
+          <dl className="pp-waybill" aria-label="Carrier credentials">
+            <div className="pp-waybill__field">
+              <dt>Carrier</dt>
+              <dd>PP-0042-D</dd>
+            </div>
+            <div className="pp-waybill__field">
+              <dt>Clearance</dt>
+              <dd>5 dimensions</dd>
+            </div>
+            <div className="pp-waybill__field">
+              <dt>Bonded</dt>
+              <dd>since 2847</dd>
+            </div>
+          </dl>
 
           <h1 className="pp-hero__title">
             Hot meals through <em>cold wormholes</em>

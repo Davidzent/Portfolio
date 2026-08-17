@@ -83,7 +83,6 @@ export const heroCode: CodeLine[] = [
 ];
 
 export const hero = {
-  eyebrow: "znt // full-stack   ·   sns // game engine",
   /** Two-line headline. The accent word is styled per-line in the component. */
   headline: ["Full-stack systems,", "game-world imagination."],
   tagline: "Production web apps on one boot, games on the other.",

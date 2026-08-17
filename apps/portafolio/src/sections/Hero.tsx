@@ -121,9 +121,18 @@ export function Hero() {
       <div className="relative mx-auto grid min-h-[100dvh] max-w-[1240px] items-center gap-8 px-5 pb-12 pt-24 sm:px-8 lg:grid-cols-[minmax(0,43%)_1fr] lg:gap-10 lg:pt-20">
         {/* Copy */}
         <div className="max-w-xl">
-          {/* <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-surface/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
-            <span className="h-1.5 w-1.5 rounded-full bg-acid" /> dual-boot // one maker
-          </div> */}
+          {/* A boot line from the machine below rather than a badge — the same
+              BOOT:// vocabulary the viewport and footer terminal already speak. */}
+          <div className="mb-6 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+            <span className="text-faint">boot://</span>
+            <span className="text-acid">ide</span>
+            <span className="text-faint" aria-hidden="true">
+              +
+            </span>
+            <span className="text-amber">engine</span>
+            <span className="h-px w-6 bg-white/15" aria-hidden="true" />
+            <span>one maker</span>
+          </div>
           <div className="mb-4 flex items-center gap-3">
             <BrandLogo height={40} />
             <ZntsnsLogo height={40} boot />
@@ -206,7 +215,9 @@ export function Hero() {
               </motion.div>
             )}
 
-            <div className="pointer-events-none absolute left-3 top-3 z-10 font-mono text-[10px] uppercase tracking-[0.2em] text-acid/70">
+            {/* Bottom-left, mirroring engine://viewport: the editor's own tab bar
+                owns the top of this panel, so a top-3 overlay lands on `dev.ts`. */}
+            <div className="pointer-events-none absolute bottom-3 left-3 z-10 font-mono text-[10px] uppercase tracking-[0.2em] text-acid/70">
               boot://ide
             </div>
             {wide && (

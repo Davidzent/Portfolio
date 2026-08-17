@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { storefront } from "../../data/portalPantry";
 import { PortalRing } from "../components/PortalRing";
 import { PortalCanvas } from "../components/PortalCanvas";
+import { CourseLine } from "../components/SectionHead";
 
 /** STOREFRONT — the hero, laid out like a restaurant header in a delivery app. */
 export function Storefront() {
@@ -12,7 +13,7 @@ export function Storefront() {
     <div className="cs-hero">
       <PortalCanvas />
       <div className="cs-shell">
-        <p className="cs-eyebrow">{storefront.label.eyebrow}</p>
+        <CourseLine label={storefront.label} />
 
         <div className="cs-hero-brand">
           <PortalRing />

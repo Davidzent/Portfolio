@@ -133,11 +133,43 @@
   max-width: 880px;
 }
 
-.pp-hero__plate {
+/* One stamped document. The vertical rules are borders on the fields rather
+   than separators between them, so a wrapped row never leaves a dangling rule. */
+.pp-waybill {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: var(--pp-s-2);
+  margin: 0;
+  border: 1px solid var(--pp-line);
+  border-radius: var(--pp-r-sm);
+  background: rgb(0 0 0 / 0.45);
+  overflow: hidden;
+  width: fit-content;
+}
+
+.pp-waybill__field {
+  padding: var(--pp-s-2) var(--pp-s-3);
+  border-inline-start: 1px solid var(--pp-line);
+  font-family: var(--pp-utility);
+}
+
+.pp-waybill__field:first-child {
+  border-inline-start: 0;
+}
+
+.pp-waybill__field dt {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pp-text-3, var(--pp-text-2));
+}
+
+.pp-waybill__field dd {
+  margin: 2px 0 0;
+  font-size: var(--pp-t-14);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--pp-portal-text);
 }
 
 .pp-hero__title {

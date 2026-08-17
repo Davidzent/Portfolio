@@ -166,29 +166,38 @@ button {
   margin-bottom: clamp(1.8rem, 4vh, 2.8rem);
 }
 
-.cs-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
+/* A menu row rather than a badge: course on the left, topic on the right, and
+   leader dots carrying the eye across — the way a printed menu sets a price. */
+.cs-course {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
   margin: 0 0 1.1rem;
-  padding: 0.3rem 0.75rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  font-size: 0.68rem;
+  font-family: var(--pp-utility, ui-monospace, monospace);
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.17em;
-  color: var(--muted);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  background: var(--surface);
+  color: var(--muted);
 }
 
-.cs-eyebrow::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 10px var(--accent);
+.cs-course__n {
+  flex: none;
+  color: var(--accent);
+}
+
+.cs-course__leader {
+  flex: 1 1 auto;
+  min-width: 1.5rem;
+  align-self: center;
+  border-bottom: 1px dotted var(--line);
+  /* Capped so the dots read as a menu leader, not as a rule across the page. */
+  max-width: 12rem;
+}
+
+.cs-course__topic {
+  flex: none;
+  color: var(--text);
 }
 
 .cs-h2 {
