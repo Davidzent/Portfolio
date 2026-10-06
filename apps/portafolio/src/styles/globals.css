@@ -281,10 +281,17 @@ html.lenis, html.lenis body { height: auto; }
 .ps-svg { display: block; width: 100%; height: 100%; }
 .ps-pulse, .ps-parcel, .ps-tw, .ps-spin, .ps-spin-r, .ps-spin-f,
 .ps-steam, .ps-bub, .ps-flame, .ps-bounce, .ps-hat, .ps-ticket,
-.ps-check, .ps-edge, .ps-node, .ps-fall, .ps-chev, .ps-stow, .ps-beam {
+.ps-check, .ps-edge, .ps-node, .ps-fall, .ps-chev, .ps-stow, .ps-beam,
+.ps-flow, .ps-lens {
   transform-box: fill-box;
   transform-origin: center;
 }
+
+/* AwardTrace */
+.ps-flow { animation: ps-flow 2.4s linear infinite; }
+@keyframes ps-flow { 0% { transform: translateX(-48px); opacity: 0; } 15%, 85% { opacity: 1; } 100% { transform: translateX(48px); opacity: 0; } }
+.ps-lens { animation: ps-scan 4s ease-in-out infinite; }
+@keyframes ps-scan { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-4px, -3px); } 50% { transform: translate(0, -5px); } 75% { transform: translate(4px, -2px); } }
 
 /* Portal Pantry */
 .ps-spin { animation: ps-spin 15s linear infinite; }

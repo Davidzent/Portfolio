@@ -68,9 +68,9 @@ export const heroCode: CodeLine[] = [
   { tokens: [["}", "punct"]] },
   { tokens: [["", "plain"]] },
   { tokens: [["const", "kw"], [" shipped", "var"], [" = ", "punct"], ["[", "punct"]] },
+  { indent: 1, tokens: [['"AwardTrace"', "str"], [",", "punct"], ["      ", "punct"], ["// live on AWS", "com"]] },
+  { indent: 1, tokens: [['"Warehouse"', "str"], [",", "punct"], ["       ", "punct"], ["// Spring API", "com"]] },
   { indent: 1, tokens: [['"Portal Pantry"', "str"], [",", "punct"], ["   ", "punct"], ["// live demo", "com"]] },
-  { indent: 1, tokens: [['"Simmer"', "str"], [",", "punct"], ["          ", "punct"], ["// live demo", "com"]] },
-  { indent: 1, tokens: [['"Restaurant"', "str"], [",", "punct"], ["      ", "punct"], ["// Spring API", "com"]] },
   { tokens: [["]", "punct"], [";", "punct"]] },
   { tokens: [["", "plain"]] },
   { tokens: [["function", "kw"], [" build", "fn"], ["(", "punct"], ["idea", "var"], [": ", "punct"], ["Idea", "type"], ["): ", "punct"], ["Shipped", "type"], [" {", "punct"]] },
@@ -176,6 +176,7 @@ export const skillTree: SkillBranch[] = [
 
 export type ProjectType = "web" | "game";
 export type MarkId =
+  | "awardtrace"
   | "portal"
   | "simmer"
   | "cooking"
@@ -190,13 +191,13 @@ export interface Project {
   short: string;
   type: ProjectType;
   mark: MarkId;
-  /** One-line "preview" shown on hover, arcade blurb voice. */
-  preview: string;
+  /** Landing-page screenshot for the featured panel; without one it shows the scene. */
+  shot?: string;
   description: string;
   highlight?: string;
   tech: string[];
   links: { github?: string; demo?: string };
-  /** Expanded view (the briefing modal): what it does + how it works. */
+  /** Expanded view (the featured panel): what it does + how it works. */
   details: {
     what: string;
     how: string[];
@@ -205,25 +206,38 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    id: "portal-pantry",
-    title: "Portal Pantry",
-    short: "Interdimensional Eats",
+    id: "awardtrace",
+    title: "AwardTrace",
+    short: "Federal contract search",
     type: "web",
-    mark: "portal",
-    preview: "Uber Eats for the multiverse. Two roles, live cart, portal checkout.",
+    mark: "awardtrace",
+    shot: "/projects/awardtrace.webp",
     description:
-      "Food delivery across dimensions: dimension filters, photo menus, a live cart, and a portal-powered checkout. Two roles on a real Node + SQLite backend (or a zero-setup in-browser mock). Customers order, track, and review; owners run menus, a live order queue, and server-computed payouts.",
-    highlight: "Live demo · order across the multiverse",
-    tech: ["React", "TypeScript", "Node.js", "Express", "Vite", "Vitest", "SQLite"],
-    links: { github: "https://github.com/Davidzent/Portal-Pantry", demo: "/portal-pantry/" },
+      "A search site for U.S. federal contract awards. USAspending data streams through a Kafka pipeline into PostgreSQL and Elasticsearch, and a Claude classifier tags each award with a category, but only after it beat the government's own product codes on a hand-labeled set. One Spring Boot codebase run in separate roles on one AWS host, rebuilt from Terraform and S3 in under 7 minutes.",
+    highlight: "Live on AWS · search p95 155 ms at 20 req/s",
+    tech: [
+      "Java 21",
+      "Spring Boot",
+      "Kafka",
+      "Elasticsearch",
+      "PostgreSQL",
+      "React",
+      "Terraform",
+      "AWS",
+      "Claude API",
+    ],
+    links: { github: "https://github.com/Davidzent/AwardTrace", demo: "https://awardtrace.zntsns.com/" },
     details: {
-      what: "A food-delivery platform played completely straight, except the restaurants span the multiverse. Browse by dimension, build a cart from photo menus, and check out through a portal. It ships two full roles: customers order, track their history, and leave reviews; owners manage menus, work a live order queue, and get payouts computed for them.",
+      what: "Search for U.S. federal contract awards, built like a production data platform. The government's USAspending files flow through Kafka into PostgreSQL and Elasticsearch, and every award gets a category from a Claude classifier that had to earn its place: it became the default only after beating the government's own product codes on 181 hand-labeled descriptions, 65.7% to 59.7%. Production holds the Department of Agriculture's contracts and runs on weekdays; outside those hours, the landing page can wake it.",
       how: [
-        "React + TypeScript front end on Vite, with dimension filters and a live cart",
-        "Node + Express + SQLite REST API, or a zero-setup in-browser mock so the demo runs with no backend at all",
-        "Role-based flows: customer ordering, history, and reviews vs. owner menus and order-queue management",
-        "Order totals and owner payouts are computed server-side, never trusted from the client",
-        "Vitest suite covering cart math and API behavior",
+        "Java 21 + Spring Boot 4 as a modular monolith: ingest, pipeline, outbox relay, indexer, enricher, and REST API are one codebase started in different roles, with a test enforcing the module boundaries",
+        "Kafka keyed by award, version-guarded upserts, and Elasticsearch external versioning, so duplicate and out-of-order events land on the same final state",
+        "A transactional outbox writes each change event in the same transaction as its row, so a crash can't lose half of the dual write",
+        "Claude Haiku 4.5 classifies award descriptions, backfilled through the Message Batches API: 31,344 descriptions for $3.25",
+        "React 19 + TypeScript search UI with shareable URL state, multi-select facets, and a client generated from the OpenAPI contract",
+        "Terraform on AWS, deployed from GitHub Actions with automatic rollback; a drill destroyed production and rebuilt it from Terraform and S3 in 6 min 54 s",
+        "Measured on production: 155 ms search p95 at 20 requests a second, and 1,068 transactions a second through the pipeline on one 2-vCPU host",
+        "138 Testcontainers integration tests, plus Playwright and axe for end-to-end and accessibility checks",
       ],
     },
   },
@@ -233,7 +247,6 @@ export const projects: Project[] = [
     short: "Receiving, end to end",
     type: "web",
     mark: "warehouse",
-    preview: "Partial deliveries, over-shipments, damaged pallets. No happy path.",
     description:
       "A Spring Boot receiving system with a React front end on top of it, both live. Clerks record what physically arrived against a purchase order, and only then does stock become pickable. Built around the awkward cases: partial deliveries, 110%-capped over-shipments, damaged units, and two clerks receiving the same PO at once. The API runs on Render against a Supabase Postgres database.",
     highlight: "Live demo · React UI on a real Spring Boot API",
@@ -263,12 +276,35 @@ export const projects: Project[] = [
     },
   },
   {
+    id: "portal-pantry",
+    title: "Portal Pantry",
+    short: "Interdimensional Eats",
+    type: "web",
+    mark: "portal",
+    shot: "/projects/portal-pantry.webp",
+    description:
+      "Food delivery across dimensions: dimension filters, photo menus, a live cart, and a portal-powered checkout. Two roles on a real Node + SQLite backend (or a zero-setup in-browser mock). Customers order, track, and review; owners run menus, a live order queue, and server-computed payouts.",
+    highlight: "Live demo · order across the multiverse",
+    tech: ["React", "TypeScript", "Node.js", "Express", "Vite", "Vitest", "SQLite"],
+    links: { github: "https://github.com/Davidzent/Portal-Pantry", demo: "/portal-pantry/" },
+    details: {
+      what: "A food-delivery platform played completely straight, except the restaurants span the multiverse. Browse by dimension, build a cart from photo menus, and check out through a portal. It ships two full roles: customers order, track their history, and leave reviews; owners manage menus, work a live order queue, and get payouts computed for them.",
+      how: [
+        "React + TypeScript front end on Vite, with dimension filters and a live cart",
+        "Node + Express + SQLite REST API, or a zero-setup in-browser mock so the demo runs with no backend at all",
+        "Role-based flows: customer ordering, history, and reviews vs. owner menus and order-queue management",
+        "Order totals and owner payouts are computed server-side, never trusted from the client",
+        "Vitest suite covering cart math and API behavior",
+      ],
+    },
+  },
+  {
     id: "simmer",
     title: "Simmer",
     short: "Recipe Finder",
     type: "web",
     mark: "simmer",
-    preview: "Search 300+ dishes by name, ingredient, or pure chaos (random).",
+    shot: "/projects/simmer.webp",
     description:
       "A standalone recipe site on TheMealDB API: search dishes by name, browse categories, hunt by main ingredient, or shuffle random meals, with check-off ingredient lists and step-by-step methods.",
     highlight: "Live demo · try it now",
@@ -290,7 +326,6 @@ export const projects: Project[] = [
     short: "Unity · in development",
     type: "game",
     mark: "cooking",
-    preview: "Overcooked-style co-op. Solo build: code, design, and 3D art.",
     description:
       "An Overcooked-inspired co-op cooking game built solo in Unity: recipe classification, player actions, and NPC routing designed as a clean, scalable C# architecture, with every 3D asset modeled in Blender. Currently extending it to real-time multiplayer.",
     highlight: "In development · sole developer",
@@ -311,7 +346,6 @@ export const projects: Project[] = [
     short: "Full-stack ordering",
     type: "web",
     mark: "restaurant",
-    preview: "Angular front, Spring Boot API, Postgres. Tested end to end.",
     description:
       "A full-stack restaurant ordering platform: menu browsing, cart management, and checkout. Angular frontend backed by a Java Spring Boot REST API with PostgreSQL persistence.",
     highlight: "JUnit coverage · Postman-validated endpoints",
@@ -332,7 +366,6 @@ export const projects: Project[] = [
     short: "Neural net from scratch",
     type: "game",
     mark: "neural",
-    preview: "A hand-built net, evolved by a genetic algorithm, beats the game.",
     description:
       "A feedforward neural network written from scratch in Java, no ML libraries, evolved with a genetic algorithm (selection, crossover, mutation) until the agent mastered Flappy Bird across hundreds of generations.",
     highlight: "Custom fitness function · real-time game-state pipeline",
@@ -354,7 +387,6 @@ export const projects: Project[] = [
     short: "Accounts + leaderboard",
     type: "game",
     mark: "tetris",
-    preview: "Classic Tetris with hashed auth and a persistent global ladder.",
     description:
       "Browser-based Tetris with a full SQL-backed user system: hashed credential authentication, session management, and a persistent global leaderboard ranked across difficulty levels.",
     highlight: "A game and a full-stack app in one",
