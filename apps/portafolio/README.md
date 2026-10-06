@@ -35,17 +35,19 @@ Every section is the same résumé beat told in the site's own vocabulary.
 |---|---|
 | **About** — a player card: rotating travel gallery, bio, and self-assessed stat bars. | ![About](docs/about.jpg) |
 | **Skills** — a two-branch tree. Solid nodes ship in production, dashed nodes are what's being levelled next. | ![Skills](docs/skills.jpg) |
-| **Projects** — a level select. Filter by web / games; each card has its own animated SVG mark. | ![Projects](docs/projects.jpg) |
+| **Projects** — a console-style level select. Each project is a tile with its own animated SVG mark, above the selected one's briefing. | ![Projects](docs/projects.jpg) |
 | **Journey** — a GSAP-pinned horizontal timeline of work checkpoints and self-directed side quests. | ![Journey](docs/journey.jpg) |
 | **Contact** — a quest board: press start, copy the email, or grab the résumé. | ![Contact](docs/contact.jpg) |
 
 ## Signature interactions
 
-**Project briefings.** Clicking a card opens a full dialog with the scene mark, what the
-project is, how it works, and a launch button for the live demo. Escape, backdrop, and ✕
-all close it; smooth scroll is paused while it's open.
+**A level select.** Projects works like a console home screen: one row of animated tiles,
+and below it the briefing for the selected tile — a screenshot of its live landing page,
+what it is, how it works, and a button to launch the demo. Click a tile, use the arrow
+buttons, or press ← / →, Home, or End. The row keeps the selection centered, and the page
+never scrolls. AwardTrace loads first.
 
-![Project briefing modal](docs/project-modal.jpg)
+![The level select with a game selected](docs/level-select.jpg)
 
 **A terminal that actually runs.** The footer is a working prompt — try `help`, `whoami`,
 `skills`, `projects`, `social`, `resume`, `github`, `ls`, `clear`, or `sudo`.
@@ -56,8 +58,8 @@ all close it; smooth scroll is paused while it's open.
 it, then chases your cursor for 30 seconds and swings at it. It has three hearts, and the
 third poke kills it — `knight` in the terminal brings it back.
 
-**Plus:** a one-shot boot screen, a scramble-decoding wordmark, magnetic buttons,
-tilting cards, and scroll reveals throughout.
+**Plus:** a one-shot boot screen, a scramble-decoding wordmark, magnetic buttons, and
+scroll reveals throughout.
 
 ## Two themes
 
@@ -93,8 +95,8 @@ src/
 ├─ sections/         Nav · Hero · About · Skills · Projects · Journey · Contact · Footer
 │  ├─ CodeEditor.tsx     the IDE half of the hero (types dev.ts out once)
 │  └─ EngineViewport.tsx the r3f half, code-split
-├─ components/       BootScreen · SpriteBuddy · ProjectModal · ProjectScene · TiltCard ·
-│                    MagneticButton · Reveal · StatBar · ZntsnsLogo · BrandLogo · fx
+├─ components/       BootScreen · SpriteBuddy · ProjectScene · MagneticButton ·
+│                    Reveal · StatBar · ZntsnsLogo · BrandLogo · fx
 ├─ lib/              useTheme · useLenis · useScramble · gsap · cn
 ├─ data/content.ts   ← every word on the site lives here
 ├─ styles/globals.css design tokens, both themes, keyframes
@@ -106,6 +108,11 @@ src/
 [`src/data/content.ts`](src/data/content.ts) is the single source of truth — copy, links,
 projects, the skill tree, the journey timeline, the hero's typed code, and the terminal
 easter egg. Sections read from it; none of them hardcode text.
+
+A project's `shot` points at its landing-page screenshot in
+[`public/projects/`](public/projects), captured as a 1440×1800 WebP. The briefing panel
+crops it from the top, so the extra height fills the panel when the briefing runs long.
+Projects without a `shot` show their animated scene instead.
 
 The hero code block has real constraints documented inline: lines type out in order and
 have to land inside a ~10-second scan, so project names stay near the top, lines stay
@@ -120,7 +127,8 @@ under ~37 characters (the seam clips anything longer), and 19 lines is the hard 
 - Both themes are checked against **WCAG AA**; the light palette's contrast reasoning is
   written into the token comments in `globals.css`.
 - Skip link, landmarks, focus-visible rings, `aria-label`s on the seam and terminal, and
-  keyboard control of the hero seam (← / →).
+  keyboard control of the hero seam (← / →). The level select is an ARIA tab list:
+  ← / →, Home, and End move the selection, and the briefing is its tab panel.
 - SEO: canonical URL, OpenGraph + Twitter cards, and `Person` JSON-LD in
   [`index.html`](index.html); `robots.txt`, `sitemap.xml` and
   [`llms.txt`](public/llms.txt) in [`public/`](public). The last is a curated map of the
@@ -179,13 +187,17 @@ push to `main` deploys — see the [workspace README](../../README.md).
 ## Live demos
 
 Three of the projects on the site are real apps in this same workspace, deployed alongside
-the portfolio and linked directly from their project cards:
+the portfolio and launched from their briefings:
 
 | Demo | Served at | Source |
 |---|---|---|
 | **Portal Pantry** — food delivery across the multiverse, two roles, live cart, portal checkout | `/portal-pantry/` | [`apps/portal-pantry`](../portal-pantry) |
 | **Warehouse** — inbound receiving against a live Spring Boot API, the only demo with a real backend | `/warehouse/` | [`apps/warehouse`](../warehouse) |
 | **Simmer** — a recipe finder on TheMealDB: search by name, category, or ingredient | `/simmer/` | [`apps/simmer`](../simmer) |
+
+AwardTrace, the first level, lives outside this workspace. It runs on AWS at
+[awardtrace.zntsns.com](https://awardtrace.zntsns.com), from
+[its own repository](https://github.com/Davidzent/AwardTrace).
 
 ---
 

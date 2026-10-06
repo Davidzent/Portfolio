@@ -62,9 +62,6 @@ export function SpriteBuddy() {
   const [mode, setMode] = useState<Mode>("idle");
   const [alarm, setAlarm] = useState(false);
   const [hp, setHp] = useState(MAX_HP);
-  const [hidden, setHidden] = useState(
-    () => typeof document !== "undefined" && document.body.style.overflow === "hidden",
-  );
 
   const moverRef = useRef<HTMLDivElement>(null);
   const flipRef = useRef<HTMLDivElement>(null);
@@ -227,15 +224,6 @@ export function SpriteBuddy() {
     return () => window.removeEventListener("buddy:respawn", onRespawn);
   }, []);
 
-  // Stand down while a modal scroll-locks the body.
-  useEffect(() => {
-    const mo = new MutationObserver(() =>
-      setHidden(document.body.style.overflow === "hidden"),
-    );
-    mo.observe(document.body, { attributes: true, attributeFilter: ["style"] });
-    return () => mo.disconnect();
-  }, []);
-
   const dismiss = () => {
     setDismissed(true);
     try {
@@ -266,8 +254,8 @@ export function SpriteBuddy() {
     <div className="pointer-events-none fixed inset-x-0 bottom-3 z-40 select-none sm:bottom-4">
       <div
         ref={moverRef}
-        className="group pointer-events-auto absolute bottom-0 left-0 cursor-pointer transition-opacity duration-300"
-        style={{ width: DISPLAY, height: DISPLAY, opacity: hidden ? 0 : 1, willChange: "transform" }}
+        className="group pointer-events-auto absolute bottom-0 left-0 cursor-pointer"
+        style={{ width: DISPLAY, height: DISPLAY, willChange: "transform" }}
         onClick={hit}
       >
         <div

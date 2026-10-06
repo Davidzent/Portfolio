@@ -35,6 +35,51 @@ function Frame({ children, glow }: { children: React.ReactNode; glow?: string })
   );
 }
 
+/** AwardTrace — an award streaming across three Kafka partitions into a search lens. */
+function AwardTrace(): ReactElement {
+  /** [y, color, delay in seconds] per partition. */
+  const lanes: [number, string, number][] = [
+    [76, ACID, 0],
+    [92, AMBER, 0.8],
+    [108, ACID, 0.4],
+  ];
+  return (
+    <Frame glow="#0d1a26">
+      <g transform="translate(0 14)">
+        {/* the award, with its AI category tag */}
+        <g fill="none" stroke={AMBER} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="30" y="56" width="50" height="72" rx="4" />
+          <path d="M40 72h30M40 84h22M40 96h28" opacity="0.7" />
+        </g>
+        <circle cx="55" cy="113" r="7" fill="none" stroke={ACID} strokeWidth="2" />
+        <g className="ps-pulse">
+          <path d="M62 44h18l6 6-6 6h-18z" fill={ACID} fillOpacity="0.16" stroke={ACID} strokeWidth="2" strokeLinejoin="round" />
+          <circle cx="68" cy="50" r="1.8" fill={ACID} />
+        </g>
+        {/* partitions; the second packet per lane runs half a cycle behind */}
+        {lanes.map(([y, c, delay]) => (
+          <g key={y}>
+            <path d={`M92 ${y}h120`} stroke={ACID} strokeOpacity="0.22" strokeWidth="2" strokeLinecap="round" />
+            {[delay, delay - 1.2].map((t) => (
+              <rect key={t} className="ps-flow" style={{ animationDelay: `${t}s` }} x="145" y={y - 4} width="14" height="8" rx="2" fill={c} />
+            ))}
+          </g>
+        ))}
+        {/* the search lens, results lighting up as they land */}
+        <g className="ps-lens">
+          <circle cx="250" cy="92" r="27" fill="#0a1218" stroke={ACID} strokeWidth="3" />
+          <path d="M269 111l16 16" stroke={ACID} strokeWidth="6" strokeLinecap="round" />
+          <g strokeWidth="3" strokeLinecap="round">
+            <path className="ps-tw" d="M237 82h26" stroke={AMBER} />
+            <path className="ps-tw ps-d1" d="M237 92h20" stroke={ACID} />
+            <path className="ps-tw ps-d2" d="M237 102h24" stroke={ACID} />
+          </g>
+        </g>
+      </g>
+    </Frame>
+  );
+}
+
 /** Portal Pantry — a portal with green + orange rings and a parcel drifting through. */
 function Portal(): ReactElement {
   return (
@@ -231,6 +276,7 @@ function Tetris(): ReactElement {
 }
 
 const SCENES: Record<MarkId, () => ReactElement> = {
+  awardtrace: AwardTrace,
   portal: Portal,
   simmer: Simmer,
   cooking: Cooking,
@@ -246,8 +292,8 @@ export function ProjectScene({ id }: { id: MarkId }) {
   const [onScreen, setOnScreen] = useState(false);
 
   // Keyframes run off-screen too, and Firefox rasterises animated SVG on the
-  // main thread Lenis scrolls from — ~33 elements across the grid. Not
-  // `content-visibility`: TiltCard's preserve-3d context disables it.
+  // main thread Lenis scrolls from. Tiles clipped by the level select's
+  // scroller count as off-screen.
   useEffect(() => {
     const el = ref.current;
     if (!el) return;

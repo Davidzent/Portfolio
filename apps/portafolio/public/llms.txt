@@ -1,8 +1,8 @@
 # David Guijosa Infante
 
 > Full-stack developer in Riverside, California, moving into game development.
-> This site is a portfolio plus three demo applications that are actually
-> running, each with public source.
+> This site is a portfolio plus four applications that are actually running,
+> each with public source.
 
 Also goes by **David Guijosa** and the handle **zntsns**. Builds production web
 applications with React, Angular, TypeScript, Java and Spring Boot, PostgreSQL,
@@ -11,6 +11,7 @@ in Blender. The links below are live software, not screenshots.
 
 ## Live demos
 
+- [AwardTrace](https://awardtrace.zntsns.com/): search for U.S. federal contract awards. USAspending data streams through Kafka into PostgreSQL and Elasticsearch, and a Claude classifier gives each award a category; it became the default only after beating the government's own product codes on a hand-labeled set. The landing page is always up. The app runs on AWS on weekdays from 8:00 to 20:00 Pacific, and the landing page can wake it outside those hours.
 - [Warehouse Receiving](https://www.zntsns.com/warehouse/): a React and TypeScript receiving desk on a real Spring Boot API. Models the awkward cases rather than the happy path — partial deliveries, over-shipments capped at 110%, damaged units that count as received but never reach stock, and JWT-gated clerk and viewer roles. The API runs on Render against Supabase PostgreSQL, so the first request after an idle period is slow.
 - [Portal Pantry](https://www.zntsns.com/portal-pantry/): a full-stack food-delivery application with two account roles. Customers browse, order, track and review; store owners run menus, a live order queue, reviews, and server-computed payouts. The hosted demo runs an in-browser mock backend with the same API contract as the Node and SQLite service.
 - [Portal Pantry case study](https://www.zntsns.com/portal-pantry/case-study/): how that application was built, presented as a delivery-app session.
@@ -18,7 +19,8 @@ in Blender. The links below are live software, not screenshots.
 
 ## Source
 
-- [ZNTSNS monorepo](https://github.com/Davidzent/ZNTSNS): the portfolio and every demo above, as a pnpm workspace deployed to Firebase Hosting.
+- [AwardTrace](https://github.com/Davidzent/AwardTrace): Java 21, Spring Boot, Kafka, Elasticsearch, PostgreSQL, React, and Terraform on AWS. The federal contract search, with its architecture decisions and measured results.
+- [ZNTSNS monorepo](https://github.com/Davidzent/ZNTSNS): the portfolio and every demo above except AwardTrace, as a pnpm workspace deployed to Firebase Hosting.
 - [Warehouse API](https://github.com/Davidzent/Warehouse-API): Java 17, Spring Boot, MyBatis, PostgreSQL. The backend behind the receiving demo.
 - [Warehouse UI](https://github.com/Davidzent/Warehouse-UI): read-only mirror of the receiving front end.
 - [Simmer](https://github.com/Davidzent/Simmer): read-only mirror of the recipe finder.

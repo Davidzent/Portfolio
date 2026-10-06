@@ -99,23 +99,20 @@ const SHOTS = [
     setup: [goTo("projects")],
   },
   {
-    name: "project-modal",
-    caption: "A project briefing",
+    name: "level-select",
+    caption: "The level select with a game selected",
     width: 1440,
     height: 900,
     setup: [
       goTo("projects"),
       `(async () => {
         ${waitFor}
-        const card = await waitFor("article.group");
-        const btn = card.querySelector('button[aria-haspopup="dialog"]');
-        btn.click();
-        await waitFor('[role="dialog"]');
+        const tab = await waitFor('[role="tab"][aria-label^="Multiplayer Cooking Game"]');
+        tab.click();
         await new Promise(r => setTimeout(r, 700));
-        return "briefing open";
+        return "game selected";
       })()`,
     ],
-    settle: 700,
   },
   {
     name: "journey",
