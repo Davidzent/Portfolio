@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import { useLenis } from "./lib/useLenis";
 import { Grain } from "./components/fx";
-import { BootScreen } from "./components/BootScreen";
+// import { BootScreen } from "./components/BootScreen";
 import { SpriteBuddy } from "./components/SpriteBuddy";
 import { Nav } from "./sections/Nav";
 import { Hero } from "./sections/Hero";
@@ -23,7 +23,7 @@ export default function App() {
 
   return (
     <>
-      <BootScreen />
+      {/* <BootScreen /> */}
       <SpriteBuddy />
       <Grain />
       <a
