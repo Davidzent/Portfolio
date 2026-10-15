@@ -36,7 +36,7 @@ Every section is the same résumé beat told in the site's own vocabulary.
 | **About** — a player card: rotating travel gallery, bio, and self-assessed stat bars. | ![About](docs/about.jpg) |
 | **Skills** — a two-branch tree. Solid nodes ship in production, dashed nodes are what's being levelled next. | ![Skills](docs/skills.jpg) |
 | **Projects** — a console-style level select. Each project is a tile with its own animated SVG mark, above the selected one's briefing. | ![Projects](docs/projects.jpg) |
-| **Journey** — a GSAP-pinned horizontal timeline of work checkpoints and self-directed side quests. | ![Journey](docs/journey.jpg) |
+| **Journey** — an overworld map: work runs along the main road, each year's side projects branch off it, and the knight walks to whichever stage you pick. | ![Journey](docs/journey.jpg) |
 | **Contact** — a quest board: press start, copy the email, or grab the résumé. | ![Contact](docs/contact.jpg) |
 
 ## Signature interactions
@@ -83,7 +83,7 @@ The choice is stored in `localStorage` and applied by an inline script in
 |---|---|
 | **Framework** | React 19, TypeScript (strict, project references), Vite 8 |
 | **Styling** | Tailwind v4 via `@tailwindcss/vite` — CSS-first `@theme` in [`src/styles/globals.css`](src/styles/globals.css), no `tailwind.config` |
-| **Motion** | [Motion](https://motion.dev) for component animation, [GSAP + ScrollTrigger](https://gsap.com) for pinning and scrubbing, [Lenis](https://lenis.darkroom.engineering) for smooth scroll (driven off the GSAP ticker, so nothing listens to `window.onscroll`) |
+| **Motion** | [Motion](https://motion.dev) for component animation, [Lenis](https://lenis.darkroom.engineering) for smooth scroll (driven off the [GSAP](https://gsap.com) ticker, so nothing listens to `window.onscroll`) |
 | **3D** | `three` + `@react-three/fiber` for the hero viewport only, lazy-loaded into its own chunk |
 | **Icons / type** | [Phosphor Icons](https://phosphoricons.com); Space Grotesk + JetBrains Mono, self-hosted via Fontsource |
 | **Tooling** | ESLint 10 with `react-hooks` v7 (strict purity rules) |
@@ -106,7 +106,7 @@ src/
 ### Editing content
 
 [`src/data/content.ts`](src/data/content.ts) is the single source of truth — copy, links,
-projects, the skill tree, the journey timeline, the hero's typed code, and the terminal
+projects, the skill tree, the journey map, the hero's typed code, and the terminal
 easter egg. Sections read from it; none of them hardcode text.
 
 A project's `shot` points at its landing-page screenshot in
@@ -123,7 +123,8 @@ under ~37 characters (the seam clips anything longer), and 19 lines is the hard 
 - Everything honors `prefers-reduced-motion`: Lenis never initializes (native scroll is
   exactly what was asked for), the boot screen is skipped, the hero editor shows the
   finished file immediately, scroll reveals render at their final state, the journey
-  timeline drops its pinned scrub, and the knight doesn't appear at all.
+  map's knight jumps between stages instead of walking, and the corner knight doesn't
+  appear at all.
 - Both themes are checked against **WCAG AA**; the light palette's contrast reasoning is
   written into the token comments in `globals.css`.
 - Skip link, landmarks, focus-visible rings, `aria-label`s on the seam and terminal, and

@@ -11,8 +11,7 @@ import { Projects } from "./sections/Projects";
 import { Contact } from "./sections/Contact";
 import { Footer } from "./sections/Footer";
 
-// The only section pulling ScrollTrigger; lazy so GSAP stays out of the entry
-// chunk, sharing one with the Lenis runtime.
+// Below the fold; lazy keeps the map and its knight sprites out of the entry chunk.
 const Journey = lazy(() =>
   import("./sections/Journey").then((m) => ({ default: m.Journey })),
 );
