@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useAnimate, useReducedMotion } from "motion/react";
 import {
   ArrowUpRight,
   CastleTurret,
@@ -81,23 +81,37 @@ function NodeIcon({ cp, n }: { cp: Checkpoint; n: number }) {
 
 function Knight({ path, walking, onWalk }: { path: Pt[]; walking: boolean; onWalk: (w: boolean) => void }) {
   const reduce = useReducedMotion();
-  const px = path.map(center);
-  const legs = path.map((p, i) => (i ? steps(path[i - 1], p) : 0));
-  const total = legs.reduce((a, b) => a + b, 0);
-  let walked = 0;
-  const times = legs.map((l) => (walked += l) / (total || 1));
+  const [scope, animate] = useAnimate<HTMLDivElement>();
   const face = path[path.length - 1][0] < path[0][0] ? -1 : 1;
 
+  // Started by hand: a declarative `animate` skips any axis whose keyframes match
+  // the last walk's, so walking back the way you came cut straight across the map.
+  // A layout effect places the knight before the first paint.
+  useLayoutEffect(() => {
+    const px = path.map(center);
+    const legs = path.map((p, i) => (i ? steps(path[i - 1], p) : 0));
+    const total = legs.reduce((a, b) => a + b, 0);
+    let walked = 0;
+    const times = legs.map((l) => (walked += l) / (total || 1));
+    let live = true;
+    const walk = animate(
+      scope.current,
+      { x: px.map(([x]) => x - KNIGHT / 2), y: px.map(([, y]) => y - KNIGHT + 12) },
+      reduce ? { duration: 0 } : { duration: total * STEP_S, times, ease: "linear" },
+    );
+    void walk.then(() => live && onWalk(false));
+    return () => {
+      live = false;
+      walk.stop();
+    };
+  }, [path, reduce, animate, scope, onWalk]);
+
   return (
-    <motion.div
+    <div
+      ref={scope}
       aria-hidden="true"
       className="pointer-events-none absolute left-0 top-0 z-20"
       style={{ width: KNIGHT, height: KNIGHT }}
-      initial={false}
-      animate={{ x: px.map(([x]) => x - KNIGHT / 2), y: px.map(([, y]) => y - KNIGHT + 12) }}
-      transition={reduce ? { duration: 0 } : { duration: total * STEP_S, times, ease: "linear" }}
-      onAnimationStart={() => onWalk(total > 0 && !reduce)}
-      onAnimationComplete={() => onWalk(false)}
     >
       <div
         key={walking ? "walk" : "idle"}
@@ -110,7 +124,7 @@ function Knight({ path, walking, onWalk }: { path: Pt[]; walking: boolean; onWal
           animation: reduce ? "none" : `sprite-run ${walking ? 0.7 : 1}s steps(4) infinite`,
         }}
       />
-    </motion.div>
+    </div>
   );
 }
 
@@ -192,6 +206,7 @@ export function Journey() {
     if (i === index) return;
     setPath(route(selected, journey[i]));
     setIndex(i);
+    setWalking(true);
   };
 
   // On a narrow screen the map scrolls sideways; keep the selected stage in view.
