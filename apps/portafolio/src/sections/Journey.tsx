@@ -29,6 +29,7 @@ const PANEL_ID = "journey-briefing";
 const tabId = (cp: Checkpoint) => `stage-${cp.id}`;
 const center = ([c, r]: Pt): Pt => [c * CELL + CELL / 2, r * CELL + CELL / 2];
 const steps = (p: Pt, q: Pt) => Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]);
+const inLine = (a: Pt, b: Pt, c: Pt) => (a[0] === b[0] && b[0] === c[0]) || (a[1] === b[1] && b[1] === c[1]);
 const byId = new Map(journey.map((cp) => [cp.id, cp]));
 const parentOf = (cp: Checkpoint) => (cp.from ? byId.get(cp.from) : undefined);
 const projectOf = (cp: Checkpoint) => projects.find((p) => p.id === cp.project);
@@ -50,8 +51,16 @@ function route(a: Checkpoint, b: Checkpoint): Pt[] {
   for (const cp of up.slice(0, up.indexOf(meet!))) pts.push(cp.at, corner(parentOf(cp)!.at, cp.at));
   pts.push(meet!.at);
   for (const cp of down.reverse()) pts.push(corner(parentOf(cp)!.at, cp.at), cp.at);
-  // A straight path's corner repeats an end, and repeated keyframe offsets stall the walk.
-  return pts.filter((p, i) => i === 0 || steps(pts[i - 1], p) > 0);
+
+  // Keep only real turns. A branch can join the road short of its parent node, and
+  // the tree walk would overshoot to the parent and double back; repeated points
+  // would also give repeated keyframe offsets, which stall the walk.
+  const walk: Pt[] = [];
+  for (const p of pts) {
+    while (walk.length > 1 && inLine(walk[walk.length - 2], walk[walk.length - 1], p)) walk.pop();
+    if (!walk.length || steps(walk[walk.length - 1], p) > 0) walk.push(p);
+  }
+  return walk;
 }
 
 /** Each year's stretch of map, shaded behind its nodes. */
