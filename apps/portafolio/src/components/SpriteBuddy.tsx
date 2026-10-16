@@ -250,8 +250,9 @@ export function SpriteBuddy() {
   if (reduce || dismissed) return null;
   const sheet = SHEETS[mode];
 
+  // Hidden on phones: there's no gutter for it, so it would sit on the text.
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-3 z-40 select-none sm:bottom-4">
+    <div className="pointer-events-none fixed inset-x-0 bottom-3 z-40 select-none max-md:hidden sm:bottom-4">
       <div
         ref={moverRef}
         className="group pointer-events-auto absolute bottom-0 left-0 cursor-pointer"
