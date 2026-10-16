@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+  type MotionValue,
+} from "motion/react";
 import {
   ArrowUpRight,
   CastleTurret,
@@ -30,6 +37,8 @@ const tabId = (cp: Checkpoint) => `stage-${cp.id}`;
 const center = ([c, r]: Pt): Pt => [c * CELL + CELL / 2, r * CELL + CELL / 2];
 const steps = (p: Pt, q: Pt) => Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]);
 const inLine = (a: Pt, b: Pt, c: Pt) => (a[0] === b[0] && b[0] === c[0]) || (a[1] === b[1] && b[1] === c[1]);
+const between = (a: Pt, b: Pt, p: Pt) =>
+  inLine(a, b, p) && [0, 1].every((k) => Math.min(a[k], b[k]) <= p[k] && p[k] <= Math.max(a[k], b[k]));
 const byId = new Map(journey.map((cp) => [cp.id, cp]));
 const parentOf = (cp: Checkpoint) => (cp.from ? byId.get(cp.from) : undefined);
 const projectOf = (cp: Checkpoint) => projects.find((p) => p.id === cp.project);
@@ -51,10 +60,19 @@ function route(a: Checkpoint, b: Checkpoint): Pt[] {
   for (const cp of up.slice(0, up.indexOf(meet!))) pts.push(cp.at, corner(parentOf(cp)!.at, cp.at));
   pts.push(meet!.at);
   for (const cp of down.reverse()) pts.push(corner(parentOf(cp)!.at, cp.at), cp.at);
+  return straighten(pts);
+}
 
-  // Keep only real turns. A branch can join the road short of its parent node, and
-  // the tree walk would overshoot to the parent and double back; repeated points
-  // would also give repeated keyframe offsets, which stall the walk.
+/** A walk picked mid-walk: from where the knight stands, along the rest of the old walk, then on. */
+function resume(here: Pt, old: Pt[], next: Pt[]): Pt[] {
+  const on = old.findIndex((p, i) => i > 0 && between(old[i - 1], p, here));
+  return straighten([here, ...(on < 0 ? [] : old.slice(on)), ...next]);
+}
+
+/** Keep only real turns. A branch can join the road short of its parent node, and a
+ *  walk that changes course doubles back; both reduce to the direct route. Repeated
+ *  points would also give repeated keyframe offsets, which stall the walk. */
+function straighten(pts: Pt[]): Pt[] {
   const walk: Pt[] = [];
   for (const p of pts) {
     while (walk.length > 1 && inLine(walk[walk.length - 2], walk[walk.length - 1], p)) walk.pop();
@@ -79,25 +97,43 @@ function NodeIcon({ cp, n }: { cp: Checkpoint; n: number }) {
   );
 }
 
-function Knight({ path, walking, onWalk }: { path: Pt[]; walking: boolean; onWalk: (w: boolean) => void }) {
+interface KnightProps {
+  path: Pt[];
+  /** Live position in cells, shared so a new walk can start from mid-walk. */
+  col: MotionValue<number>;
+  row: MotionValue<number>;
+  walking: boolean;
+  onWalk: (w: boolean) => void;
+}
+
+function Knight({ path, col, row, walking, onWalk }: KnightProps) {
   const reduce = useReducedMotion();
-  const px = path.map(center);
-  const legs = path.map((p, i) => (i ? steps(path[i - 1], p) : 0));
-  const total = legs.reduce((a, b) => a + b, 0);
-  let walked = 0;
-  const times = legs.map((l) => (walked += l) / (total || 1));
+  const x = useTransform(col, (c) => center([c, 0])[0] - KNIGHT / 2);
+  const y = useTransform(row, (r) => center([0, r])[1] - KNIGHT + 12);
   const face = path[path.length - 1][0] < path[0][0] ? -1 : 1;
+
+  // Driven imperatively: a declarative `animate` skips any axis whose keyframes
+  // match the last walk's, so walking back the way you came cut across the map.
+  useEffect(() => {
+    const legs = path.map((p, i) => (i ? steps(path[i - 1], p) : 0));
+    const total = legs.reduce((a, b) => a + b, 0);
+    let walked = 0;
+    const times = legs.map((l) => (walked += l) / (total || 1));
+    const opts = reduce ? { duration: 0 } : { duration: total * STEP_S, times, ease: "linear" as const };
+    const walks = [animate(col, path.map((p) => p[0]), opts), animate(row, path.map((p) => p[1]), opts)];
+    let live = true;
+    void Promise.all(walks).then(() => live && onWalk(false));
+    return () => {
+      live = false;
+      walks.forEach((w) => w.stop());
+    };
+  }, [path, reduce, col, row, onWalk]);
 
   return (
     <motion.div
       aria-hidden="true"
       className="pointer-events-none absolute left-0 top-0 z-20"
-      style={{ width: KNIGHT, height: KNIGHT }}
-      initial={false}
-      animate={{ x: px.map(([x]) => x - KNIGHT / 2), y: px.map(([, y]) => y - KNIGHT + 12) }}
-      transition={reduce ? { duration: 0 } : { duration: total * STEP_S, times, ease: "linear" }}
-      onAnimationStart={() => onWalk(total > 0 && !reduce)}
-      onAnimationComplete={() => onWalk(false)}
+      style={{ width: KNIGHT, height: KNIGHT, x, y }}
     >
       <div
         key={walking ? "walk" : "idle"}
@@ -186,12 +222,15 @@ export function Journey() {
   const [index, setIndex] = useState(0);
   const [path, setPath] = useState<Pt[]>([journey[0].at]);
   const [walking, setWalking] = useState(false);
+  const col = useMotionValue(journey[0].at[0]);
+  const row = useMotionValue(journey[0].at[1]);
   const selected = journey[index];
 
   const select = (i: number) => {
     if (i === index) return;
-    setPath(route(selected, journey[i]));
+    setPath(resume([col.get(), row.get()], path, route(selected, journey[i])));
     setIndex(i);
+    setWalking(true);
   };
 
   // On a narrow screen the map scrolls sideways; keep the selected stage in view.
@@ -327,7 +366,7 @@ export function Journey() {
               );
             })}
 
-            <Knight path={path} walking={walking} onWalk={setWalking} />
+            <Knight path={path} col={col} row={row} walking={walking} onWalk={setWalking} />
           </div>
         </div>
 
