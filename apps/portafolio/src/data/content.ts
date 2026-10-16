@@ -9,7 +9,7 @@ export const site = {
   name: "David",
   fullName: "David Guijosa Infante",
   role: "Full-Stack Developer, leveling into Game Dev",
-  experience: "3+ yrs experience",
+  experience: "4+ yrs experience",
   domain: "zntsns.com",
   email: "davidgin641@gmail.com",
   location: "Riverside, CA",
@@ -117,7 +117,7 @@ export const about = {
   ],
   facts: [
     { k: "Base", v: "Riverside, CA" },
-    { k: "XP", v: "3+ yrs shipping" },
+    { k: "XP", v: "4+ yrs shipping" },
     { k: "Guild", v: "Freelance · ex-Cognizant" },
     { k: "Status", v: "Open to work" },
   ],
@@ -285,7 +285,6 @@ export const projects: Project[] = [
     short: "Interdimensional Eats",
     type: "web",
     mark: "portal",
-    shot: "/projects/portal-pantry.webp",
     description:
       "Food delivery across dimensions: dimension filters, photo menus, a live cart, and a portal-powered checkout. Two roles on a real Node + SQLite backend (or a zero-setup in-browser mock). Customers order, track, and review; owners run menus, a live order queue, and server-computed payouts.",
     highlight: "Live demo · order across the multiverse",
