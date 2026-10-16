@@ -9,7 +9,7 @@ export const site = {
   name: "David",
   fullName: "David Guijosa Infante",
   role: "Full-Stack Developer, leveling into Game Dev",
-  experience: "3+ yrs experience",
+  experience: "4+ yrs experience",
   domain: "zntsns.com",
   email: "davidgin641@gmail.com",
   location: "Riverside, CA",
@@ -117,7 +117,7 @@ export const about = {
   ],
   facts: [
     { k: "Base", v: "Riverside, CA" },
-    { k: "XP", v: "3+ yrs shipping" },
+    { k: "XP", v: "4+ yrs shipping" },
     { k: "Guild", v: "Freelance · ex-Cognizant" },
     { k: "Status", v: "Open to work" },
   ],
