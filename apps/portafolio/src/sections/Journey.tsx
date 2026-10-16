@@ -211,7 +211,7 @@ export function Journey() {
   let stage = 0;
 
   return (
-    <section id="journey" className="border-t border-white/5 bg-void px-5 py-16 sm:px-8 lg:py-24">
+    <section className="border-t border-white/5 bg-void px-5 py-16 sm:px-8 lg:py-24">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
           cmd="cat journey.log"
