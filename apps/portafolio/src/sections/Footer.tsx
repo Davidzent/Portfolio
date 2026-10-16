@@ -161,7 +161,7 @@ export function Footer() {
           <span>
             © {new Date().getFullYear()} {site.fullName} · {site.domain}
           </span>
-          <span className="hidden sm:inline">built with React · Tailwind · Motion · GSAP · three</span>
+          <span className="hidden sm:inline">built with React · Tailwind · Motion · three</span>
           <a
             href="#top"
             className="flex items-center gap-2 rounded-md border border-white/10 px-3 py-1.5 text-muted transition-colors hover:border-acid/40 hover:text-acid"

@@ -195,7 +195,8 @@ Two things that licence does **not** cover:
 - [TheMealDB](https://www.themealdb.com) — free recipe API and photography powering Simmer.
 - [Vite](https://vite.dev), [React](https://react.dev), and [pnpm](https://pnpm.io) — the foundation of the whole workspace.
 - [Firebase Hosting](https://firebase.google.com/docs/hosting) and [`FirebaseExtended/action-hosting-deploy`](https://github.com/FirebaseExtended/action-hosting-deploy) — hosting and preview channels.
-- [Phosphor Icons](https://phosphoricons.com), [GSAP](https://gsap.com), [Lenis](https://lenis.darkroom.engineering), [Motion](https://motion.dev), and [Three.js](https://threejs.org) — motion and visuals in the portfolio app.
+- [Phosphor Icons](https://phosphoricons.com), [Lenis](https://lenis.darkroom.engineering), [Motion](https://motion.dev), and [Three.js](https://threejs.org) — motion and visuals in the portfolio app.
+- [GSAP](https://gsap.com) — scroll-scrubbed animation in the Portal Pantry case study.
 
 ---
 
