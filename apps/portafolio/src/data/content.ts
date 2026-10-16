@@ -403,22 +403,37 @@ export const projects: Project[] = [
   },
 ];
 
-/* ── Journey (side-scroll timeline) ────────────────────────── */
+/* ── Journey (world map) ───────────────────────────────────── */
 
 export interface Checkpoint {
+  id: string;
   year: string;
   title: string;
   org: string;
-  type: "work" | "quest";
+  /** Short caption under the map node. */
+  label: string;
+  /** work runs the main road, quests branch off their year, the castle ends it. */
+  type: "work" | "quest" | "castle";
+  /** Map cell as [column, row] on a 21 × 7 grid; the main road is row 3. Captions
+   *  sit below nodes, so no path may enter a node from straight below. */
+  at: [number, number];
+  /** The node this one's path leads from. The first node leads from START. */
+  from?: string;
+  /** Quests: the entry in `projects` whose links the briefing shows. */
+  project?: string;
   points: string[];
 }
 
+/** In walking order, which the arrow keys follow. */
 export const journey: Checkpoint[] = [
   {
+    id: "revature",
     year: "2022",
     title: "Software Engineer",
     org: "Revature",
+    label: "Revature",
     type: "work",
+    at: [2, 3],
     points: [
       "Enterprise training program; placed at Cognizant.",
       "Contributed to 12+ full-stack projects in Java, Spring, Angular, and Node.",
@@ -426,10 +441,29 @@ export const journey: Checkpoint[] = [
     ],
   },
   {
+    id: "restaurant",
+    year: "2022",
+    title: "Restaurant Platform",
+    org: "Self-directed",
+    label: "Restaurant",
+    type: "quest",
+    at: [3, 1],
+    from: "revature",
+    project: "restaurant",
+    points: [
+      "Angular front end over a Java Spring Boot REST API and PostgreSQL.",
+      "JUnit tests on the API, every endpoint validated in Postman.",
+    ],
+  },
+  {
+    id: "cognizant",
     year: "2022",
     title: "Software Engineer",
     org: "Cognizant",
+    label: "Cognizant",
     type: "work",
+    at: [5, 3],
+    from: "revature",
     points: [
       "Built RESTful microservices in Java / Spring Boot for enterprise apps.",
       "Owned Jenkins CI/CD pipelines end to end, +25% delivery velocity.",
@@ -437,20 +471,14 @@ export const journey: Checkpoint[] = [
     ],
   },
   {
-    year: "2023",
-    title: "Side quest: Flappy Bird AI",
-    org: "Self-directed",
-    type: "quest",
-    points: [
-      "Wrote a neural network from scratch in Java, no ML libraries.",
-      "Evolved it with a genetic algorithm until it beat the game.",
-    ],
-  },
-  {
+    id: "freelance",
     year: "2023",
     title: "Full-Stack Developer",
     org: "Freelance",
+    label: "Freelance",
     type: "work",
+    at: [8, 3],
+    from: "cognizant",
     points: [
       "Architected and shipped full-stack apps for 5+ clients on GCP.",
       "Docker-based CI/CD cut deployment cycles by 50%.",
@@ -458,10 +486,118 @@ export const journey: Checkpoint[] = [
     ],
   },
   {
+    id: "neural",
+    year: "2023",
+    title: "Flappy Bird AI",
+    org: "Self-directed",
+    label: "Flappy AI",
+    type: "quest",
+    at: [9, 1],
+    from: "freelance",
+    project: "neural",
+    points: [
+      "Wrote a neural network from scratch in Java, no ML libraries.",
+      "Evolved it with a genetic algorithm until it beat the game.",
+    ],
+  },
+  {
+    id: "tetris",
+    year: "2023",
+    title: "Tetris",
+    org: "Self-directed",
+    label: "Tetris",
+    type: "quest",
+    at: [9, 5],
+    from: "freelance",
+    project: "tetris",
+    points: [
+      "Game loop, pieces, and rendering in vanilla JavaScript.",
+      "SQL-backed accounts with hashed credentials and a global leaderboard.",
+    ],
+  },
+  {
+    id: "cappi",
+    year: "2026",
+    title: "Cappi travel platform",
+    org: "Concierge marketplace",
+    label: "Cappi",
+    type: "work",
+    at: [14, 3],
+    from: "freelance",
+    points: [
+      "Wrote the platform's 62-page documentation site, covering the Android app, the customer API, and the marketplace backend.",
+      "Shipped account deletion across the Expo app and two NestJS services, including Stripe card cleanup.",
+    ],
+  },
+  {
+    id: "simmer",
+    year: "2026",
+    title: "Simmer",
+    org: "Self-directed",
+    label: "Simmer",
+    type: "quest",
+    at: [12, 1],
+    from: "cappi",
+    project: "simmer",
+    points: [
+      "Recipe finder on TheMealDB: by name, category, main ingredient, or at random.",
+      "Check-off ingredient lists and step-by-step methods.",
+    ],
+  },
+  {
+    id: "portal-pantry",
+    year: "2026",
+    title: "Portal Pantry",
+    org: "Self-directed",
+    label: "Portal Pantry",
+    type: "quest",
+    at: [16, 1],
+    from: "cappi",
+    project: "portal-pantry",
+    points: [
+      "Food delivery across dimensions, with customer and owner roles.",
+      "A Node + SQLite backend, or a zero-setup in-browser mock.",
+    ],
+  },
+  {
+    id: "warehouse",
+    year: "2026",
+    title: "Warehouse API & UI",
+    org: "Self-directed",
+    label: "Warehouse",
+    type: "quest",
+    at: [12, 5],
+    from: "cappi",
+    project: "warehouse",
+    points: [
+      "Spring Boot receiving API with a live React front end.",
+      "Partial deliveries, 110%-capped over-shipments, and concurrent clerks.",
+    ],
+  },
+  {
+    id: "awardtrace",
+    year: "2026",
+    title: "AwardTrace",
+    org: "Self-directed",
+    label: "AwardTrace",
+    type: "quest",
+    at: [16, 5],
+    from: "cappi",
+    project: "awardtrace",
+    points: [
+      "Federal contract search: Kafka into PostgreSQL and Elasticsearch, on AWS.",
+      "A Claude classifier that beat the government's product codes, 65.7% to 59.7%.",
+    ],
+  },
+  {
+    id: "now",
     year: "Now",
     title: "Building a multiplayer cooking game",
     org: "Solo, in Unity",
-    type: "quest",
+    label: "Cooking game",
+    type: "castle",
+    at: [19, 3],
+    from: "cappi",
     points: [
       "Designing gameplay systems in C#, modeling every asset in Blender.",
       "Extending single-player systems to real-time multiplayer.",

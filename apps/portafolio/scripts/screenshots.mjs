@@ -116,7 +116,7 @@ const SHOTS = [
   },
   {
     name: "journey",
-    caption: "Journey — the pinned timeline",
+    caption: "Journey — the world map",
     width: 1440,
     height: 900,
     reload: true,
