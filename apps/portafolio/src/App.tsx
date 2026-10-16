@@ -44,18 +44,20 @@ export default function App() {
         <About />
         <Skills />
         <Projects />
-        {/* Placeholder keeps the nav anchor and reserves height against jump. */}
-        <Suspense
-          fallback={
-            <section
-              id="journey"
-              className="min-h-screen border-t border-white/5 bg-void"
-              aria-hidden="true"
-            />
-          }
-        >
-          <Journey />
-        </Suspense>
+        {/* Anchor lives outside Suspense so Nav's observer keeps the same node
+            when the chunk lands; the placeholder reserves height against jump. */}
+        <div id="journey">
+          <Suspense
+            fallback={
+              <section
+                className="min-h-screen border-t border-white/5 bg-void"
+                aria-hidden="true"
+              />
+            }
+          >
+            <Journey />
+          </Suspense>
+        </div>
         <Contact />
       </main>
       <Footer />
