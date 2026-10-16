@@ -8,7 +8,6 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev)
 [![Tailwind](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![GSAP](https://img.shields.io/badge/GSAP-ScrollTrigger-88CE02?logo=greensock&logoColor=black)](https://gsap.com)
 [![three.js](https://img.shields.io/badge/three.js-r185-000000?logo=threedotjs&logoColor=white)](https://threejs.org)
 
 [Live site](https://www.zntsns.com) · [LinkedIn](https://www.linkedin.com/in/davidguijosa/) · [GitHub](https://github.com/Davidzent)
@@ -83,7 +82,7 @@ The choice is stored in `localStorage` and applied by an inline script in
 |---|---|
 | **Framework** | React 19, TypeScript (strict, project references), Vite 8 |
 | **Styling** | Tailwind v4 via `@tailwindcss/vite` — CSS-first `@theme` in [`src/styles/globals.css`](src/styles/globals.css), no `tailwind.config` |
-| **Motion** | [Motion](https://motion.dev) for component animation, [Lenis](https://lenis.darkroom.engineering) for smooth scroll (driven off the [GSAP](https://gsap.com) ticker, so nothing listens to `window.onscroll`) |
+| **Motion** | [Motion](https://motion.dev) for component animation, [Lenis](https://lenis.darkroom.engineering) for smooth scroll on its own `requestAnimationFrame` loop, off under `prefers-reduced-motion` |
 | **3D** | `three` + `@react-three/fiber` for the hero viewport only, lazy-loaded into its own chunk |
 | **Icons / type** | [Phosphor Icons](https://phosphoricons.com); Space Grotesk + JetBrains Mono, self-hosted via Fontsource |
 | **Tooling** | ESLint 10 with `react-hooks` v7 (strict purity rules) |
@@ -97,7 +96,7 @@ src/
 │  └─ EngineViewport.tsx the r3f half, code-split
 ├─ components/       BootScreen · SpriteBuddy · ProjectScene · MagneticButton ·
 │                    Reveal · StatBar · ZntsnsLogo · BrandLogo · fx
-├─ lib/              useTheme · useLenis · useScramble · gsap · cn
+├─ lib/              useTheme · useLenis · useScramble · cn
 ├─ data/content.ts   ← every word on the site lives here
 ├─ styles/globals.css design tokens, both themes, keyframes
 └─ assets/           pixel-knight sprite sheets
