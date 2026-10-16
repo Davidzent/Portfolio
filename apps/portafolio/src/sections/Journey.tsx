@@ -370,6 +370,15 @@ export function Journey() {
           </div>
         </div>
 
+        {/* Shown while the map can overflow: it needs ~1160px, plus a desktop
+            scrollbar's width. Phones hide scrollbars, so nothing else says it scrolls. */}
+        <p
+          aria-hidden="true"
+          className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-muted min-[1180px]:hidden"
+        >
+          &larr; scroll the map &rarr;
+        </p>
+
         <Briefing cp={selected} />
       </div>
     </section>
