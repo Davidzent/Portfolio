@@ -179,14 +179,15 @@ export function Hero() {
             data-theme="dark"
             className={cn(
               "relative overflow-hidden rounded-xl border border-white/15 bg-void shadow-2xl",
-              wide ? "h-[62vh] max-h-[560px]" : "grid h-[74vh] grid-rows-2",
+              wide ? "h-[62vh] max-h-[560px]" : "grid",
             )}
           >
-            <div className={wide ? "absolute inset-0" : "relative overflow-hidden border-b border-white/10"}>
+            <div className={wide ? "absolute inset-0" : "relative h-[37vh] overflow-hidden border-b border-white/10"}>
               {engine}
             </div>
+            {/* Stacked, the editor takes its full height and leaves a strip for boot://ide. */}
             <motion.div
-              className={wide ? "absolute inset-0" : "relative overflow-hidden"}
+              className={wide ? "absolute inset-0" : "relative overflow-hidden pb-8"}
               style={wide ? { clipPath: clip } : undefined}
             >
               <CodeEditor />

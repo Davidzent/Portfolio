@@ -92,7 +92,8 @@ export function CodeEditor() {
         <span className="h-2.5 w-2.5 rounded-full bg-acid/40" />
         <span className="ml-2 text-xs text-faint">dev.ts</span>
       </div>
-      <div className="flex-1 overflow-hidden px-3 py-4 sm:px-5">
+      {/* Long comments run under the seam on desktop; stacked on a phone, they scroll. */}
+      <div className="flex-1 overflow-x-auto overflow-y-hidden px-3 py-4 [scrollbar-width:none] sm:px-5">
         {heroCode.map((ln, i) => {
           const isPast = reduce || i < line;
           const isCur = !reduce && i === line;
