@@ -36,49 +36,90 @@ function RoleWord({ play }: { play: boolean }) {
 }
 
 const GLYPHS = "#$%&*+-./:;<=>?@~!\\";
-const COLS = 420; // ~2,800px of 11px mono, past ultrawide; the pre clips the rest
 const ROWS = 9;
+const FONT_PX = 11;
+const LINE_PX = FONT_PX * 1.25;
 
-/** Heaps of glyphs along the bottom edge: column heights drift, characters flicker. */
-function glyphField(heights: number[]): string {
-  const pick = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-  return Array.from({ length: ROWS }, (_, r) =>
-    heights.map((h) => (r >= ROWS - h ? pick() : " ")).join(""),
-  ).join("\n");
+/**
+ * Column height for column `c` at tick `t`: two sine swells, a long one and a short
+ * chop. Phase grows with t, so every crest travels toward column 0, right to left.
+ */
+function swell(c: number, t: number): number {
+  const y = 0.45 + 0.3 * Math.sin(c * 0.09 + t * 0.25) + 0.15 * Math.sin(c * 0.23 + t * 0.4);
+  return Math.max(0, Math.min(ROWS, Math.round(ROWS * y)));
 }
 
 /**
- * Column heights at tick `t`: two sine swells, a long one and a short chop. Phase
- * grows with t, so every crest travels toward column 0 — right to left, like surf.
+ * The rolling glyph surf along the hero's bottom edge. Drawn on a canvas, not as
+ * DOM text: a <pre> repainting thousands of glyphs through background-clip and a
+ * mask 11 times a second was what made Firefox stutter.
  */
-function swell(t: number): number[] {
-  return Array.from({ length: COLS }, (_, c) => {
-    const y = 0.45 + 0.3 * Math.sin(c * 0.09 + t * 0.25) + 0.15 * Math.sin(c * 0.23 + t * 0.4);
-    return Math.max(0, Math.min(ROWS, Math.round(ROWS * y)));
-  });
-}
-
 function GlyphBand({ animate }: { animate: boolean }) {
-  const [text, setText] = useState("");
+  const ref = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
+    const canvas = ref.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+    const height = ROWS * LINE_PX;
+    let width = 0;
+    let charW = FONT_PX * 0.6;
     let t = 0;
-    const tick = () => {
-      t += 1;
-      setText(glyphField(swell(t)));
+
+    const draw = () => {
+      const css = getComputedStyle(canvas);
+      const fill = ctx.createLinearGradient(0, 0, width, 0);
+      fill.addColorStop(0, css.getPropertyValue("--color-acid").trim() || "#7dfc5a");
+      fill.addColorStop(0.5, css.getPropertyValue("--color-muted").trim() || "#8b958d");
+      fill.addColorStop(1, css.getPropertyValue("--color-amber").trim() || "#ff9e2c");
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = fill;
+      const cols = Math.ceil(width / charW);
+      const heights = Array.from({ length: cols }, (_, c) => swell(c, t));
+      for (let r = 0; r < ROWS; r++) {
+        // Fades toward the top, like the old mask-image.
+        ctx.globalAlpha = 0.32 * ((r + 1) / ROWS);
+        for (let c = 0; c < cols; c++) {
+          if (r >= ROWS - heights[c]) {
+            ctx.fillText(GLYPHS[(Math.random() * GLYPHS.length) | 0], c * charW, r * LINE_PX);
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
     };
-    tick();
-    if (!animate) return;
-    const id = window.setInterval(tick, 90);
-    return () => window.clearInterval(id);
+
+    const resize = () => {
+      width = canvas.clientWidth;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.font = `${FONT_PX}px "JetBrains Mono", monospace`;
+      ctx.textBaseline = "top";
+      charW = ctx.measureText("M").width || charW;
+      draw();
+    };
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+    if (!animate) return () => ro.disconnect();
+    const id = window.setInterval(() => {
+      t += 1;
+      draw();
+    }, 90);
+    return () => {
+      ro.disconnect();
+      window.clearInterval(id);
+    };
   }, [animate]);
 
   return (
-    <pre
+    <canvas
+      ref={ref}
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 bottom-0 select-none overflow-hidden whitespace-pre bg-gradient-to-r from-acid/30 via-white/10 to-amber/30 bg-clip-text font-mono text-[11px] leading-[1.25] text-transparent [mask-image:linear-gradient(to_top,black,transparent)]"
-    >
-      {text}
-    </pre>
+      className="pointer-events-none absolute inset-x-0 bottom-0 w-full"
+      style={{ height: ROWS * LINE_PX }}
+    />
   );
 }
 

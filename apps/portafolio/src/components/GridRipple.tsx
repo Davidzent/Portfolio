@@ -29,6 +29,15 @@ export function GridRipple() {
     let raf = 0;
     let hover: [number, number] | null = null;
     const waves: Wave[] = [];
+    let acid = "#7dfc5a";
+    let amber = "#ff9e2c";
+    // Read on interaction, not per frame: getComputedStyle in a 60fps loop forces a
+    // style flush each frame. Interaction-time is still fresh after a theme toggle.
+    const readColors = () => {
+      const css = getComputedStyle(host);
+      acid = css.getPropertyValue("--color-acid").trim() || acid;
+      amber = css.getPropertyValue("--color-amber").trim() || amber;
+    };
 
     const schedule = () => {
       if (!raf) raf = requestAnimationFrame(draw);
@@ -37,10 +46,6 @@ export function GridRipple() {
     function draw(now: number) {
       raf = 0;
       ctx!.clearRect(0, 0, w, h);
-      // Read per frame so the theme toggle recolors it.
-      const css = getComputedStyle(host!);
-      const acid = css.getPropertyValue("--color-acid").trim() || "#7dfc5a";
-      const amber = css.getPropertyValue("--color-amber").trim() || "#ff9e2c";
       ctx!.font = `600 ${Math.round(CELL * 0.42)}px "JetBrains Mono", monospace`;
       ctx!.textAlign = "center";
       ctx!.textBaseline = "middle";
@@ -101,6 +106,7 @@ export function GridRipple() {
       const c = cellAt(e);
       if (hover?.[0] === c[0] && hover[1] === c[1]) return;
       hover = c;
+      readColors();
       schedule();
     };
     const onLeave = () => {
@@ -112,6 +118,7 @@ export function GridRipple() {
       // carries data-theme too, so an unscoped match would swallow every click.
       const hit = (e.target as Element).closest("a, button, input, [role='separator'], [data-theme='dark']");
       if (reduce || (hit && host.contains(hit))) return;
+      readColors();
       const [col, row] = cellAt(e);
       const x = (col + 0.5) * CELL;
       // Left half is the IDE side (green), right half the engine side (amber).
