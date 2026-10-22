@@ -85,7 +85,8 @@ export const heroCode: CodeLine[] = [
 export const hero = {
   /** Two-line headline. The accent word is styled per-line in the component. */
   headline: ["Full-stack systems,", "game-world imagination."],
-  tagline: "Production web apps on one boot, games on the other.",
+  /** Cycles in the hero's "… Developer." line. */
+  roles: ["Full-stack", "Backend", "Frontend", "Game"],
   primaryCta: { label: "View projects", href: "#projects" },
   secondaryCta: { label: "Start co-op", href: "#contact" },
   engineHint: "drag the seam",

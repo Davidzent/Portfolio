@@ -8,7 +8,7 @@ import {
 } from "motion/react";
 import { ArrowRight, GameController, ArrowsHorizontal } from "@phosphor-icons/react";
 import { hero, site } from "../data/content";
-import { ZntsnsLogo } from "../components/ZntsnsLogo";
+import { useScramble } from "../lib/useScramble";
 import { MagneticButton } from "../components/MagneticButton";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { Scanlines } from "../components/fx";
@@ -17,6 +17,69 @@ import { cn } from "../lib/cn";
 import { BrandLogo } from "../components/BrandLogo";
 
 const EngineViewport = lazy(() => import("./EngineViewport"));
+
+/** The role word in "… Developer." cycles, decoding through the scramble glyphs each time. */
+function RoleWord({ play }: { play: boolean }) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (!play) return;
+    const id = window.setInterval(() => setI((n) => (n + 1) % hero.roles.length), 2600);
+    return () => window.clearInterval(id);
+  }, [play]);
+  const text = useScramble(hero.roles[i], play, 0.35);
+  return (
+    <span aria-hidden="true" className={i % 2 ? "text-amber text-glow-amber" : "text-acid text-glow-acid"}>
+      {text}
+    </span>
+  );
+}
+
+const GLYPHS = "#$%&*+-./:;<=>?@~!\\";
+const COLS = 420; // ~2,800px of 11px mono, past ultrawide; the pre clips the rest
+const ROWS = 9;
+
+/** Heaps of glyphs along the bottom edge: column heights drift, characters flicker. */
+function glyphField(heights: number[]): string {
+  const pick = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+  return Array.from({ length: ROWS }, (_, r) =>
+    heights.map((h) => (r >= ROWS - h ? pick() : " ")).join(""),
+  ).join("\n");
+}
+
+/**
+ * Column heights at tick `t`: two sine swells, a long one and a short chop. Phase
+ * grows with t, so every crest travels toward column 0 — right to left, like surf.
+ */
+function swell(t: number): number[] {
+  return Array.from({ length: COLS }, (_, c) => {
+    const y = 0.45 + 0.3 * Math.sin(c * 0.09 + t * 0.25) + 0.15 * Math.sin(c * 0.23 + t * 0.4);
+    return Math.max(0, Math.min(ROWS, Math.round(ROWS * y)));
+  });
+}
+
+function GlyphBand({ animate }: { animate: boolean }) {
+  const [text, setText] = useState("");
+  useEffect(() => {
+    let t = 0;
+    const tick = () => {
+      t += 1;
+      setText(glyphField(swell(t)));
+    };
+    tick();
+    if (!animate) return;
+    const id = window.setInterval(tick, 90);
+    return () => window.clearInterval(id);
+  }, [animate]);
+
+  return (
+    <pre
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 bottom-0 select-none overflow-hidden whitespace-pre bg-gradient-to-r from-acid/30 via-white/10 to-amber/30 bg-clip-text font-mono text-[11px] leading-[1.25] text-transparent [mask-image:linear-gradient(to_top,black,transparent)]"
+    >
+      {text}
+    </pre>
+  );
+}
 
 export function Hero() {
   const reduce = useReducedMotion();
@@ -118,45 +181,21 @@ export function Hero() {
         />
       </div>
 
-      <div className="relative mx-auto grid min-h-[100dvh] max-w-[1240px] items-center gap-8 px-5 pb-12 pt-24 sm:px-8 lg:grid-cols-[minmax(0,43%)_1fr] lg:gap-10 lg:pt-20">
+      <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-[1240px] flex-col items-center px-5 pb-40 pt-28 sm:px-8 lg:h-[100dvh] lg:min-h-[640px] lg:pb-10 lg:pt-[4.5rem]">
         {/* Copy */}
-        <div className="max-w-xl">
-          {/* A boot line from the machine below rather than a badge — the same
-              BOOT:// vocabulary the viewport and footer terminal already speak. */}
-          <div className="mb-6 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
-            <span className="text-faint">boot://</span>
-            <span className="text-acid">ide</span>
-            <span className="text-faint" aria-hidden="true">
-              +
+        <div className="flex max-w-4xl flex-col items-center text-center">
+          {/* The h1 carries the full name: this page ranks for a person, not a slogan. */}
+          <h1 className="flex flex-col items-center whitespace-nowrap text-[min(7.4vw,3.6rem)] font-bold leading-[1.04] tracking-tight lg:text-[clamp(3rem,8.5vh,5rem)] lg:leading-[1.02]">
+            <span className="flex items-center gap-3 sm:gap-4">
+              <BrandLogo height={52} className="h-[1em] w-auto" />
+              Hi, I&apos;m {site.name}.
             </span>
-            <span className="text-amber">engine</span>
-            <span className="h-px w-6 bg-white/15" aria-hidden="true" />
-            <span>one maker</span>
-          </div>
-          <div className="mb-4 flex items-center gap-3">
-            <BrandLogo height={40} />
-            <ZntsnsLogo height={40} boot />
-          </div>
-          {/* The name is the h1, not the tagline below it: this page ranks for a
-              person, and a heading naming someone else's slogan spends that signal. */}
-          <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h1 className="text-xl font-semibold tracking-tight text-ink sm:text-2xl">
-              {site.fullName}
-            </h1>
-            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-acid">
-              {site.experience}
+            <span>
+              <RoleWord play={!reduce && inView} /> Developer.
             </span>
-          </div>
-          <p className="text-[2rem] font-bold tracking-tight sm:text-[2.5rem] lg:text-[2.5rem] lg:leading-[1.05] xl:text-[2.9rem] xl:leading-[1.03]">
-            <span className="block">
-              Full-stack <span className="text-acid text-glow-acid">systems</span>,
-            </span>
-            <span className="block">
-              <span className="text-amber text-glow-amber">game-world</span> imagination.
-            </span>
-          </p>
-          <p className="mt-6 max-w-md font-mono text-sm text-muted sm:text-[15px]">{hero.tagline}</p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <span className="sr-only">{site.fullName}, {hero.roles.join(", ")} developer</span>
+          </h1>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:mt-6">
             <MagneticButton
               href={hero.primaryCta.href}
               className="gap-2 rounded-lg bg-acid px-6 py-3.5 font-mono text-sm font-semibold uppercase tracking-wider text-void"
@@ -172,14 +211,15 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Machine */}
-        <div className="w-full">
+        {/* Machine: the console under the headline. On desktop it takes the height left
+            over, so the whole hero fits the first screen. */}
+        <div className="mt-14 w-full max-w-[1100px] lg:mt-6 lg:min-h-0 lg:flex-1">
           <div
             ref={machineRef}
             data-theme="dark"
             className={cn(
               "relative overflow-hidden rounded-xl border border-white/15 bg-void shadow-2xl",
-              wide ? "h-[62vh] max-h-[560px]" : "grid",
+              wide ? "h-full" : "grid",
             )}
           >
             <div className={wide ? "absolute inset-0" : "relative h-[37vh] overflow-hidden border-b border-white/10"}>
@@ -229,6 +269,7 @@ export function Hero() {
           </div>
         </div>
       </div>
+      <GlyphBand animate={!reduce && inView} />
     </section>
   );
 }
