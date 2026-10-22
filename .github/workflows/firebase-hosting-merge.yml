@@ -45,3 +45,5 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZNTSNS_34AEE }}
           channelId: live
           projectId: zntsns-34aee
+          # 15.34.1 checks the Service Usage API first and gets a 403 from our deploy account.
+          firebaseToolsVersion: 15.34.0
