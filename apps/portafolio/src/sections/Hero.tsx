@@ -15,6 +15,7 @@ import { Scanlines } from "../components/fx";
 import { CodeEditor } from "./CodeEditor";
 import { cn } from "../lib/cn";
 import { BrandLogo } from "../components/BrandLogo";
+import { GridRipple } from "../components/GridRipple";
 
 const EngineViewport = lazy(() => import("./EngineViewport"));
 
@@ -170,6 +171,7 @@ export function Hero() {
   return (
     <section id="top" className="relative min-h-[100dvh] overflow-hidden">
       <div className="grid-lines pointer-events-none absolute inset-0 opacity-60" aria-hidden="true" />
+      <GridRipple />
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <motion.div
           className="absolute -left-40 top-1/3 h-96 w-96 rounded-full bg-[var(--orb-acid)] blur-[130px]"
