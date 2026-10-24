@@ -1,5 +1,5 @@
 /**
- * Capture the README screenshots.
+ * Capture the README screenshots and the Open Graph image (public/og.jpg).
  *
  *   pnpm --filter portafolio dev     # in another terminal
  *   node scripts/screenshots.mjs     # writes ../docs/*.jpg
@@ -60,6 +60,18 @@ const goTo = (id) => `(async () => {
 })()`;
 
 const SHOTS = [
+  {
+    // The link preview every app's index.html points at: 1200x630 pixels, laid
+    // out at 1600x840 so the hero's console fits (it needs ~768px of height).
+    name: "og",
+    caption: "Open Graph image",
+    width: 1600,
+    height: 840,
+    scale: 0.75,
+    out: fileURLToPath(new URL("../public/og.jpg", import.meta.url)),
+    theme: "dark",
+    settle: 1600,
+  },
   {
     name: "hero",
     caption: "The hero: a draggable seam between a live-typing IDE and a WebGL viewport",
@@ -252,7 +264,7 @@ async function main() {
     await cdp.send("Emulation.setDeviceMetricsOverride", {
       width: shot.width,
       height: shot.height,
-      deviceScaleFactor: 2, // retina — the README is read on good screens
+      deviceScaleFactor: shot.scale ?? 2, // retina — the README is read on good screens
       mobile: false,
     });
 
@@ -298,7 +310,7 @@ async function main() {
       captureBeyondViewport: false,
     });
     const buf = Buffer.from(data, "base64");
-    writeFileSync(join(OUT, `${shot.name}.jpg`), buf);
+    writeFileSync(shot.out ?? join(OUT, `${shot.name}.jpg`), buf);
     console.log(`${(buf.length / 1024) | 0} kB`);
   }
 
